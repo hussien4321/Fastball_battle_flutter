@@ -28,11 +28,14 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   int currentScore;
   int strikes;
+
+  bool gameInProgress;
   
   void initState() {
     currentScore = 0;
     strikes = 0;
     canInput = true;
+    gameInProgress = false;
 
     machineAnimationController = new AnimationController(duration: new Duration(), vsync: this);
     obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_SPEED), vsync: this);    inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
@@ -65,6 +68,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
         });
         if(newStrikes < 3){   
           startMachine();
+        }else{
+          setState(() => gameInProgress = false);
         }
       }
     });
@@ -96,6 +101,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   }
 
   void startMachine(){
+    setState(() => gameInProgress = true);
+    if(strikes >= 3){
+      setState(() {
+        strikes = 0;
+        currentScore = 0;  
+      });
+    }
     int rand = MACHINE_FIXED_DELAY + Random().nextInt(MACHINE_OFFSET_DELAY);
     
     machineAnimationController.duration = Duration(milliseconds: rand);
@@ -154,8 +166,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                   child: Container(
                     padding: EdgeInsets.all(10.0),
                     child: RaisedButton(
-                      onPressed: machineAnimation.value == 0 ? (()=> startMachine()) : null,
-                      child: Text('Hit me')
+                      onPressed: !gameInProgress ? (()=> startMachine()) : null,
+                      child: Text(!gameInProgress ? strikes < 3 ? 'Start game' : 'Play again' :  'Playing')
                     ),
                   ),
                 ),
@@ -173,7 +185,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           ),
           Expanded(
             child: CustomPaint(size: Size(1000.0,1000.0), painter: GamePainter(obstacleAnimation.value == 0 ? 0.0 : obstacleAnimation.value / OBSTACLE_SPEED)),
-            
           ),
         ],
       ),
