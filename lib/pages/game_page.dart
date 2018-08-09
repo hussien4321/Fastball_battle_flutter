@@ -23,7 +23,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   AnimationController  inputAnimationController;
 
-  static final int TIME_INVALID_AFTER_HIT = 200; //ms time disabled after clicking hit
+  static final int TIME_INVALID_AFTER_HIT = 500; //ms time disabled after clicking hit
   bool canInput;
 
   int currentScore;
@@ -125,10 +125,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void swing() {
     
     if(canInput){
-      if(obstacleAnimation.value != 0){
-        //Start success animation
+      if(obstacleAnimation.value != 0 && obstacleAnimation.value != OBSTACLE_SPEED){
+        int newScore = currentScore + 1;
+        setState(() => currentScore = newScore);
+        obstacleAnimationController.stop();
+        obstacleAnimationController.reset();
+        startMachine();
       }
-      print(obstacleAnimation.value == 0? 'MISS':'HIT');
       setState(() => canInput = false);
       inputAnimationController.reset();
       inputAnimationController.forward();
