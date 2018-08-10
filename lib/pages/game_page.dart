@@ -7,6 +7,11 @@ class GamePage extends StatefulWidget {
   _GamePageState createState() => _GamePageState();
 }
 
+enum OBSTACLE_STATUS{
+  OFFSCREEN,
+  ALIVE,
+  DEATH,
+}
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
 
@@ -19,7 +24,17 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Animation<int> obstacleAnimation;
   AnimationController  obstacleAnimationController;
 
-  static final int OBSTACLE_SPEED = 300; //ms time for obstacle to be first to passing by user 
+  static final int OBSTACLE_DURATION = 400; //ms time for obstacle to be first to passing by user 
+  static final int CAN_HIT_OBSTACLE = 200; //ms time for obstacle to be first to passing by user 
+
+  Animation<int> obstacleDeathAnimation;
+  AnimationController  obstacleDeathAnimationController;
+
+  static final int OBSTACLE_DEATH_DURATION = (OBSTACLE_DURATION*0.5).toInt(); //ms time for obstacle to be first to passing by user 
+  
+  OBSTACLE_STATUS obstacle_status;
+  
+  bool obstacleIsHit;
 
   AnimationController  inputAnimationController;
 
@@ -32,25 +47,29 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   bool gameInProgress;
   
   void initState() {
-    currentScore = 0;
-    strikes = 0;
-    canInput = true;
-    gameInProgress = false;
+    newGameState();
 
     machineAnimationController = new AnimationController(duration: new Duration(), vsync: this);
-    obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_SPEED), vsync: this);    inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
+    obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DURATION), vsync: this);
+    obstacleDeathAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DEATH_DURATION), vsync: this);
+    inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
 
     machineAnimation = IntTween(
       begin: 0,
       end: 0
     ).animate(machineAnimationController);
     obstacleAnimation = IntTween(
-      begin: OBSTACLE_SPEED,
+      begin: OBSTACLE_DURATION,
       end: 0
     ).animate(obstacleAnimationController);
+    obstacleDeathAnimation = IntTween(
+      begin: OBSTACLE_DEATH_DURATION,
+      end: 0
+    ).animate(obstacleDeathAnimationController);
 
     machineAnimationController.addStatusListener((status){
       if(status == AnimationStatus.completed){
+        obstacle_status = OBSTACLE_STATUS.ALIVE;
         obstacleAnimationController.reset();
         obstacleAnimationController.forward();
       }
@@ -62,15 +81,22 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
     obstacleAnimationController.addStatusListener((status){
       if(status == AnimationStatus.completed){
-        int newStrikes = strikes + 1;
-        setState(() {
-          strikes = newStrikes;
-        });
-        if(newStrikes < 3){   
-          startMachine();
-        }else{
-          setState(() => gameInProgress = false);
+        if(obstacleIsHit){
+          int newScore = currentScore + 1;
+          setState(() {
+            currentScore = newScore;
+          });
         }
+        else{  
+          int newStrikes = strikes + 1;
+          setState(() {
+            strikes = newStrikes;
+          });
+        }
+        print(obstacleIsHit ? "BALL HIT!" : "BALL MISS!");
+        obstacle_status = OBSTACLE_STATUS.DEATH;
+        obstacleDeathAnimationController.reset();
+        obstacleDeathAnimationController.forward();
       }
     });
     obstacleAnimationController.addListener(() {
@@ -78,6 +104,29 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       });
     });
     
+    
+    obstacleDeathAnimationController.addStatusListener((status){
+      if(status == AnimationStatus.completed){
+        if(obstacleIsHit){
+          setState(() {
+            obstacleIsHit = false;
+          });          
+        }
+        if(!isGameOver()){
+          startMachine();
+        } else{
+          setState(() => gameInProgress = false);
+        }
+        obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
+      }
+    });
+
+    obstacleDeathAnimationController.addListener(() {
+      setState(() {
+      });
+    });
+    
+
     inputAnimationController.addStatusListener((status){
       if(status == AnimationStatus.completed){
         setState(() => canInput = true);
@@ -87,11 +136,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     super.initState();
   }
 
-  VoidCallback lineUpPitch = (){
-    print('HIMME');
+  bool isGameOver() {
+    return strikes >= 3;
+  }
 
-  };
-  
   @override
   void dispose() {
     machineAnimationController.dispose();
@@ -100,16 +148,24 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     super.dispose();
   }
 
+  newGameState(){
+    setState(() {      
+      currentScore = 0;
+      strikes = 0;
+      canInput = true;
+      gameInProgress = false;
+      obstacleIsHit = false;
+      obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
+    });
+  }
+
   void startMachine(){
-    setState(() => gameInProgress = true);
-    if(strikes >= 3){
-      setState(() {
-        strikes = 0;
-        currentScore = 0;  
-      });
+    if(isGameOver()){
+      newGameState();
     }
+    setState(() => gameInProgress = true);
+
     int rand = MACHINE_FIXED_DELAY + Random().nextInt(MACHINE_OFFSET_DELAY);
-    
     machineAnimationController.duration = Duration(milliseconds: rand);
     
     machineAnimation = IntTween(
@@ -122,15 +178,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   }
 
 
-  void swing() {
+  void triggerInput() {
     
     if(canInput){
-      if(obstacleAnimation.value != 0 && obstacleAnimation.value != OBSTACLE_SPEED){
-        int newScore = currentScore + 1;
-        setState(() => currentScore = newScore);
-        obstacleAnimationController.stop();
-        obstacleAnimationController.reset();
-        startMachine();
+      if(obstacleAnimation.value != 0 && obstacleAnimation.value <= CAN_HIT_OBSTACLE){
+        obstacleIsHit = true;
       }
       setState(() => canInput = false);
       inputAnimationController.reset();
@@ -153,14 +205,18 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             'Strikes: '+strikes.toString(),
             style: TextStyle(fontSize: 30.0),
           ),
-          Text(
-            'Next Pitch in : ${machineAnimation.value} ms',
-            style: TextStyle(fontSize: 25.0),
-          ),
-          Text(
-            'Ball speed: ${obstacleAnimation.value} ms',
-            style: TextStyle(fontSize: 25.0),
-          ),
+          // Text(
+          //   'Next Pitch in : ${machineAnimation.value} ms',
+          //   style: TextStyle(fontSize: 25.0),
+          // ),
+          // Text(
+          //   'Obstacle : ${obstacleAnimation.value} ms',
+          //   style: TextStyle(fontSize: 25.0),
+          // ),
+          // Text(
+          //   'Death : ${obstacleDeathAnimation.value} ms',
+          //   style: TextStyle(fontSize: 25.0),
+          // ),
           Container(
             padding: EdgeInsets.only(top:30.0, bottom: 30.0),
             child: Row(
@@ -178,7 +234,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                   child: Container(
                     padding: EdgeInsets.all(10.0),
                     child: RaisedButton(
-                      onPressed: canInput ? () => swing() : null,
+                      onPressed: canInput ? () => triggerInput() : null,
                       child: Text('Swing')
                     ),
                   ),
@@ -187,10 +243,17 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             ),
           ),
           Expanded(
-            child: CustomPaint(size: Size(1000.0,1000.0), painter: GamePainter(obstacleAnimation.value == 0 ? 0.0 : obstacleAnimation.value / OBSTACLE_SPEED)),
+            child: CustomPaint(size: Size(1000.0,1000.0), painter: GamePainter(obstacleTimeAsPercentage(),obstacleDeathTimeAsPercentage(),obstacleIsHit, obstacle_status))
           ),
         ],
       ),
     );
+  }
+
+  double obstacleTimeAsPercentage(){
+    return obstacleAnimation.value == 0 ? 0.0 : obstacleAnimation.value / OBSTACLE_DURATION;
+  }
+  double obstacleDeathTimeAsPercentage(){
+    return obstacleDeathAnimation.value == 0 ? 0.0 : (obstacleDeathAnimation.value / OBSTACLE_DEATH_DURATION);
   }
 }
