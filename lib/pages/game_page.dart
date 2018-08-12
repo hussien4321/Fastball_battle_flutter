@@ -33,7 +33,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   AnimationController  obstacleAnimationController;
 
   static final int OBSTACLE_DURATION = 300; //ms time for obstacle to be first to passing by user 
-  static final int CAN_HIT_OBSTACLE = 200; //ms time for obstacle to be first to passing by user 
+  static final int CAN_HIT_OBSTACLE = ((OBSTACLE_DURATION*2)/3).floor(); //ms time for obstacle to be first to passing by user 
 
   Animation<int> obstacleDeathAnimation;
   AnimationController  obstacleDeathAnimationController;
@@ -115,7 +115,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             strikes = newStrikes;
           });
         }
-        print(obstacleIsHit ? "BALL HIT!" : "BALL MISS!");
         obstacle_status = OBSTACLE_STATUS.DEATH;
         obstacleDeathAnimationController.reset();
         obstacleDeathAnimationController.forward();
@@ -253,11 +252,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     return Container(
       decoration: BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/stadium2.jpg", bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage("assets/stadium.jpg", bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
-      padding: EdgeInsets.only(top: 40.0, left: 0.0, right: 0.0),
       child: Stack(
         children: <Widget>[
           SizedBox.expand(
@@ -280,9 +278,17 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                   ),
                 ),
           ),
-          
+          SizedBox.expand(
+            child: Opacity(
+              opacity: 0.0,
+              child: RaisedButton(
+                onPressed: () => triggerInput(),
+              ),
+            ),
+          ),
           Column(
             children: <Widget>[ 
+              Padding( padding: EdgeInsets.only(top: 40.0)),
               Text(
                 'Score: '+currentScore.toString(),
                 style: TextStyle(fontSize: 30.0),
@@ -292,24 +298,16 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                 style: TextStyle(fontSize: 30.0),
               ),
               Container(
-                padding: EdgeInsets.only(top:30.0, bottom: 30.0),
+                padding: EdgeInsets.only(top: 30.0),
                 child: Row(
                   children: <Widget>[
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.all(10.0),
-                        child: RaisedButton(
+                        child: gameInProgress ? Container() :RaisedButton(
                           onPressed: !gameInProgress ? (()=> startMachine()) : null,
-                          child: Text(!gameInProgress ? strikes < 3 ? 'Start game' : 'Play again' :  'Playing')
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: RaisedButton(
-                          onPressed: canInput ? () => triggerInput() : null,
-                          child: Text('Swing')
+                          child: Text(!gameInProgress ? strikes < 3 ? 'Start game' : 'Play again' :  'Playing'),
+                          color: Colors.orange[300],
                         ),
                       ),
                     ),

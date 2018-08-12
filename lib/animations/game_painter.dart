@@ -48,30 +48,23 @@ class GamePainter extends CustomPainter {
   void paint(Canvas canvas, Size size){    
     
     int index = (inputPos*charInputImages.length).floor();
-    // canvas.drawRect(Rect.fromLTWH(size.width*0.1, size.height - charHeight, charWidth, charHeight), _paint2);
-    // canvas.drawRect(Rect.fromLTWH(size.width*0.9, size.height - charHeight, charWidth, charHeight), _paint1);
-    canvas.drawImage(enemyImage, Offset(size.width*0.9, size.height-50), _paint2);
+    canvas.drawImage(enemyImage, Offset(size.width*0.8, size.height-50), _paint2);
     canvas.drawImage(canInput ? charImage1 : charInputImages[index], Offset(size.width*0.2-100.0, size.height-100), _paint2);
 
 
     if(obstacleStatus == OBSTACLE_STATUS.ALIVE){
-      print("ALAAAIVE");
-      double currentPos = ((size.width*0.7) * obstaclePos ) + size.width*0.2;
-      // canvas.drawCircle(Offset(currentPos, size.height-(charHeight/2)), obstacleSize/2, _paint1);
+      double currentPos = ((size.width*0.6) * obstaclePos ) + size.width*0.2;
       canvas.drawImage(ballImage, Offset(currentPos, size.height-(charHeight/2)), _paint2);
 
     }
     if(obstacleStatus == OBSTACLE_STATUS.DEATH){
-      print("DEAAATH");
       if(obstacleIsHit){
         double currentDeathXpos = size.width*0.2 + (size.width * (1-obstacleDeathPos));
         double currentDeathYpos = (size.height-(charHeight/2)) -  (size.height * (1-obstacleDeathPos)); 
-        // canvas.drawCircle(Offset(currentDeathXpos, currentDeathYpos), obstacleSize/2, _paint3);
         canvas.drawImage(ballImage, Offset(currentDeathXpos, currentDeathYpos), _paint2);
 
       }else{
         double currentDeathPos = ((size.width*0.35+obstacleSize) * obstacleDeathPos) - obstacleSize - size.width*0.15;
-        // canvas.drawCircle(Offset(currentDeathPos, size.height-(charHeight/2)), obstacleSize/2, _paint1);
         canvas.drawImage(ballImage, Offset(currentDeathPos, size.height-(charHeight/2)), _paint2);
 
       }

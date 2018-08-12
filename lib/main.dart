@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     _lockOrientation();
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Baseball game',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
