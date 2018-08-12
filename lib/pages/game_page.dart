@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../animations/game_painter.dart';
+import 'dart:ui' as UI;
+import 'dart:async';
+import 'dart:typed_data';
 
 class GamePage extends StatefulWidget {
+
+  BuildContext parentContext;
+
+  GamePage(this.parentContext);
+
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -24,7 +32,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Animation<int> obstacleAnimation;
   AnimationController  obstacleAnimationController;
 
-  static final int OBSTACLE_DURATION = 400; //ms time for obstacle to be first to passing by user 
+  static final int OBSTACLE_DURATION = 300; //ms time for obstacle to be first to passing by user 
   static final int CAN_HIT_OBSTACLE = 200; //ms time for obstacle to be first to passing by user 
 
   Animation<int> obstacleDeathAnimation;
@@ -36,6 +44,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   
   bool obstacleIsHit;
 
+  Animation<int> inputAnimation;
   AnimationController  inputAnimationController;
 
   static final int TIME_INVALID_AFTER_HIT = 500; //ms time disabled after clicking hit
@@ -45,8 +54,16 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   int strikes;
 
   bool gameInProgress;
-  
+
+  bool loading;
+  UI.Image ballImage;
+  UI.Image charImage1;
+  List<UI.Image> charInputImages;
+
   void initState() {
+
+    loading = true;
+    charInputImages = [];
     newGameState();
 
     machineAnimationController = new AnimationController(duration: new Duration(), vsync: this);
@@ -66,6 +83,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       begin: OBSTACLE_DEATH_DURATION,
       end: 0
     ).animate(obstacleDeathAnimationController);
+    inputAnimation = IntTween(
+      begin: TIME_INVALID_AFTER_HIT,
+      end: 0
+    ).animate(inputAnimationController);
 
     machineAnimationController.addStatusListener((status){
       if(status == AnimationStatus.completed){
@@ -132,8 +153,40 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
         setState(() => canInput = true);
       }
     });
+    inputAnimationController.addListener(() {
+      setState(() {
+      });
+    });
 
+
+    loadImages();
     super.initState();
+  }
+
+  void loadImages() async{
+    ballImage =  await loadImage("assets/baseball.png");
+    charImage1 =  await loadImage("assets/batter_idle.png");
+    UI.Image hit1 =  await loadImage("assets/batter_hit1.png");
+    UI.Image hit2 =  await loadImage("assets/batter_hit2.png");
+    UI.Image hit3 =  await loadImage("assets/batter_hit3.png");
+    UI.Image hit4 =  await loadImage("assets/batter_hit4.png");
+    charInputImages.add(hit4);
+    charInputImages.add(hit3);
+    charInputImages.add(hit2);
+    charInputImages.add(hit1);
+    setState(() {
+      loading = false;
+    });
+    
+  }
+
+  Future<UI.Image> loadImage(String link) async {
+
+    ByteData bd = await DefaultAssetBundle.of(widget.parentContext).load(link);//.then( (bd) {
+    Uint8List lst = new Uint8List.view(bd.buffer);
+    UI.Codec codec = await UI.instantiateImageCodec(lst);//.then( (codec) {
+    UI.FrameInfo frameInfo = await codec.getNextFrame();//.then(
+    return frameInfo.image;
   }
 
   bool isGameOver() {
@@ -191,10 +244,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 40.0, left: 10.0, right: 10.0),
+      padding: EdgeInsets.only(top: 40.0, left: 0.0, right: 0.0),
       child: Column(
         children: <Widget>[
           Text(
@@ -242,18 +297,49 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
               ],
             ),
           ),
+          loading? Text('Loading...') :
           Expanded(
-            child: CustomPaint(size: Size(1000.0,1000.0), painter: GamePainter(obstacleTimeAsPercentage(),obstacleDeathTimeAsPercentage(),obstacleIsHit, obstacle_status))
+            // child: GamePainter2(context, obstacleTimeAsPercentage(),obstacleDeathTimeAsPercentage(),obstacleIsHit, obstacle_status),
+            child: Container(
+              decoration: BoxDecoration(
+                image: new DecorationImage(
+                  image: new AssetImage("assets/bg_stadium.png", bundle: DefaultAssetBundle.of(context)),
+                  fit: BoxFit.fill,
+                ),
+                border: new Border(
+                  top: BorderSide(color: Colors.grey[800], width: 0.5),
+                  right: BorderSide(color: Colors.grey[800], width: 0.5),
+                  bottom: BorderSide(color: Colors.grey[800], width: 0.5),
+                  left: BorderSide(color: Colors.grey[800], width: 0.5)
+                ),
+              ),
+              child: CustomPaint(size: Size(1000.0,1000.0), painter: 
+                GamePainter(
+                  context, 
+                  obstacleTimeAsPercentage(),
+                  obstacleDeathTimeAsPercentage(),
+                  inputTimeAsPercentage(),
+                  canInput,
+                  obstacleIsHit, 
+                  obstacle_status, 
+                  ballImage, 
+                  charImage1, 
+                  charInputImages,
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
-
   double obstacleTimeAsPercentage(){
     return obstacleAnimation.value == 0 ? 0.0 : obstacleAnimation.value / OBSTACLE_DURATION;
   }
   double obstacleDeathTimeAsPercentage(){
     return obstacleDeathAnimation.value == 0 ? 0.0 : (obstacleDeathAnimation.value / OBSTACLE_DEATH_DURATION);
+  }
+  double inputTimeAsPercentage(){
+    return inputAnimation.value == 0 ? 0.0 : (inputAnimation.value == TIME_INVALID_AFTER_HIT ? 0.99 : (inputAnimation.value / TIME_INVALID_AFTER_HIT));
   }
 }
