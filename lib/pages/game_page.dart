@@ -57,6 +57,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   bool loading;
   UI.Image ballImage;
+  UI.Image enemyImage;
   UI.Image charImage1;
   List<UI.Image> charInputImages;
 
@@ -166,6 +167,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void loadImages() async{
     ballImage =  await loadImage("assets/baseball.png");
     charImage1 =  await loadImage("assets/batter_idle.png");
+    enemyImage = await loadImage("assets/tank.png");
     UI.Image hit1 =  await loadImage("assets/batter_hit1.png");
     UI.Image hit2 =  await loadImage("assets/batter_hit2.png");
     UI.Image hit3 =  await loadImage("assets/batter_hit3.png");
@@ -249,85 +251,72 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        image: new DecorationImage(
+          image: new AssetImage("assets/stadium2.jpg", bundle: DefaultAssetBundle.of(context)),
+          fit: BoxFit.fill,
+        ),
+      ),
       padding: EdgeInsets.only(top: 40.0, left: 0.0, right: 0.0),
-      child: Column(
+      child: Stack(
         children: <Widget>[
-          Text(
-            'Score: '+currentScore.toString(),
-            style: TextStyle(fontSize: 30.0),
-          ),
-          Text(
-            'Strikes: '+strikes.toString(),
-            style: TextStyle(fontSize: 30.0),
-          ),
-          // Text(
-          //   'Next Pitch in : ${machineAnimation.value} ms',
-          //   style: TextStyle(fontSize: 25.0),
-          // ),
-          // Text(
-          //   'Obstacle : ${obstacleAnimation.value} ms',
-          //   style: TextStyle(fontSize: 25.0),
-          // ),
-          // Text(
-          //   'Death : ${obstacleDeathAnimation.value} ms',
-          //   style: TextStyle(fontSize: 25.0),
-          // ),
-          Container(
-            padding: EdgeInsets.only(top:30.0, bottom: 30.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: RaisedButton(
-                      onPressed: !gameInProgress ? (()=> startMachine()) : null,
-                      child: Text(!gameInProgress ? strikes < 3 ? 'Start game' : 'Play again' :  'Playing')
+          SizedBox.expand(
+            child: loading? Text('Loading...') :
+              Container(
+                  child: CustomPaint(size: Size(1000.0,1000.0), painter: 
+                    GamePainter(
+                      context, 
+                      obstacleTimeAsPercentage(),
+                      obstacleDeathTimeAsPercentage(),
+                      inputTimeAsPercentage(),
+                      canInput,
+                      obstacleIsHit, 
+                      obstacle_status, 
+                      ballImage, 
+                      enemyImage,
+                      charImage1, 
+                      charInputImages,
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: RaisedButton(
-                      onPressed: canInput ? () => triggerInput() : null,
-                      child: Text('Swing')
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
-          loading? Text('Loading...') :
-          Expanded(
-            // child: GamePainter2(context, obstacleTimeAsPercentage(),obstacleDeathTimeAsPercentage(),obstacleIsHit, obstacle_status),
-            child: Container(
-              decoration: BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage("assets/bg_stadium.png", bundle: DefaultAssetBundle.of(context)),
-                  fit: BoxFit.fill,
-                ),
-                border: new Border(
-                  top: BorderSide(color: Colors.grey[800], width: 0.5),
-                  right: BorderSide(color: Colors.grey[800], width: 0.5),
-                  bottom: BorderSide(color: Colors.grey[800], width: 0.5),
-                  left: BorderSide(color: Colors.grey[800], width: 0.5)
+          
+          Column(
+            children: <Widget>[ 
+              Text(
+                'Score: '+currentScore.toString(),
+                style: TextStyle(fontSize: 30.0),
+              ),
+              Text(
+                'Strikes: '+strikes.toString(),
+                style: TextStyle(fontSize: 30.0),
+              ),
+              Container(
+                padding: EdgeInsets.only(top:30.0, bottom: 30.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: RaisedButton(
+                          onPressed: !gameInProgress ? (()=> startMachine()) : null,
+                          child: Text(!gameInProgress ? strikes < 3 ? 'Start game' : 'Play again' :  'Playing')
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: RaisedButton(
+                          onPressed: canInput ? () => triggerInput() : null,
+                          child: Text('Swing')
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: CustomPaint(size: Size(1000.0,1000.0), painter: 
-                GamePainter(
-                  context, 
-                  obstacleTimeAsPercentage(),
-                  obstacleDeathTimeAsPercentage(),
-                  inputTimeAsPercentage(),
-                  canInput,
-                  obstacleIsHit, 
-                  obstacle_status, 
-                  ballImage, 
-                  charImage1, 
-                  charInputImages,
-                ),
-              ),
-            ),
+            ],
           ),
         ],
       ),

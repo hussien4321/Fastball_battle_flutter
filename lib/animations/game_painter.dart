@@ -9,6 +9,7 @@ class GamePainter extends CustomPainter {
   Paint _paint2;
   Paint _paint3;
   UI.Image ballImage;
+  UI.Image enemyImage;
   UI.Image charImage1;
   List<UI.Image> charInputImages;
 
@@ -23,7 +24,7 @@ class GamePainter extends CustomPainter {
   bool canInput;
   double obstacleSize = 20.0;
   
-  GamePainter(BuildContext context, double newObstaclePos, double newObstacleDeathPos,double newInputPos, bool newCanInput, bool newObstacleIsHit, OBSTACLE_STATUS newObstacleStatus, UI.Image newBallImage, UI.Image newCharImage1, List<UI.Image> newCharInputImages){
+  GamePainter(BuildContext context, double newObstaclePos, double newObstacleDeathPos,double newInputPos, bool newCanInput, bool newObstacleIsHit, OBSTACLE_STATUS newObstacleStatus, UI.Image newBallImage, UI.Image newEnemyImage, UI.Image newCharImage1, List<UI.Image> newCharInputImages){
     obstacleStatus = newObstacleStatus;
     obstaclePos = newObstaclePos;
     obstacleDeathPos = newObstacleDeathPos;
@@ -37,6 +38,7 @@ class GamePainter extends CustomPainter {
     _paint3 = Paint()
       ..color = Colors.green;
     ballImage = newBallImage;
+    enemyImage = newEnemyImage;
     charImage1 = newCharImage1;
     charInputImages = newCharInputImages;
     
@@ -47,7 +49,8 @@ class GamePainter extends CustomPainter {
     
     int index = (inputPos*charInputImages.length).floor();
     // canvas.drawRect(Rect.fromLTWH(size.width*0.1, size.height - charHeight, charWidth, charHeight), _paint2);
-    canvas.drawRect(Rect.fromLTWH(size.width*0.9, size.height - charHeight, charWidth, charHeight), _paint1);
+    // canvas.drawRect(Rect.fromLTWH(size.width*0.9, size.height - charHeight, charWidth, charHeight), _paint1);
+    canvas.drawImage(enemyImage, Offset(size.width*0.9, size.height-50), _paint2);
     canvas.drawImage(canInput ? charImage1 : charInputImages[index], Offset(size.width*0.2-100.0, size.height-100), _paint2);
 
 
