@@ -31,6 +31,8 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/
+    - assets/new assets/player_animations/player_01/player_idle/
+    - assets/new assets/player_animations/player_01/player_swing/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
@@ -43,6 +45,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Bungee
+      fonts:
+        - asset: assets/fonts/Bungee.ttf
+
   # fonts:
   #   - family: Schyler
   #     fonts:

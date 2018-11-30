@@ -58,12 +58,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   bool loading;
   UI.Image ballImage;
   UI.Image enemyImage;
-  UI.Image charImage1;
+  List<UI.Image> charIdleImages;
   List<UI.Image> charInputImages;
 
   void initState() {
 
     loading = true;
+    charIdleImages = [];
     charInputImages = [];
     newGameState();
 
@@ -165,16 +166,18 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   void loadImages() async{
     ballImage =  await loadImage("assets/baseball.png");
-    charImage1 =  await loadImage("assets/batter_idle.png");
     enemyImage = await loadImage("assets/tank.png");
-    UI.Image hit1 =  await loadImage("assets/batter_hit1.png");
-    UI.Image hit2 =  await loadImage("assets/batter_hit2.png");
-    UI.Image hit3 =  await loadImage("assets/batter_hit3.png");
-    UI.Image hit4 =  await loadImage("assets/batter_hit4.png");
-    charInputImages.add(hit4);
-    charInputImages.add(hit3);
-    charInputImages.add(hit2);
-    charInputImages.add(hit1);
+
+    for(int i=3; i > 0; i--){
+      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_idle/idle_0${i}.png");
+      charIdleImages.add(temp);
+    }
+    for(int i=15; i  > 0; i--){
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_swing/swing_0$num.png");
+      charInputImages.add(temp);
+    }
+    
     setState(() {
       loading = false;
     });
@@ -272,7 +275,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                       obstacle_status, 
                       ballImage, 
                       enemyImage,
-                      charImage1, 
+                      charIdleImages, 
                       charInputImages,
                     ),
                   ),

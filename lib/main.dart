@@ -14,6 +14,9 @@ class MyApp extends StatelessWidget {
       title: 'Baseball game',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
+        textTheme: TextTheme(
+          body1: TextStyle(fontFamily: 'Bungee'),
+        ),
       ),
       home: Scaffold(
         body: GamePage(context),
