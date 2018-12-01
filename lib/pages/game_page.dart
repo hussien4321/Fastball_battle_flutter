@@ -58,12 +58,16 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   bool loading;
   UI.Image ballImage;
   UI.Image enemyImage;
+  List<UI.Image> enemyIdleImages;
+  List<UI.Image> enemyInputImages;
   List<UI.Image> charIdleImages;
   List<UI.Image> charInputImages;
 
   void initState() {
 
     loading = true;
+    enemyIdleImages = [];
+    enemyInputImages = [];
     charIdleImages = [];
     charInputImages = [];
     newGameState();
@@ -167,14 +171,27 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void loadImages() async{
     ballImage =  await loadImage("assets/baseball.png");
     enemyImage = await loadImage("assets/tank.png");
+    for(int i=18; i > 0; i--){
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("assets/new assets/enemy_animations/enemy_01/enemy_idle/idle_$num.png");
+      enemyIdleImages.add(temp);
+    }
+
+    // for(int i=18; i > 0; i--){
+    //   String num = i<10 ? '0$i':'$i';
+    //   UI.Image temp =  await loadImage("assets/new assets/enemy_animations/enemy_01/enemy_swing/swing_$num.png");
+    //   enemyIdleImages.add(temp);
+    // }
+
 
     for(int i=3; i > 0; i--){
-      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_idle/idle_0${i}.png");
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_idle/idle_$num.png");
       charIdleImages.add(temp);
     }
     for(int i=15; i  > 0; i--){
       String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_swing/swing_0$num.png");
+      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_swing/swing_$num.png");
       charInputImages.add(temp);
     }
     
@@ -182,6 +199,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       loading = false;
     });
     
+    kickOffAnimationLoader();
+  }
+
+  kickOffAnimationLoader() async {
+    while(mounted){
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   Future<UI.Image> loadImage(String link) async {
@@ -275,6 +301,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                       obstacle_status, 
                       ballImage, 
                       enemyImage,
+                      enemyIdleImages, 
                       charIdleImages, 
                       charInputImages,
                     ),
