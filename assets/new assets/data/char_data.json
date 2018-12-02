@@ -1,0 +1,31 @@
+{
+    "players" : [
+        {
+            "id" : 1,
+            "name": "sally",
+            "weapon": "knife",
+            "unlock": "0"
+        }
+    ],
+    "enemies" : [
+        {
+            "id": 1,
+            "name": "kongo",
+            "weapon": "rocks"
+        }
+    ],
+    "backgrounds" : [
+        {
+            "id": 1,
+            "name": "stadium",
+            "src": "stadium.jpg"
+        }
+    ],
+    "songs": [
+        {
+            "id": 1,
+            "name": "epic",
+            "link": "file.mp3"
+        }
+    ]
+}

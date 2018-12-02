@@ -1,0 +1,8 @@
+{
+    "wins" : 0,
+    "losses": 0,
+    "max_streak": 0,
+    "current_streak": 0,
+    "current_char": 1,
+    "current enemy" : 1
+}

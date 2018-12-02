@@ -34,7 +34,6 @@ flutter:
     - assets/new assets/player_animations/player_01/player_idle/
     - assets/new assets/player_animations/player_01/player_swing/
     - assets/new assets/enemy_animations/enemy_01/enemy_idle/
-    - assets/new assets/enemy_animations/enemy_01/enemy_swing/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
