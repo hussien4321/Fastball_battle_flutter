@@ -169,11 +169,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   }
 
   void loadImages() async{
-    ballImage =  await loadImage("assets/baseball.png");
-    enemyImage = await loadImage("assets/tank.png");
+    ballImage =  await loadImage("assets/ball/baseball.png");
+    enemyImage = await loadImage("assets/enemy_animations/tank.png");
     for(int i=18; i > 0; i--){
       String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/new assets/enemy_animations/enemy_01/enemy_idle/idle_$num.png");
+      UI.Image temp =  await loadImage("assets/enemy_animations/enemy_01/enemy_idle/idle_$num.png");
       enemyIdleImages.add(temp);
     }
 
@@ -186,12 +186,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
     for(int i=3; i > 0; i--){
       String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_idle/idle_$num.png");
+      UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/idle_$num.png");
       charIdleImages.add(temp);
     }
     for(int i=15; i  > 0; i--){
       String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/new assets/player_animations/player_01/player_swing/swing_$num.png");
+      UI.Image temp =  await loadImage("assets/player_animations/player_01/player_swing/swing_$num.png");
       charInputImages.add(temp);
     }
     
@@ -199,15 +199,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       loading = false;
     });
     
-    kickOffAnimationLoader();
-  }
-
-  kickOffAnimationLoader() async {
-    while(mounted){
-      setState(() {
-        loading = false;
-      });
-    }
   }
 
   Future<UI.Image> loadImage(String link) async {
@@ -281,7 +272,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     return Container(
       decoration: BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/stadium.jpg", bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage("assets/backgrounds/stadium.jpg", bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
