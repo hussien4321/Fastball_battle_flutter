@@ -184,12 +184,17 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     // }
 
 
-    for(int i=3; i > 0; i--){
+    // for(int i=3; i > 0; i--){
+    //   String num = i<10 ? '0$i':'$i';
+    //   UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/idle_$num.png");
+    //   charIdleImages.add(temp);
+    // }
+    for(int i=23; i >= 0; i--){
       String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/idle_$num.png");
+      UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/Idle_0$num.png");
       charIdleImages.add(temp);
     }
-    for(int i=15; i  > 0; i--){
+    for(int i=9; i  > 0; i--){
       String num = i<10 ? '0$i':'$i';
       UI.Image temp =  await loadImage("assets/player_animations/player_01/player_swing/swing_$num.png");
       charInputImages.add(temp);
@@ -284,6 +289,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                   child: CustomPaint(size: Size(1000.0,1000.0), painter: 
                     GamePainter(
                       context, 
+                      machineTimeAsPercentage(),
                       obstacleTimeAsPercentage(),
                       obstacleDeathTimeAsPercentage(),
                       inputTimeAsPercentage(),
@@ -340,6 +346,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
         ],
       ),
     );
+  }
+  double machineTimeAsPercentage(){
+    return machineAnimation.value == 0 ? 0.0 : machineAnimation.value / machineAnimationController.duration.inMilliseconds;
   }
   double obstacleTimeAsPercentage(){
     return obstacleAnimation.value == 0 ? 0.0 : obstacleAnimation.value / OBSTACLE_DURATION;

@@ -21,6 +21,7 @@ class GamePainter extends CustomPainter {
   static double charWidth = 100.0;
 
   OBSTACLE_STATUS obstacleStatus;
+  double machinePos;
   double obstaclePos;
   double obstacleDeathPos;
   double inputPos;
@@ -28,8 +29,9 @@ class GamePainter extends CustomPainter {
   bool canInput;
   double obstacleSize = 20.0;
   
-  GamePainter(BuildContext context, double newObstaclePos, double newObstacleDeathPos,double newInputPos, bool newCanInput, bool newObstacleIsHit, OBSTACLE_STATUS newObstacleStatus, UI.Image newBallImage, UI.Image newEnemyImage, List<UI.Image> newEnemyIdleImages, List<UI.Image> newCharIdleImages, List<UI.Image> newCharInputImages){
+  GamePainter(BuildContext context, double newMachinePos, double newObstaclePos, double newObstacleDeathPos,double newInputPos, bool newCanInput, bool newObstacleIsHit, OBSTACLE_STATUS newObstacleStatus, UI.Image newBallImage, UI.Image newEnemyImage, List<UI.Image> newEnemyIdleImages, List<UI.Image> newCharIdleImages, List<UI.Image> newCharInputImages){
     obstacleStatus = newObstacleStatus;
+    machinePos = newMachinePos;
     obstaclePos = newObstaclePos;
     obstacleDeathPos = newObstacleDeathPos;
     inputPos = newInputPos;
@@ -54,17 +56,17 @@ class GamePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size){    
-    print('$obstaclePos, $obstacleDeathPos, $inputPos');
     idleIndex = (charIdleImages.length*(DateTime.now().millisecond/1000)).floor();
     enemyIndex = (enemyIdleImages.length*(DateTime.now().millisecond/1000)).floor();
     
     int inputIndex = (inputPos*charInputImages.length).floor();
+    print(inputIndex);
+
     canvas.drawImage(enemyImage, Offset(size.width*0.8, size.height-50), _paint2);
     // canvas.drawImage(canInput ? charIdleImages[idleIndex] : charInputImages[inputIndex], Offset(size.width*0.2-100.0, size.height-100), _paint2);
     // canvas.drawRect(Rect.fromLTRB(size.width*0.8, size.height,size.width*0.8+charWidth, size.height-charHeight), _paint2);
     canvas.drawImageRect(enemyIdleImages[enemyIndex], Rect.fromLTRB(0.0,0.0,enemyIdleImages[0].width.toDouble(), enemyIdleImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.8, size.height-charHeight,size.width*0.8+charWidth, size.height), _paint2);
 
-    print('${enemyIdleImages[0].width.toDouble()}, ${enemyIdleImages[0].height.toDouble()}');
     canvas.drawImageRect(canInput ? charIdleImages[idleIndex] : charInputImages[inputIndex], Rect.fromLTRB(0.0,0.0,canInput ? charIdleImages[0].width.toDouble() : charInputImages[0].width.toDouble(), canInput ? charIdleImages[0].height.toDouble() : charInputImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.2-charWidth, size.height-charHeight,size.width*0.2, size.height), _paint2);
 
 
@@ -90,6 +92,6 @@ class GamePainter extends CustomPainter {
 
   @override
     bool shouldRepaint(GamePainter oldDelegate) {
-      return oldDelegate.obstacleDeathPos != obstacleDeathPos || oldDelegate.obstacleIsHit != obstacleIsHit || oldDelegate.obstaclePos != obstaclePos || oldDelegate.obstacleStatus != obstacleStatus || oldDelegate.ballImage != ballImage || oldDelegate.canInput != canInput || oldDelegate.inputPos != inputPos || oldDelegate.idleIndex != idleIndex || oldDelegate.enemyIndex != enemyIndex;
+      return oldDelegate.machinePos != machinePos || oldDelegate.obstacleDeathPos != obstacleDeathPos || oldDelegate.obstacleIsHit != obstacleIsHit || oldDelegate.obstaclePos != obstaclePos || oldDelegate.obstacleStatus != obstacleStatus || oldDelegate.ballImage != ballImage || oldDelegate.canInput != canInput || oldDelegate.inputPos != inputPos || oldDelegate.idleIndex != idleIndex || oldDelegate.enemyIndex != enemyIndex;
     }
 }
