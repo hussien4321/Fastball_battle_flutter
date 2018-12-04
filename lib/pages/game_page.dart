@@ -57,7 +57,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   bool loading;
   UI.Image ballImage;
-  UI.Image enemyImage;
   List<UI.Image> enemyIdleImages;
   List<UI.Image> enemyInputImages;
   List<UI.Image> charIdleImages;
@@ -169,12 +168,17 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   }
 
   void loadImages() async{
-    ballImage =  await loadImage("assets/ball/baseball.png");
-    enemyImage = await loadImage("assets/enemy_animations/tank.png");
+    ballImage =  await loadImage("assets/ball/ball_01/ball_01.png");
+
     for(int i=18; i > 0; i--){
       String num = i<10 ? '0$i':'$i';
       UI.Image temp =  await loadImage("assets/enemy_animations/enemy_01/enemy_idle/idle_$num.png");
       enemyIdleImages.add(temp);
+    }
+    for(int i=11; i >= 3; i--){
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("assets/enemy_animations/enemy_01/enemy_throw/Throwing_0$num.png");
+      enemyInputImages.add(temp);
     }
 
     // for(int i=18; i > 0; i--){
@@ -297,8 +301,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                       obstacleIsHit, 
                       obstacle_status, 
                       ballImage, 
-                      enemyImage,
                       enemyIdleImages, 
+                      enemyInputImages, 
                       charIdleImages, 
                       charInputImages,
                     ),

@@ -32,12 +32,13 @@ flutter:
   assets:
     - assets/backgrounds/
     - assets/ball/
+    - assets/ball/ball_01/
     - assets/fonts/
     - assets/player_animations/player_01/player_idle/
     - assets/player_animations/player_01/player_swing/
     - assets/enemy_animations/enemy_01/enemy_idle/
-    - assets/enemy_animations/
-
+    - assets/enemy_animations/enemy_01/enemy_throw/
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 
