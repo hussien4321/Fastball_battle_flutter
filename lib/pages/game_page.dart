@@ -38,7 +38,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Animation<int> obstacleDeathAnimation;
   AnimationController  obstacleDeathAnimationController;
 
-  static final int OBSTACLE_DEATH_DURATION = (OBSTACLE_DURATION*0.5).toInt(); //ms time for obstacle to be first to passing by user 
+  static final int OBSTACLE_DEATH_DURATION = 600;//(OBSTACLE_DURATION*0.5).toInt(); //ms time for obstacle to be first to passing by user 
   
   OBSTACLE_STATUS obstacle_status;
   
@@ -180,19 +180,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       UI.Image temp =  await loadImage("assets/enemy_animations/enemy_01/enemy_throw/Throwing_0$num.png");
       enemyInputImages.add(temp);
     }
-
-    // for(int i=18; i > 0; i--){
-    //   String num = i<10 ? '0$i':'$i';
-    //   UI.Image temp =  await loadImage("assets/new assets/enemy_animations/enemy_01/enemy_swing/swing_$num.png");
-    //   enemyIdleImages.add(temp);
-    // }
-
-
-    // for(int i=3; i > 0; i--){
-    //   String num = i<10 ? '0$i':'$i';
-    //   UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/idle_$num.png");
-    //   charIdleImages.add(temp);
-    // }
+    
     for(int i=23; i >= 0; i--){
       String num = i<10 ? '0$i':'$i';
       UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/Idle_0$num.png");
@@ -263,7 +251,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   void triggerInput() {
     
-    if(canInput){
+    if(canInput && gameInProgress){
       if(obstacleAnimation.value != 0 && obstacleAnimation.value <= CAN_HIT_OBSTACLE){
         obstacleIsHit = true;
       }

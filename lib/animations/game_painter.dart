@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/game_page.dart';
 import 'dart:ui' as UI;
+import 'dart:math';
 import 'dart:typed_data';
 
 class GamePainter extends CustomPainter {
@@ -81,9 +82,19 @@ class GamePainter extends CustomPainter {
     }
     if(obstacleStatus == OBSTACLE_STATUS.DEATH){
       if(obstacleIsHit){
-        double currentDeathXpos = size.width*0.2 + (size.width * (1-obstacleDeathPos));
-        double currentDeathYpos = (size.height-(charHeight*2/3)) -  (size.height * (1-obstacleDeathPos)); 
-        canvas.drawImageRect(ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(currentDeathXpos, currentDeathYpos, obstacleSize, obstacleSize), _paint2);
+        double startX = size.width*0.2;
+        double startY = size.height-(charHeight*2/3);
+
+        double displacementX = size.width*0.8;
+        double displacementY = -size.height*3/4;
+
+        double powerX = 1-obstacleDeathPos;
+        double powerY = 1 - pow(1- (0.5-(obstacleDeathPos-0.5).abs()).abs()*2,4);
+
+        double newX = startX + displacementX * powerX;
+        double newY = startY + displacementY * powerY;
+
+        canvas.drawImageRect(ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(newX, newY, obstacleSize, obstacleSize), _paint2);
 
       }else{
         double currentDeathPos = ((size.width*0.35+obstacleSize) * obstacleDeathPos) - obstacleSize - size.width*0.15;
