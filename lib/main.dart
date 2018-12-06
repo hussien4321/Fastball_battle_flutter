@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import './pages/game_page.dart';
 import 'package:flutter/services.dart';
+import './pages/main_page.dart';
+import './services/objects_loader.dart';
+import './services/stats_loader.dart';
 
 void main() => runApp(new MyApp());
 
@@ -9,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _lockOrientation();
+    _initializeServices(context);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Baseball game',
@@ -19,16 +22,21 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: Scaffold(
-        body: GamePage(context),
+        body: MainPage(context),
       ),
     );
   }
 
-    void _lockOrientation(){
+  void _lockOrientation(){
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+  }
+
+  void _initializeServices(BuildContext context){
+    new StatsLoader();
+    new ObjectsLoader(context);
   }
 
 }

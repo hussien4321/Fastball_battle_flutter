@@ -168,7 +168,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   }
 
   void loadImages() async{
-    ballImage =  await loadImage("assets/ball/ball_01/ball_01.png");
+    ballImage =  await loadImage("assets/balls/rock.png");
 
     for(int i=18; i > 0; i--){
       String num = i<10 ? '0$i':'$i';

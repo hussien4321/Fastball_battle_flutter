@@ -1,0 +1,73 @@
+{
+    "characters" : [
+        {
+            "id" : 1,
+            "name": "Sally",
+            "unlock": {
+                "unlock_threshold": 0,
+                "unlocked": true,
+                "coin_price": 0
+            },
+            "idle_action": {
+                "srcPrefix": "assets/player_animations/player_01/player_idle/Idle_0",
+                "startIndex": 0,
+                "image_count": 24
+            },
+            "swing_action": {
+                "srcPrefix": "assets/player_animations/player_01/player_swing/swing_",
+                "startIndex": 1,
+                "image_count": 9
+            },
+            "hurt_action": {
+                "srcPrefix": "assets/player_animations/player_01/player_hurt/Hurt_0",
+                "startIndex": 0,
+                "image_count": 15
+            },
+            "death_action": {
+                "srcPrefix": "assets/player_animations/player_01/player_death/Dying_0",
+                "startIndex": 0,
+                "image_count": 15
+            }
+        }
+    ],
+    "enemies" : [
+        {
+            "id" : 1,
+            "name": "Grodd",
+            "unlock": {
+                "unlock_threshold": 0,
+                "unlocked": true,
+                "coin_price": 0
+            },
+            "weapon_src": "assets/balls/rock.png",
+            "idle_action": {
+                "srcPrefix": "assets/enemy_animations/enemy_01/enemy_idle/idle_",
+                "startIndex": 1,
+                "image_count": 18
+            },
+            "throw_action": {
+                "srcPrefix": "assets/enemy_animations/enemy_01/enemy_throw/Throwing_0",
+                "startIndex": 0,
+                "image_count": 12
+            },
+            "hurt_action": {
+                "srcPrefix": "assets/enemy_animations/enemy_01/enemy_hurt/Hurt_0",
+                "startIndex": 0,
+                "image_count": 12
+            }
+        }
+    ],
+    "stages" : [
+        {
+            "id" : 1,
+            "name": "stadium",
+            "src": "assets/backgrounds/stadium.jpg",
+            "unlock": {
+                "unlock_threshold": 0,
+                "unlocked": true,
+                "coin_price": 0
+            }
+        }
+    ]
+
+}
