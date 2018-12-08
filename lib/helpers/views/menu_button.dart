@@ -4,8 +4,9 @@ class MenuButton extends StatelessWidget {
 
   String text;
   IconData icon;
+  VoidCallback onClick;
 
-  MenuButton(this.text, this.icon);
+  MenuButton(this.text, this.icon, this.onClick);
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class MenuButton extends StatelessWidget {
                     icon,
                     color: Colors.black,
                   ),
+                  onPressed: onClick,
                   iconSize: 30.0,
                 ),
               ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../helpers/views/menu_button.dart';
 import '../services/stats_loader.dart';
+import './game_page.dart';
+import '../helpers/views/custom_page_routes.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -65,14 +67,28 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text(
-                              coins < 0 ? '...' : coins.toString(),
-                              style: TextStyle(fontSize: 20.0),
+                            Material(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0)),
+                              color: Colors.orange[100],
+                              child: Container(
+                                height: 32.0,
+                                padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                child: Center(
+                                  child: Text(
+                                    coins < 0 ? '...' : coins.toString(),
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                ),
+                              ),
                             ),
-                            Image.asset(
-                              'assets/other/coin2.png',
-                              height: 32.0,
-                              width: 32.0,
+                            Material(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0)),
+                              color: Colors.orange[100],
+                              child: Image.asset(
+                                'assets/other/coin2.png',
+                                height: 32.0,
+                                width: 32.0,
+                              ),
                             ),
                           ],
                         ),
@@ -84,11 +100,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                 padding: EdgeInsets.only(top: 30.0),
                 child: Row(
                   children: <Widget>[
-                    MenuButton('CHANGE CHARACTER', Icons.person),
-                    MenuButton('CHANGE STAGE', Icons.landscape),
-                    MenuButton('PLAY GAME', Icons.gamepad),
-                    MenuButton('BUY BONUSES', Icons.attach_money),
-                    MenuButton('CHANGE ENEMY', Icons.person_outline),
+                    MenuButton('CHANGE CHARACTER', Icons.person, () => print('clicked')),
+                    MenuButton('CHANGE STAGE', Icons.landscape, () => print('clicked')),
+                    MenuButton('PLAY GAME', Icons.gamepad, () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(builder: (context) => GamePage(context)),
+                      );
+                    }),
+                    MenuButton('BUY BONUSES', Icons.attach_money, () => print('clicked')),
+                    MenuButton('CHANGE ENEMY', Icons.person_outline, () => print('clicked')),
                   ],
                 ),
               ),

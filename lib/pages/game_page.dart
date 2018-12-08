@@ -191,7 +191,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       UI.Image temp =  await loadImage("assets/player_animations/player_01/player_swing/swing_$num.png");
       charInputImages.add(temp);
     }
-    
+    startMachine();
     setState(() {
       loading = false;
     });
@@ -266,7 +266,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      body: Container(
       decoration: BoxDecoration(
         image: new DecorationImage(
           image: new AssetImage("assets/backgrounds/stadium.jpg", bundle: DefaultAssetBundle.of(context)),
@@ -336,6 +337,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             ],
           ),
         ],
+      ),
       ),
     );
   }
