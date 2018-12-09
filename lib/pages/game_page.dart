@@ -4,6 +4,10 @@ import '../animations/game_painter.dart';
 import 'dart:ui' as UI;
 import 'dart:async';
 import 'dart:typed_data';
+import '../services/stats_loader.dart';
+import '../services/objects_loader.dart';
+
+
 
 class GamePage extends StatefulWidget {
 
@@ -22,6 +26,8 @@ enum OBSTACLE_STATUS{
 }
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
+  StatsLoader stats = new StatsLoader();
+  ObjectsLoader objectsLoader;
 
   Animation<int> machineAnimation;
   AnimationController  machineAnimationController;
@@ -65,6 +71,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void initState() {
 
     loading = true;
+    
+    objectsLoader = new ObjectsLoader(context);
+
     enemyIdleImages = [];
     enemyInputImages = [];
     charIdleImages = [];
@@ -270,14 +279,14 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       body: Container(
       decoration: BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/backgrounds/stadium.jpg", bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage("assets/backgrounds/1.png", bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
       child: Stack(
         children: <Widget>[
           SizedBox.expand(
-            child: loading? Text('Loading...') :
+            child: loading? Center(child: Text('Loading...')):
               Container(
                   child: CustomPaint(size: Size(1000.0,1000.0), painter: 
                     GamePainter(
@@ -310,13 +319,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             children: <Widget>[ 
               Padding( padding: EdgeInsets.only(top: 40.0)),
               Text(
-                'Score: '+currentScore.toString(),
+                currentScore.toString(),
                 style: TextStyle(fontSize: 30.0),
               ),
-              Text(
-                'Strikes: '+strikes.toString(),
-                style: TextStyle(fontSize: 30.0),
-              ),
+              // Text(
+              //   'Strikes: '+strikes.toString(),
+              //   style: TextStyle(fontSize: 30.0),
+              // ),
               Container(
                 padding: EdgeInsets.only(top: 30.0),
                 child: Row(
@@ -335,6 +344,28 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                 ),
               ),
             ],
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 30.0, left: 10.0),
+            child: Row(
+              children: <Widget>[
+                Image.asset(
+                  strikes < 3 ?'assets/other/heart.png':'assets/other/heart_gray.png' ,
+                  width: 32.0,
+                  height: 32.0,
+                ),
+                Image.asset(
+                  strikes < 2 ?'assets/other/heart.png':'assets/other/heart_gray.png' ,
+                  width: 32.0,
+                  height: 32.0,
+                ),
+                Image.asset(
+                  strikes < 1 ?'assets/other/heart.png':'assets/other/heart_gray.png' ,
+                  width: 32.0,
+                  height: 32.0,
+                ),
+              ],
+            )
           ),
         ],
       ),

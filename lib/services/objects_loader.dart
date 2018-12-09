@@ -1,14 +1,25 @@
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
-import 'package:path/path.dart';
-import 'package:flutter/material.dart';
 import '../models/character.dart';
 import '../models/enemy.dart';
+import '../models/action.dart';
 import '../models/stage.dart';
+import 'package:flutter/material.dart';
+import 'dart:ui' as UI;
+import 'dart:async';
+import 'dart:typed_data';
 
 
+enum AVATAR_TYPE {
+  Character, Enemy
+}
+
+enum CHAR_ACTION_TYPE {
+  IDLE, SWING, HURT, DEATH
+}
+enum ENEMY_ACTION_TYPE {
+  IDLE, THROW, HURT
+}
 
 class ObjectsLoader {
   
@@ -49,5 +60,92 @@ class ObjectsLoader {
     _stages = temp3.map((result) => Stage.fromJson(result)).toList();
   }
 
-  
+  Action loadCharAction(Character char, CHAR_ACTION_TYPE actionType){
+    switch (actionType) {
+      case CHAR_ACTION_TYPE.IDLE:
+        return char.idleAction;
+      case CHAR_ACTION_TYPE.SWING:
+        return char.swingAction;
+      case CHAR_ACTION_TYPE.HURT:
+        return char.hurtAction;
+      case CHAR_ACTION_TYPE.DEATH:
+        return char.deathAction;
+      default:
+        return null;
+    }
+  }
+
+
+  Future<List<UI.Image>> loadCharImages(int id, CHAR_ACTION_TYPE actionType, BuildContext context) async {
+    List<UI.Image> imagesList = [];
+
+    Character currChar = _characters.where((char)=> char.id==id).toList()[0]; 
+    
+    Action currAction = loadCharAction(currChar, actionType);
+    
+    int start = currAction.startIndex;
+    int count = currAction.imageCount;
+    String prefix = currAction.srcPrefix;
+
+    for(int i=count+start ; i >= start; i--){
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("$prefix$num.png", context);
+      imagesList.add(temp);
+    }
+    
+    return imagesList;
+  }
+
+
+  Action loadEnemyAction(Enemy enemy, ENEMY_ACTION_TYPE actionType){
+    switch (actionType) {
+      case ENEMY_ACTION_TYPE.IDLE:
+        return enemy.idleAction;
+      case ENEMY_ACTION_TYPE.THROW:
+        return enemy.throwAction;
+      case ENEMY_ACTION_TYPE.HURT:
+        return enemy.hurtAction;
+      default:
+        return null;
+    }
+  }
+
+  Future<List<UI.Image>> loadEnemyImages(int id, ENEMY_ACTION_TYPE actionType, BuildContext context) async {
+    List<UI.Image> imagesList = [];
+
+    Enemy currEnemy = _enemies.where((enemy)=> enemy.id==id).toList()[0]; 
+    
+    Action currAction = loadEnemyAction(currEnemy, actionType);
+    
+    int start = currAction.startIndex;
+    int count = currAction.imageCount;
+    String prefix = currAction.srcPrefix;
+
+    for(int i=count+start ; i >= start; i--){
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("$prefix$num.png", context);
+      imagesList.add(temp);
+    }
+    
+    return imagesList;
+  }
+
+  Future<UI.Image> loadStageImage(int id, BuildContext context) async {
+    
+    Stage currStage = _stages.where((stage)=> stage.id==id).toList()[0]; 
+    
+    UI.Image temp =  await loadImage(currStage.src, context);
+    
+    return temp;
+  }
+
+  Future<UI.Image> loadImage(String link, BuildContext context) async {
+
+    ByteData bd = await DefaultAssetBundle.of(context).load(link);//.then( (bd) {
+    Uint8List lst = new Uint8List.view(bd.buffer);
+    UI.Codec codec = await UI.instantiateImageCodec(lst);//.then( (codec) {
+    UI.FrameInfo frameInfo = await codec.getNextFrame();//.then(
+    return frameInfo.image;
+  }
+
 }

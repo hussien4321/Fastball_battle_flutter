@@ -60,19 +60,14 @@ class GamePainter extends CustomPainter {
     idleIndex = (charIdleImages.length*(DateTime.now().millisecond/1000)).floor();
     enemyIndex = (enemyIdleImages.length*(DateTime.now().millisecond/1000)).floor();
     
+
     int inputIndex = (inputPos*charInputImages.length).floor();
 
-    // canvas.drawImage(canInput ? charIdleImages[idleIndex] : charInputImages[inputIndex], Offset(size.width*0.2-100.0, size.height-100), _paint2);
-    // canvas.drawRect(Rect.fromLTRB(size.width*0.8, size.height,size.width*0.8+charWidth, size.height-charHeight), _paint2);
+    int throwIndex = (obstaclePos* enemyInputImages.length*0.99).floor();
 
-    if(obstacleStatus==OBSTACLE_STATUS.ALIVE){
-      int throwIndex = (obstaclePos* enemyInputImages.length*0.99).floor();
+    canvas.drawImageRect(obstacleStatus==OBSTACLE_STATUS.ALIVE ? enemyInputImages[throwIndex] : enemyIdleImages[enemyIndex], Rect.fromLTRB(0.0,0.0,enemyIdleImages[0].width.toDouble(), enemyIdleImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.8, size.height-charHeight+10,size.width*0.8+charWidth, size.height+10), _paint2);
 
-      canvas.drawImageRect(enemyInputImages[throwIndex], Rect.fromLTRB(0.0,0.0,enemyInputImages[0].width.toDouble(), enemyInputImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.8, size.height-charHeight,size.width*0.8+charWidth, size.height), _paint2);
-    }else{
-      canvas.drawImageRect(enemyIdleImages[enemyIndex], Rect.fromLTRB(0.0,0.0,enemyIdleImages[0].width.toDouble(), enemyIdleImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.8, size.height-charHeight,size.width*0.8+charWidth, size.height), _paint2);
-    }
-    canvas.drawImageRect(canInput ? charIdleImages[idleIndex] : charInputImages[inputIndex], Rect.fromLTRB(0.0,0.0,canInput ? charIdleImages[0].width.toDouble() : charInputImages[0].width.toDouble(), canInput ? charIdleImages[0].height.toDouble() : charInputImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.2-charWidth, size.height-charHeight,size.width*0.2, size.height), _paint2);
+    canvas.drawImageRect(canInput ? charIdleImages[idleIndex] : charInputImages[inputIndex], Rect.fromLTRB(0.0,0.0,canInput ? charIdleImages[0].width.toDouble() : charInputImages[0].width.toDouble(), canInput ? charIdleImages[0].height.toDouble() : charInputImages[0].height.toDouble()), Rect.fromLTRB(size.width*0.2-charWidth, size.height-charHeight+10,size.width*0.2, size.height+10), _paint2);
 
 
     if(obstacleStatus == OBSTACLE_STATUS.ALIVE){

@@ -61,7 +61,7 @@
         {
             "id" : 1,
             "name": "stadium",
-            "src": "assets/backgrounds/stadium.jpg",
+            "src": "assets/backgrounds/1.png",
             "unlock": {
                 "unlock_threshold": 0,
                 "unlocked": true,

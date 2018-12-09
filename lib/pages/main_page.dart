@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     return Container(
       decoration: BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/backgrounds/stadium.jpg", bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage("assets/backgrounds/3.png", bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
@@ -85,7 +85,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                               borderRadius: BorderRadius.only(topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0)),
                               color: Colors.orange[100],
                               child: Image.asset(
-                                'assets/other/coin2.png',
+                                'assets/other/coin.png',
                                 height: 32.0,
                                 width: 32.0,
                               ),
