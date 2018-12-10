@@ -6,7 +6,8 @@ import 'dart:async';
 import 'dart:typed_data';
 import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
-
+import '../models/character.dart';
+import '../models/enemy.dart';
 
 
 class GamePage extends StatefulWidget {
@@ -62,6 +63,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   bool gameInProgress;
 
   bool loading;
+
+  Character char;
+  Enemy enemy;
+
   UI.Image ballImage;
   List<UI.Image> enemyIdleImages;
   List<UI.Image> enemyInputImages;
@@ -80,126 +85,123 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     charInputImages = [];
     newGameState();
 
-    machineAnimationController = new AnimationController(duration: new Duration(), vsync: this);
-    obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DURATION), vsync: this);
-    obstacleDeathAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DEATH_DURATION), vsync: this);
-    inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
-
-    machineAnimation = IntTween(
-      begin: 0,
-      end: 0
-    ).animate(machineAnimationController);
-    obstacleAnimation = IntTween(
-      begin: OBSTACLE_DURATION,
-      end: 0
-    ).animate(obstacleAnimationController);
-    obstacleDeathAnimation = IntTween(
-      begin: OBSTACLE_DEATH_DURATION,
-      end: 0
-    ).animate(obstacleDeathAnimationController);
-    inputAnimation = IntTween(
-      begin: TIME_INVALID_AFTER_HIT,
-      end: 0
-    ).animate(inputAnimationController);
-
-    machineAnimationController.addStatusListener((status){
-      if(status == AnimationStatus.completed){
-        obstacle_status = OBSTACLE_STATUS.ALIVE;
-        obstacleAnimationController.reset();
-        obstacleAnimationController.forward();
-      }
-    });
-    machineAnimationController.addListener(() {
-      setState(() {
-      });
-    });
-
-    obstacleAnimationController.addStatusListener((status){
-      if(status == AnimationStatus.completed){
-        if(obstacleIsHit){
-          int newScore = currentScore + 1;
-          setState(() {
-            currentScore = newScore;
-          });
-        }
-        else{  
-          int newStrikes = strikes + 1;
-          setState(() {
-            strikes = newStrikes;
-          });
-        }
-        obstacle_status = OBSTACLE_STATUS.DEATH;
-        obstacleDeathAnimationController.reset();
-        obstacleDeathAnimationController.forward();
-      }
-    });
-    obstacleAnimationController.addListener(() {
-      setState(() {
-      });
-    });
+    initControllers();
     
-    
-    obstacleDeathAnimationController.addStatusListener((status){
-      if(status == AnimationStatus.completed){
-        if(obstacleIsHit){
-          setState(() {
-            obstacleIsHit = false;
-          });          
-        }
-        if(!isGameOver()){
-          startMachine();
-        } else{
-          setState(() => gameInProgress = false);
-        }
-        obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
-      }
-    });
-
-    obstacleDeathAnimationController.addListener(() {
-      setState(() {
-      });
-    });
-    
-
-    inputAnimationController.addStatusListener((status){
-      if(status == AnimationStatus.completed){
-        setState(() => canInput = true);
-      }
-    });
-    inputAnimationController.addListener(() {
-      setState(() {
-      });
-    });
-
-
     loadImages();
     super.initState();
   }
 
-  void loadImages() async{
-    ballImage =  await loadImage("assets/balls/rock.png");
-
-    for(int i=18; i > 0; i--){
-      String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/enemy_animations/enemy_01/enemy_idle/idle_$num.png");
-      enemyIdleImages.add(temp);
-    }
-    for(int i=11; i >= 3; i--){
-      String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/enemy_animations/enemy_01/enemy_throw/Throwing_0$num.png");
-      enemyInputImages.add(temp);
-    }
+  void initControllers(){
     
-    for(int i=23; i >= 0; i--){
-      String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/player_animations/player_01/player_idle/Idle_0$num.png");
-      charIdleImages.add(temp);
-    }
-    for(int i=9; i  > 0; i--){
-      String num = i<10 ? '0$i':'$i';
-      UI.Image temp =  await loadImage("assets/player_animations/player_01/player_swing/swing_$num.png");
-      charInputImages.add(temp);
-    }
+      machineAnimationController = new AnimationController(duration: new Duration(), vsync: this);
+      obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DURATION), vsync: this);
+      obstacleDeathAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DEATH_DURATION), vsync: this);
+      inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
+
+      machineAnimation = IntTween(
+        begin: 0,
+        end: 0
+      ).animate(machineAnimationController);
+      obstacleAnimation = IntTween(
+        begin: OBSTACLE_DURATION,
+        end: 0
+      ).animate(obstacleAnimationController);
+      obstacleDeathAnimation = IntTween(
+        begin: OBSTACLE_DEATH_DURATION,
+        end: 0
+      ).animate(obstacleDeathAnimationController);
+      inputAnimation = IntTween(
+        begin: TIME_INVALID_AFTER_HIT,
+        end: 0
+      ).animate(inputAnimationController);
+
+      machineAnimationController.addStatusListener((status){
+        if(status == AnimationStatus.completed){
+          obstacle_status = OBSTACLE_STATUS.ALIVE;
+          obstacleAnimationController.reset();
+          obstacleAnimationController.forward();
+        }
+      });
+      machineAnimationController.addListener(() {
+        setState(() {
+        });
+      });
+
+      obstacleAnimationController.addStatusListener((status){
+        if(status == AnimationStatus.completed){
+          if(obstacleIsHit){
+            int newScore = currentScore + 1;
+            setState(() {
+              currentScore = newScore;
+            });
+          }
+          else{  
+            int newStrikes = strikes + 1;
+            setState(() {
+              strikes = newStrikes;
+            });
+          }
+          obstacle_status = OBSTACLE_STATUS.DEATH;
+          obstacleDeathAnimationController.reset();
+          obstacleDeathAnimationController.forward();
+        }
+      });
+      obstacleAnimationController.addListener(() {
+        setState(() {
+        });
+      });
+      
+      
+      obstacleDeathAnimationController.addStatusListener((status){
+        if(status == AnimationStatus.completed){
+          if(obstacleIsHit){
+            setState(() {
+              obstacleIsHit = false;
+            });          
+          }
+          if(!isGameOver()){
+            startMachine();
+          } else{
+            setState(() => gameInProgress = false);
+          }
+          obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
+        }
+      });
+
+      obstacleDeathAnimationController.addListener(() {
+        setState(() {
+        });
+      });
+      
+
+      inputAnimationController.addStatusListener((status){
+        if(status == AnimationStatus.completed){
+          setState(() => canInput = true);
+        }
+      });
+      inputAnimationController.addListener(() {
+        setState(() {
+        });
+      });
+  }
+
+
+  void loadImages() async{
+
+    int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
+    int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
+
+    char = objectsLoader.getChar(charId);
+    enemy = objectsLoader.getEnemy(enemyId);
+
+    ballImage =  await objectsLoader.loadImage(enemy.weaponSrc, context);
+
+    enemyIdleImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.IDLE, context);
+    enemyInputImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.THROW, context);
+    
+    charIdleImages = await objectsLoader.loadCharImages(enemy.id, CHAR_ACTION_TYPE.IDLE, context);
+    charInputImages = await objectsLoader.loadCharImages(enemy.id, CHAR_ACTION_TYPE.SWING, context);
+    
     startMachine();
     setState(() {
       loading = false;
@@ -283,10 +285,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           fit: BoxFit.fill,
         ),
       ),
-      child: Stack(
+      child: loading? Center(child: Text('Loading...')): Stack(
         children: <Widget>[
           SizedBox.expand(
-            child: loading? Center(child: Text('Loading...')):
+            child: 
               Container(
                   child: CustomPaint(size: Size(1000.0,1000.0), painter: 
                     GamePainter(

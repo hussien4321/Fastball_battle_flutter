@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../helpers/views/menu_button.dart';
 import '../services/stats_loader.dart';
+import '../services/objects_loader.dart';
 import './game_page.dart';
 import '../helpers/views/custom_page_routes.dart';
 
@@ -17,8 +18,15 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   StatsLoader stats = new StatsLoader();
+  ObjectsLoader objectsLoader;
+
+
+  String stageSrc;
+
   int coins = -1;
   int highScore = -1;
+
+  bool loading = true;
 
   void initState() {
     super.initState();
@@ -29,9 +37,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     int coinValue = await stats.getPreference(StatsLoader.COINS);
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
 
+    objectsLoader = new ObjectsLoader(context);
+
+    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    stageSrc = objectsLoader.getStageImage(stageId, context);
+
     setState(() {
       this.coins = coinValue;
-      this.highScore = highScoreValue; 
+      this.highScore = highScoreValue;
+      loading = false; 
     });
   }
 
@@ -42,10 +56,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return loading ? Center(child: Text('[LOAD SCREEN GOES HERE]...')):  Container(
       decoration: BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/backgrounds/3.png", bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage(stageSrc, bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
@@ -85,7 +99,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                               borderRadius: BorderRadius.only(topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0)),
                               color: Colors.orange[100],
                               child: Image.asset(
-                                'assets/other/coin.png',
+                                ObjectsLoader.COIN_SRC,
                                 height: 32.0,
                                 width: 32.0,
                               ),

@@ -25,6 +25,8 @@ class ObjectsLoader {
   
   final String _filePath = 'assets/data/objects_data.json';
 
+  static final String COIN_SRC = 'assets/other/coin.png';
+
   static BuildContext _context;
 
   List<Character> _characters; 
@@ -60,7 +62,7 @@ class ObjectsLoader {
     _stages = temp3.map((result) => Stage.fromJson(result)).toList();
   }
 
-  Action loadCharAction(Character char, CHAR_ACTION_TYPE actionType){
+  Action _loadCharAction(Character char, CHAR_ACTION_TYPE actionType){
     switch (actionType) {
       case CHAR_ACTION_TYPE.IDLE:
         return char.idleAction;
@@ -75,19 +77,27 @@ class ObjectsLoader {
     }
   }
 
+  Character getChar(int id) {
+    return _characters.where((char)=> char.id==id).toList()[0];
+  }
+
+  Enemy getEnemy(int id) {
+    return _enemies.where((enemy)=> enemy.id==id).toList()[0];
+  }
+
 
   Future<List<UI.Image>> loadCharImages(int id, CHAR_ACTION_TYPE actionType, BuildContext context) async {
     List<UI.Image> imagesList = [];
 
     Character currChar = _characters.where((char)=> char.id==id).toList()[0]; 
     
-    Action currAction = loadCharAction(currChar, actionType);
+    Action currAction = _loadCharAction(currChar, actionType);
     
     int start = currAction.startIndex;
     int count = currAction.imageCount;
     String prefix = currAction.srcPrefix;
 
-    for(int i=count+start ; i >= start; i--){
+    for(int i=(count+start-1) ; i >= start; i--){
       String num = i<10 ? '0$i':'$i';
       UI.Image temp =  await loadImage("$prefix$num.png", context);
       imagesList.add(temp);
@@ -97,7 +107,7 @@ class ObjectsLoader {
   }
 
 
-  Action loadEnemyAction(Enemy enemy, ENEMY_ACTION_TYPE actionType){
+  Action _loadEnemyAction(Enemy enemy, ENEMY_ACTION_TYPE actionType){
     switch (actionType) {
       case ENEMY_ACTION_TYPE.IDLE:
         return enemy.idleAction;
@@ -115,13 +125,13 @@ class ObjectsLoader {
 
     Enemy currEnemy = _enemies.where((enemy)=> enemy.id==id).toList()[0]; 
     
-    Action currAction = loadEnemyAction(currEnemy, actionType);
+    Action currAction = _loadEnemyAction(currEnemy, actionType);
     
     int start = currAction.startIndex;
     int count = currAction.imageCount;
     String prefix = currAction.srcPrefix;
 
-    for(int i=count+start ; i >= start; i--){
+    for(int i=(count+start-1) ; i >= start; i--){
       String num = i<10 ? '0$i':'$i';
       UI.Image temp =  await loadImage("$prefix$num.png", context);
       imagesList.add(temp);
@@ -130,13 +140,11 @@ class ObjectsLoader {
     return imagesList;
   }
 
-  Future<UI.Image> loadStageImage(int id, BuildContext context) async {
+  String getStageImage(int id, BuildContext context) {
     
     Stage currStage = _stages.where((stage)=> stage.id==id).toList()[0]; 
-    
-    UI.Image temp =  await loadImage(currStage.src, context);
-    
-    return temp;
+  
+    return currStage.src;
   }
 
   Future<UI.Image> loadImage(String link, BuildContext context) async {

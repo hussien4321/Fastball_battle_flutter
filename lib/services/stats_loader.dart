@@ -51,7 +51,7 @@ class StatsLoader {
     print('Initializing Stats Loader...');
     Directory directory = await getApplicationDocumentsDirectory();
     Directory dir = directory;
-    _jsonFile = new File(dir.path + "/" + _fileName);
+    _jsonFile = new File(dir.path +  "/" + _fileName);
     bool fileExists = _jsonFile.existsSync();
     if (fileExists){
       _currentPreferences = json.decode(_jsonFile.readAsStringSync());

@@ -9,23 +9,23 @@
                 "coin_price": 0
             },
             "idle_action": {
-                "srcPrefix": "assets/player_animations/player_01/player_idle/Idle_0",
-                "startIndex": 0,
+                "src_prefix": "assets/player_animations/player_01/player_idle/Idle_0",
+                "start_index": 0,
                 "image_count": 24
             },
             "swing_action": {
-                "srcPrefix": "assets/player_animations/player_01/player_swing/swing_",
-                "startIndex": 1,
+                "src_prefix": "assets/player_animations/player_01/player_swing/swing_",
+                "start_index": 1,
                 "image_count": 9
             },
             "hurt_action": {
-                "srcPrefix": "assets/player_animations/player_01/player_hurt/Hurt_0",
-                "startIndex": 0,
+                "src_prefix": "assets/player_animations/player_01/player_hurt/Hurt_0",
+                "start_index": 0,
                 "image_count": 15
             },
             "death_action": {
-                "srcPrefix": "assets/player_animations/player_01/player_death/Dying_0",
-                "startIndex": 0,
+                "src_prefix": "assets/player_animations/player_01/player_death/Dying_0",
+                "start_index": 0,
                 "image_count": 15
             }
         }
@@ -41,18 +41,18 @@
             },
             "weapon_src": "assets/balls/rock.png",
             "idle_action": {
-                "srcPrefix": "assets/enemy_animations/enemy_01/enemy_idle/idle_",
-                "startIndex": 1,
+                "src_prefix": "assets/enemy_animations/enemy_01/enemy_idle/idle_",
+                "start_index": 1,
                 "image_count": 18
             },
             "throw_action": {
-                "srcPrefix": "assets/enemy_animations/enemy_01/enemy_throw/Throwing_0",
-                "startIndex": 0,
+                "src_prefix": "assets/enemy_animations/enemy_01/enemy_throw/Throwing_0",
+                "start_index": 0,
                 "image_count": 12
             },
             "hurt_action": {
-                "srcPrefix": "assets/enemy_animations/enemy_01/enemy_hurt/Hurt_0",
-                "startIndex": 0,
+                "src_prefix": "assets/enemy_animations/enemy_01/enemy_hurt/Hurt_0",
+                "start_index": 0,
                 "image_count": 12
             }
         }

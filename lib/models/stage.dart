@@ -18,4 +18,9 @@ class Stage{
       _src =json['src'],
       _unlock = Unlock.fromJson(json['unlock']);
 
+  @override
+  String toString() {
+      // TODO: implement toString
+      return "Stage w/ id:$id, name:$name, src:$src";
+    }
 }
