@@ -8,6 +8,7 @@ import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import '../models/character.dart';
 import '../models/enemy.dart';
+import '../helpers/views/menu_button.dart';
 
 
 class GamePage extends StatefulWidget {
@@ -45,7 +46,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Animation<int> obstacleDeathAnimation;
   AnimationController  obstacleDeathAnimationController;
 
-  static final int OBSTACLE_DEATH_DURATION = 600;//(OBSTACLE_DURATION*0.5).toInt(); //ms time for obstacle to be first to passing by user 
+  static final int OBSTACLE_DEATH_DURATION = 600; //ms time for obstacle to be first to passing by user 
   
   OBSTACLE_STATUS obstacle_status;
   
@@ -68,10 +69,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Enemy enemy;
 
   UI.Image ballImage;
+  
   List<UI.Image> enemyIdleImages;
   List<UI.Image> enemyInputImages;
+  List<UI.Image> enemyHurtImages;
+  
   List<UI.Image> charIdleImages;
   List<UI.Image> charInputImages;
+  List<UI.Image> charHurtImages;
+  List<UI.Image> charDeathImages;
 
   void initState() {
 
@@ -81,8 +87,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
     enemyIdleImages = [];
     enemyInputImages = [];
+    enemyHurtImages = [];
     charIdleImages = [];
     charInputImages = [];
+    charHurtImages = [];
+    charDeathImages = [];
+
     newGameState();
 
     initControllers();
@@ -198,9 +208,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
     enemyIdleImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.IDLE, context);
     enemyInputImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.THROW, context);
+    enemyHurtImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.HURT, context);
     
-    charIdleImages = await objectsLoader.loadCharImages(enemy.id, CHAR_ACTION_TYPE.IDLE, context);
-    charInputImages = await objectsLoader.loadCharImages(enemy.id, CHAR_ACTION_TYPE.SWING, context);
+    charIdleImages = await objectsLoader.loadCharImages(char.id, CHAR_ACTION_TYPE.IDLE, context);
+    charInputImages = await objectsLoader.loadCharImages(char.id, CHAR_ACTION_TYPE.SWING, context);
+    charHurtImages = await objectsLoader.loadCharImages(char.id, CHAR_ACTION_TYPE.HURT, context);
+    charDeathImages = await objectsLoader.loadCharImages(char.id, CHAR_ACTION_TYPE.DEATH, context);
     
     startMachine();
     setState(() {
@@ -293,6 +306,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                   child: CustomPaint(size: Size(1000.0,1000.0), painter: 
                     GamePainter(
                       context, 
+                      strikes,
                       machineTimeAsPercentage(),
                       obstacleTimeAsPercentage(),
                       obstacleDeathTimeAsPercentage(),
@@ -303,8 +317,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                       ballImage, 
                       enemyIdleImages, 
                       enemyInputImages, 
+                      enemyHurtImages, 
                       charIdleImages, 
-                      charInputImages,
+                      charInputImages, 
+                      charHurtImages,
+                      charDeathImages
                     ),
                   ),
                 ),
@@ -334,10 +351,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                   children: <Widget>[
                     Expanded(
                       child: Container(
+                        width: 100.0,
                         padding: EdgeInsets.all(10.0),
-                        child: gameInProgress ? Container() :RaisedButton(
-                          onPressed: !gameInProgress ? (()=> startMachine()) : null,
-                          child: Text(!gameInProgress ? strikes < 3 ? 'Start game' : 'Play again' :  'Playing'),
+                        child: gameInProgress ? Container() : RaisedButton(
+                          onPressed: (()=> startMachine()),
+                          child: Text('Play again'),
                           color: Colors.orange[300],
                         ),
                       ),
