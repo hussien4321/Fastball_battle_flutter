@@ -3,6 +3,7 @@ import '../helpers/views/menu_button.dart';
 import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import './game_page.dart';
+import './stage_select_page.dart';
 import '../helpers/views/custom_page_routes.dart';
 
 class MainPage extends StatefulWidget {
@@ -115,7 +116,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                 child: Row(
                   children: <Widget>[
                     MenuButton('CHANGE CHARACTER', Icons.person, () => print('clicked')),
-                    MenuButton('CHANGE STAGE', Icons.landscape, () => print('clicked')),
+                    MenuButton('CHANGE STAGE', Icons.landscape, () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(builder: (context) => StageSelectPage()),
+                      );
+                    }),
                     MenuButton('PLAY GAME', Icons.gamepad, () {
                       Navigator.push(
                         context,
