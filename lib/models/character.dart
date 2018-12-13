@@ -1,11 +1,10 @@
 import './action.dart';
-import './unlock.dart';
 
 class Character{
 
   int _id;
   String _name;
-  Unlock _unlock;
+  int _unlockThreshold;
   Action _idleAction;
   Action _swingAction;
   Action _hurtAction;
@@ -14,7 +13,7 @@ class Character{
 
   int get id => _id;
   String get name => _name;
-  Unlock get unlock => _unlock;
+  int get unlockThreshold => _unlockThreshold;
   Action get idleAction => _idleAction;
   Action get swingAction => _swingAction;
   Action get hurtAction => _hurtAction;
@@ -23,7 +22,7 @@ class Character{
   Character.fromJson(Map<String, dynamic> json)
     : _id = json['id'],
       _name =json['name'],
-      _unlock = Unlock.fromJson(json['unlock']),
+      _unlockThreshold = json['unlockThreshold'],
       _idleAction = Action.fromJson(json['idle_action']),
       _swingAction = Action.fromJson(json['swing_action']),
       _hurtAction = Action.fromJson(json['hurt_action']),

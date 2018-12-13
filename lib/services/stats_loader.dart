@@ -11,6 +11,9 @@ class StatsLoader {
   static final String CURRENT_CHARACTER = 'currentChar';
   static final String CURRENT_ENEMY = 'currentEnemy';
   static final String CURRENT_STAGE = 'currentStage';
+  static final String CHAR_PAGE_SCORE = 'charPageScore';
+  static final String ENEMY_PAGE_SCORE = 'enemyPageScore';
+  static final String STAGE_PAGE_SCORE = 'stagePageScore';
   static final String COINS = 'coins';
   static final String HIGH_SCORE = 'highScore';
   static final String ADS_PAID_STATUS = 'adsPaidStatus';
@@ -19,6 +22,9 @@ class StatsLoader {
     'currentChar' : 1,
     'currentEnemy' : 1,
     'currentStage' : 1,
+    'stagePageScore' : 0,
+    'enemyPageScore' : 0,
+    'charPageScore' : 0,
     'coins' : 0,
     'highScore' : 0,
     'adsPaidStatus' : false,
@@ -68,6 +74,8 @@ class StatsLoader {
 
 
   void updatePreference(String key, dynamic value) {
+
+    print('Saving $key with val $value');
     Map<String, dynamic> content = {key: value};
     Map<String, dynamic> jsonFileContent = json.decode(_jsonFile.readAsStringSync());
     jsonFileContent.addAll(content);

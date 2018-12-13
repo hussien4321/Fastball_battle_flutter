@@ -1,11 +1,10 @@
 import './action.dart';
-import './unlock.dart';
 
 class Enemy{
 
   int _id;
   String _name;
-  Unlock _unlock;
+  int _unlockThreshold;
   String _weaponSrc;
   Action _idleAction;
   Action _throwAction;
@@ -14,7 +13,7 @@ class Enemy{
 
   int get id => _id;
   String get name => _name;
-  Unlock get unlock => _unlock;
+  int get unlockThreshold => _unlockThreshold;
   String get weaponSrc => _weaponSrc;
   Action get idleAction => _idleAction;
   Action get throwAction => _throwAction;
@@ -23,7 +22,7 @@ class Enemy{
   Enemy.fromJson(Map<String, dynamic> json)
     : _id = json['id'],
       _name =json['name'],
-      _unlock = Unlock.fromJson(json['unlock']),
+      _unlockThreshold = json['unlockThreshold'],
       _weaponSrc = json['weapon_src'],
       _idleAction = Action.fromJson(json['idle_action']),
       _throwAction = Action.fromJson(json['throw_action']),
