@@ -3,30 +3,188 @@
         {
             "id" : 1,
             "name": "Sally",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            },
+            "unlock_threshold": 0,
             "idle_action": {
-                "src_prefix": "assets/player_animations/player_01/player_idle/Idle_0",
-                "start_index": 0,
-                "image_count": 24
+                "src_prefix": "assets/player_animations/player_01/player_idle/Idle_0", "start_index": 0, "image_count": 24
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_01/player_swing/swing_",
-                "start_index": 1,
-                "image_count": 9
+                "src_prefix": "assets/player_animations/player_01/player_swing/swing_", "start_index": 1, "image_count": 9
             },
             "hurt_action": {
-                "src_prefix": "assets/player_animations/player_01/player_hurt/Hurt_0",
-                "start_index": 0,
-                "image_count": 15
+                "src_prefix": "assets/player_animations/player_01/player_hurt/Hurt_0", "start_index": 0, "image_count": 15
             },
             "death_action": {
-                "src_prefix": "assets/player_animations/player_01/player_death/Dying_0",
-                "start_index": 0,
-                "image_count": 15
+                "src_prefix": "assets/player_animations/player_01/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 2,
+            "name": "Damon",
+            "unlock_threshold": 4,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_02/player_idle/Idle_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_02/player_swing/Slashing_", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_02/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_02/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 3,
+            "name": "Wang Fung",
+            "unlock_threshold": 16,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_03/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_03/player_swing/Slashing_", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_03/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_03/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 4,
+            "name": "Ali Yan",
+            "unlock_threshold": 28,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_04/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_04/player_swing/Slashing_", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_04/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_04/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 5,
+            "name": "Roman",
+            "unlock_threshold": 44,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_05/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_05/player_swing/Slashing_", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_05/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_05/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 6,
+            "name": "Chi Eve",
+            "unlock_threshold": 48,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_06/player_idle/Idle_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_06/player_swing/Slashing_", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_06/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_05/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 7,
+            "name": "Robin",
+            "unlock_threshold": 56,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_07/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_07/player_swing/Slashing_", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_07/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_07/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 8,
+            "name": "Rob Liam",
+            "unlock_threshold": 60,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_08/player_idle/Idle_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_08/player_swing/Kicking_0", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_08/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_08/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 9,
+            "name": "Miss death",
+            "unlock_threshold": 76,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_09/player_idle/Idle_0", "start_index": 0, "image_count": 24
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_09/player_swing/Slashing_0", "start_index": 7, "image_count": 8
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_09/player_hurt/Hurt_0", "start_index": 0, "image_count": 15
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_09/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 10,
+            "name": "Nate Ron",
+            "unlock_threshold": 88,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_10/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 12
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_10/player_swing/Attacking_0", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_10/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_10/player_death/Dying_0", "start_index": 0, "image_count": 15
+            }
+        },
+        {
+            "id" : 11,
+            "name": "The Monk",
+            "unlock_threshold": 100,
+            "idle_action": {
+                "src_prefix": "assets/player_animations/player_11/player_idle/Idle_0", "start_index": 0, "image_count": 18
+            },
+            "swing_action": {
+                "src_prefix": "assets/player_animations/player_11/player_swing/Attacking_0", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/player_animations/player_11/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            },
+            "death_action": {
+                "src_prefix": "assets/player_animations/player_11/player_death/Dying_0", "start_index": 0, "image_count": 15
             }
         }
     ],
@@ -34,129 +192,169 @@
         {
             "id" : 1,
             "name": "Grodd",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            },
-            "weapon_src": "assets/balls/rock.png",
+            "unlock_threshold": 0,
+            "weapon_src": "assets/balls/rock1.png",
             "idle_action": {
-                "src_prefix": "assets/enemy_animations/enemy_01/enemy_idle/idle_",
-                "start_index": 1,
-                "image_count": 18
+                "src_prefix": "assets/enemy_animations/enemy_01/enemy_idle/idle_", "start_index": 1, "image_count": 18
             },
             "throw_action": {
-                "src_prefix": "assets/enemy_animations/enemy_01/enemy_throw/Throwing_0",
-                "start_index": 0,
-                "image_count": 12
+                "src_prefix": "assets/enemy_animations/enemy_01/enemy_throw/Throwing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
-                "src_prefix": "assets/enemy_animations/enemy_01/enemy_hurt/Hurt_0",
-                "start_index": 0,
-                "image_count": 12
+                "src_prefix": "assets/enemy_animations/enemy_01/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
             }
-        }
+        },
+        {
+            "id" : 2,
+            "name": "Zombie",
+            "unlock_threshold": 12,
+            "weapon_src": "assets/balls/rock2.png",
+            "idle_action": {
+                "src_prefix": "assets/enemy_animations/enemy_02/enemy_idle/Idle_0", "start_index": 0, "image_count": 12
+            },
+            "throw_action": {
+                "src_prefix": "assets/enemy_animations/enemy_02/enemy_throw/Throwing_0", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/enemy_animations/enemy_02/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            }
+        },
+        {
+            "id" : 3,
+            "name": "Yeti",
+            "unlock_threshold": 24,
+            "weapon_src": "assets/balls/snowball.png",
+            "idle_action": {
+                "src_prefix": "assets/enemy_animations/enemy_03/enemy_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+            },
+            "throw_action": {
+                "src_prefix": "assets/enemy_animations/enemy_03/enemy_throw/Throwing_0", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/enemy_animations/enemy_03/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            }
+        },
+        {
+            "id" : 4,
+            "name": "Soldier",
+            "unlock_threshold": 32,
+            "weapon_src": "assets/balls/purple_bullet.png",
+            "idle_action": {
+                "src_prefix": "assets/enemy_animations/enemy_04/enemy_idle/Idle Blinking - Handgun_0", "start_index": 0, "image_count": 18
+            },
+            "throw_action": {
+                "src_prefix": "assets/enemy_animations/enemy_04/enemy_throw/Firing - Handgun_0", "start_index": 0, "image_count": 9
+            },
+            "hurt_action": {
+                "src_prefix": "assets/enemy_animations/enemy_04/enemy_hurt/Hurt - Handgun_0", "start_index": 0, "image_count": 12
+            }
+        },
+        {
+            "id" : 5,
+            "name": "Hedgehog",
+            "unlock_threshold": 64,
+            "weapon_src": "assets/balls/orange_bullet.png",
+            "idle_action": {
+                "src_prefix": "assets/enemy_animations/enemy_05/enemy_idle/Idle_0", "start_index": 0, "image_count": 18
+            },
+            "throw_action": {
+                "src_prefix": "assets/enemy_animations/enemy_05/enemy_throw/Firing_0", "start_index": 0, "image_count": 9
+            },
+            "hurt_action": {
+                "src_prefix": "assets/enemy_animations/enemy_05/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            }
+        },
+        {
+            "id" : 6,
+            "name": "Rebel",
+            "unlock_threshold": 72,
+            "weapon_src": "assets/balls/red_bullet.png",
+            "idle_action": {
+                "src_prefix": "assets/enemy_animations/enemy_06/enemy_idle/Idle - Rifle_0", "start_index": 0, "image_count": 18
+            },
+            "throw_action": {
+                "src_prefix": "assets/enemy_animations/enemy_06/enemy_throw/Firing - Rifle_0", "start_index": 0, "image_count": 4
+            },
+            "hurt_action": {
+                "src_prefix": "assets/enemy_animations/enemy_06/enemy_hurt/Hurt - Rifle_0", "start_index": 0, "image_count": 12
+            }
+        },
+        {
+            "id" : 7,
+            "name": "Ninja Master",
+            "unlock_threshold": 92,
+            "weapon_src": "assets/balls/shuriken.png",
+            "idle_action": {
+                "src_prefix": "assets/enemy_animations/enemy_07/enemy_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+            },
+            "throw_action": {
+                "src_prefix": "assets/enemy_animations/enemy_07/enemy_throw/Throwing_0", "start_index": 0, "image_count": 12
+            },
+            "hurt_action": {
+                "src_prefix": "assets/enemy_animations/enemy_07/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
+            }
+        },
     ],
     "stages" : [
         {
             "id" : 1,
             "name": "Exotic jungle",
             "src": "assets/backgrounds/stage_01.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 0
         },
         {
             "id" : 2,
             "name": "Deadly arena",
             "src": "assets/backgrounds/stage_02.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 8
         },
         {
             "id" : 3,
             "name": "Peaceful beach",
             "src": "assets/backgrounds/stage_03.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 20
         },
         {
             "id" : 4,
             "name": "Cold winter",
             "src": "assets/backgrounds/stage_04.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 36
         },
         {
             "id" : 5,
             "name": "Dangerous temple",
             "src": "assets/backgrounds/stage_05.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 40
         },
         {
             "id" : 6,
             "name": "Future wasteland",
             "src": "assets/backgrounds/stage_06.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 52
         },
         {
             "id" : 7,
             "name": "Bustling city",
             "src": "assets/backgrounds/stage_07.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 68
         },
         {
             "id" : 8,
             "name": "Wild landscape",
             "src": "assets/backgrounds/stage_08.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 80
         },
         {
             "id" : 9,
             "name": "Deep ocean",
             "src": "assets/backgrounds/stage_09.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 84
         },
         {
             "id" : 10,
             "name": "Deserted desert",
             "src": "assets/backgrounds/stage_10.png",
-            "unlock": {
-                "unlock_threshold": 0,
-                "unlocked": true,
-                "coin_price": 0
-            }
+            "unlock_threshold": 96
         }
     ]
 

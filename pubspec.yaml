@@ -38,10 +38,68 @@ flutter:
     - assets/enemy_animations/enemy_01/enemy_idle/
     - assets/enemy_animations/enemy_01/enemy_throw/
     - assets/enemy_animations/enemy_01/enemy_hurt/
+    - assets/enemy_animations/enemy_02/enemy_idle/
+    - assets/enemy_animations/enemy_02/enemy_throw/
+    - assets/enemy_animations/enemy_02/enemy_hurt/
+    - assets/enemy_animations/enemy_03/enemy_idle/
+    - assets/enemy_animations/enemy_03/enemy_throw/
+    - assets/enemy_animations/enemy_03/enemy_hurt/
+    - assets/enemy_animations/enemy_04/enemy_idle/
+    - assets/enemy_animations/enemy_04/enemy_throw/
+    - assets/enemy_animations/enemy_04/enemy_hurt/
+    - assets/enemy_animations/enemy_05/enemy_idle/
+    - assets/enemy_animations/enemy_05/enemy_throw/
+    - assets/enemy_animations/enemy_05/enemy_hurt/
+    - assets/enemy_animations/enemy_06/enemy_idle/
+    - assets/enemy_animations/enemy_06/enemy_throw/
+    - assets/enemy_animations/enemy_06/enemy_hurt/
+    - assets/enemy_animations/enemy_07/enemy_idle/
+    - assets/enemy_animations/enemy_07/enemy_throw/
+    - assets/enemy_animations/enemy_07/enemy_hurt/
     - assets/player_animations/player_01/player_idle/
     - assets/player_animations/player_01/player_swing/
     - assets/player_animations/player_01/player_hurt/
     - assets/player_animations/player_01/player_death/
+    - assets/player_animations/player_02/player_idle/
+    - assets/player_animations/player_02/player_swing/
+    - assets/player_animations/player_02/player_hurt/
+    - assets/player_animations/player_02/player_death/
+    - assets/player_animations/player_03/player_idle/
+    - assets/player_animations/player_03/player_swing/
+    - assets/player_animations/player_03/player_hurt/
+    - assets/player_animations/player_03/player_death/
+    - assets/player_animations/player_04/player_idle/
+    - assets/player_animations/player_04/player_swing/
+    - assets/player_animations/player_04/player_hurt/
+    - assets/player_animations/player_04/player_death/
+    - assets/player_animations/player_05/player_idle/
+    - assets/player_animations/player_05/player_swing/
+    - assets/player_animations/player_05/player_hurt/
+    - assets/player_animations/player_05/player_death/
+    - assets/player_animations/player_06/player_idle/
+    - assets/player_animations/player_06/player_swing/
+    - assets/player_animations/player_06/player_hurt/
+    - assets/player_animations/player_06/player_death/
+    - assets/player_animations/player_07/player_idle/
+    - assets/player_animations/player_07/player_swing/
+    - assets/player_animations/player_07/player_hurt/
+    - assets/player_animations/player_07/player_death/
+    - assets/player_animations/player_08/player_idle/
+    - assets/player_animations/player_08/player_swing/
+    - assets/player_animations/player_08/player_hurt/
+    - assets/player_animations/player_08/player_death/
+    - assets/player_animations/player_09/player_idle/
+    - assets/player_animations/player_09/player_swing/
+    - assets/player_animations/player_09/player_hurt/
+    - assets/player_animations/player_09/player_death/
+    - assets/player_animations/player_10/player_idle/
+    - assets/player_animations/player_10/player_swing/
+    - assets/player_animations/player_10/player_hurt/
+    - assets/player_animations/player_10/player_death/
+    - assets/player_animations/player_11/player_idle/
+    - assets/player_animations/player_11/player_swing/
+    - assets/player_animations/player_11/player_hurt/
+    - assets/player_animations/player_11/player_death/
     - assets/other/
     
   # An image asset can refer to one or more resolution-specific "variants", see

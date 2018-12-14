@@ -24,8 +24,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   String stageSrc;
 
-  int coins = -1;
-  int highScore = -1;
+  int coins;
+  int highScore;
 
   bool loading = true;
 
@@ -48,6 +48,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       this.highScore = highScoreValue;
       loading = false; 
     });
+  }
+
+  updateData() {
+    //get latest stage/char/enemy
+    //if new stage then current
+      //update page with new image
+    
+    //get latest highscore 
+    //if new highscore
+      //update bottom of the page
+      //check if any of the pages have new unlockables
+      //enable a label to those pages
   }
 
   @override
