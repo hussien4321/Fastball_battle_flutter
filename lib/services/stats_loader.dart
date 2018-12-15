@@ -91,40 +91,4 @@ class StatsLoader {
     return preferences[key];
   }
   
-
-  Future<int> getCurrentChar() async {
-    var preferences = await currentPreferences;
-
-    return preferences['currentChar'];
-  }
-
-  Future<int> getCurrentEnemy() async {
-    var preferences = await currentPreferences;
-
-    return preferences['currentEnemy'];
-  }
-
-  Future<int> getCurrentStage() async {
-    var preferences = await currentPreferences;
-
-    return preferences['currentStage'];
-  }
-
-  Future<int> getCoins() async {
-    var preferences = await currentPreferences;
-
-    return preferences['coins'];
-  }
-
-  Future<int> getHighScore() async {
-    var preferences = await currentPreferences;
-
-    return preferences['highScore'];
-  }
-
-  Future<bool> getAdsPaidStatus() async {
-    var preferences = await currentPreferences;
-
-    return preferences['adsPaidStatus'];
-  }
 }

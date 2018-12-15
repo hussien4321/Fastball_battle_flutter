@@ -50,16 +50,18 @@ class ObjectsLoader {
   }
 
   reInitiliaze() async {
-    print('Initializing Objects Loader...');
-    String data = await DefaultAssetBundle.of(_context).loadString(_filePath);
-    final jsonResult = json.decode(data);
+    if(_stages == null){
+      print('Initializing Objects Loader...');
+      String data = await DefaultAssetBundle.of(_context).loadString(_filePath);
+      final jsonResult = json.decode(data);
 
-    List<dynamic> temp1 = jsonResult['characters'];
-    _characters = temp1.map((result) => Character.fromJson(result)).toList();
-    List<dynamic> temp2 = jsonResult['enemies'];
-    _enemies = temp2.map((result) => Enemy.fromJson(result)).toList();
-    List<dynamic> temp3 = jsonResult['stages'];
-    _stages = temp3.map((result) => Stage.fromJson(result)).toList();
+      List<dynamic> temp1 = jsonResult['characters'];
+      _characters = temp1.map((result) => Character.fromJson(result)).toList();
+      List<dynamic> temp2 = jsonResult['enemies'];
+      _enemies = temp2.map((result) => Enemy.fromJson(result)).toList();
+      List<dynamic> temp3 = jsonResult['stages'];
+      _stages = temp3.map((result) => Stage.fromJson(result)).toList();
+    }
   }
 
   Action _loadCharAction(Character char, CHAR_ACTION_TYPE actionType){
@@ -81,8 +83,30 @@ class ObjectsLoader {
     return _characters.where((char)=> char.id==id).toList()[0];
   }
 
+  Stage getStage(int id) {
+    return _stages.where((stage)=> stage.id==id).toList()[0];
+  }
+
   Enemy getEnemy(int id) {
     return _enemies.where((enemy)=> enemy.id==id).toList()[0];
+  }
+
+  bool checkNewChars(int newHighScore, int lastScore){
+    return _characters.any((char) {
+      return newHighScore >= char.unlockThreshold && lastScore < char.unlockThreshold;
+    });
+  }
+
+  bool checkNewEnemies(int newHighScore, int lastScore){
+    return _enemies.any((enemy) {
+      return newHighScore >= enemy.unlockThreshold && lastScore < enemy.unlockThreshold;
+    });
+  }
+
+  bool checkNewStages(int newHighScore, int lastScore){
+    return _stages.any((stage) {
+      return newHighScore >= stage.unlockThreshold && lastScore < stage.unlockThreshold;
+    });
   }
 
 
@@ -138,15 +162,6 @@ class ObjectsLoader {
     }
     
     return imagesList;
-  }
-
-  Future<String> getStageImage(int id, BuildContext context) async {
-    if(_stages == null ){
-      await reInitiliaze();
-    }
-    Stage currStage = _stages.where((stage)=> stage.id==id).toList()[0]; 
-  
-    return currStage.src;
   }
 
   Future<UI.Image> loadImage(String link, BuildContext context) async {

@@ -7,6 +7,9 @@ import './stage_select_page.dart';
 import './enemy_select_page.dart';
 import './char_select_page.dart';
 import '../helpers/views/custom_page_routes.dart';
+import '../models/stage.dart';
+import '../models/enemy.dart';
+import '../models/character.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -20,14 +23,20 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
-  StatsLoader stats = new StatsLoader();
+  StatsLoader stats;
   ObjectsLoader objectsLoader;
 
 
-  String stageSrc;
+  Character char;
+  Enemy enemy;
+  Stage stage;
 
   int coins;
   int highScore;
+
+  int lastScoreStage;
+  int lastScoreEnemy;
+  int lastScoreChar;
 
   bool loading = true;
 
@@ -36,14 +45,44 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     loadData();
   }
 
+  loadChar() async {
+    int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
+    setState(() {
+      stage = objectsLoader.getStage(charId);;
+    });
+  }
+
+  loadEnemy() async {
+    int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
+    setState(() {
+      enemy = objectsLoader.getEnemy(enemyId);;
+    });
+  }
+
+  loadStage() async {
+    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    setState(() {
+      stage = objectsLoader.getStage(stageId);;
+    });
+  }
+
   loadData() async {
+    stats = new StatsLoader();
+    await stats.reInitiliaze();
+    objectsLoader = new ObjectsLoader(context);
+    await objectsLoader.reInitiliaze();
+
+    loadChar();
+    loadEnemy();
+    loadStage();
     int coinValue = await stats.getPreference(StatsLoader.COINS);
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
+    
+    lastScoreStage = await stats.getPreference(StatsLoader.STAGE_PAGE_SCORE);
+    lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
+    lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
 
-    objectsLoader = new ObjectsLoader(context);
 
-    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
-    stageSrc = await objectsLoader.getStageImage(stageId, context);
 
     setState(() {
       this.coins = coinValue;
@@ -52,11 +91,42 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     });
   }
 
-  updateData() {
+  updatePage() async {
+    setState(() {
+      loading = true;
+    });
+
+    // if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
+    //   loadChar();
+    // }
+    // if(objectsLoader.checkNewEnemies(newHighScore, lastScoreStage)){
+    //   loadEnemy();
+    // }
+    // if(objectsLoader.checkNewStages(newHighScore, lastScoreStage)){
+    //   loadStage();
+    // }
     //get latest stage/char/enemy
     //if new stage then current
       //update page with new image
-    
+    int newHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
+    if(newHighScore > highScore){
+      setState(() {
+        highScore = newHighScore;
+      });
+    }
+
+    if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
+      print('NEW CHARS');
+    }
+    if(objectsLoader.checkNewEnemies(newHighScore, lastScoreStage)){
+      print('NEW ENEMIES');
+    }
+    if(objectsLoader.checkNewStages(newHighScore, lastScoreStage)){
+      print('NEW STAGES');
+    }
+    setState(() {
+      loading = false;
+    });
     //get latest highscore 
     //if new highscore
       //update bottom of the page
@@ -71,15 +141,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return loading ? Center(child: Text('[LOAD SCREEN GOES HERE]...')):  Container(
-      decoration: BoxDecoration(
+    return Container(
+      decoration: stage == null ? null : BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage(stageSrc, bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage(stage.src, bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
       padding: EdgeInsets.only(top: 30.0, bottom: 10.0, right: 5.0, left: 5.0),
-      child: Column(
+      child: loading ? Center(child: Text('LOADING...')): Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[               
               Container(
@@ -91,37 +161,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                         style: TextStyle(fontSize: 30.0),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Material(
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0)),
-                              color: Colors.orange[100],
-                              child: Container(
-                                height: 32.0,
-                                padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                                child: Center(
-                                  child: Text(
-                                    coins < 0 ? '...' : coins.toString(),
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0)),
-                              color: Colors.orange[100],
-                              child: Image.asset(
-                                ObjectsLoader.COIN_SRC,
-                                height: 32.0,
-                                width: 32.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                    )
                   ],
                 ),
               ),
@@ -141,11 +180,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                         CustomPageRoute(builder: (context) => StageSelectPage()),
                       );
                     }),
-                    MenuButton('PLAY GAME', Icons.gamepad, () {
-                      Navigator.push(
+                    MenuButton('PLAY GAME', Icons.gamepad, () async {
+                      await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => GamePage(context)),
                       );
+                      updatePage();
                     }),
                     MenuButton('BUY BONUSES', Icons.attach_money, () => print('clicked')),
                     MenuButton('CHANGE ENEMY', Icons.person_outline, () {
@@ -158,19 +198,37 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                 ),
               ),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'High Score: '+ (highScore < 0 ? '...' : highScore.toString()),
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.share),
-                      iconSize: 20.0,
-                      onPressed: () => print('I got a high score of $highScore'),
-                    )
-                ],
+                children: <Widget>[
+                  Expanded(
+                    child: Container()
+                  ),
+              Material(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                color: Colors.orange[100],
+                child: Container(
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'High Score: '+ (highScore < 0 ? '...' : highScore.toString()),
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        iconSize: 30.0,
+                        onPressed: () => print('I got a high score of $highScore'),
+                      )
+                    ],
+                  ),
+                ),
               ),
+                  Expanded(
+                    child: Container()
+                  ),
+                ],
+              )
+
             ],
           ),
     );

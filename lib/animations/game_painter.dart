@@ -72,7 +72,7 @@ class GamePainter extends CustomPainter {
       int deathIndex = (obstacleDeathPos*charDeathImages.length*0.99).floor();
       return charDeathImages[deathIndex];
     }else if(!canInput){
-      int inputIndex = (inputPos*charInputImages.length).floor();
+      int inputIndex = (inputPos*charInputImages.length*0.99).floor();
       return charInputImages[inputIndex];
     }else {
       idleIndex = (charIdleImages.length*(DateTime.now().millisecond/1000)).floor();
@@ -82,7 +82,7 @@ class GamePainter extends CustomPainter {
 
   UI.Image getEnemyImage(){
     if(obstacleStatus == OBSTACLE_STATUS.DEATH && obstacleIsHit && obstacleDeathPos <= 0.5){
-      int hurtIndex = (obstacleDeathPos*2*enemyHurtImages.length).floor();
+      int hurtIndex = (obstacleDeathPos*2*enemyHurtImages.length*0.99).floor();
       return enemyHurtImages[hurtIndex];
     }else if(obstacleStatus==OBSTACLE_STATUS.ALIVE){
       int throwIndex = (obstaclePos* enemyInputImages.length*0.99).floor();

@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import '../models/character.dart';
+import '../models/stage.dart';
 import '../models/enemy.dart';
 import '../helpers/views/menu_button.dart';
 
@@ -28,7 +29,7 @@ enum OBSTACLE_STATUS{
 }
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
-  StatsLoader stats = new StatsLoader();
+  StatsLoader stats;
   ObjectsLoader objectsLoader;
 
   Animation<int> machineAnimation;
@@ -58,6 +59,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   static final int TIME_INVALID_AFTER_HIT = 500; //ms time disabled after clicking hit
   bool canInput;
 
+  int highScore;
   int currentScore;
   int strikes;
 
@@ -65,6 +67,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   bool loading;
 
+
+  Stage stage;
   Character char;
   Enemy enemy;
 
@@ -84,6 +88,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     loading = true;
     
     objectsLoader = new ObjectsLoader(context);
+    stats = StatsLoader();
 
     enemyIdleImages = [];
     enemyInputImages = [];
@@ -172,6 +177,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           if(!isGameOver()){
             startMachine();
           } else{
+            //TODO: ADD 'NEW HIGH SCORE' MESSAGE TO POST GAME SCREEN WHEN NEW HIGH SCORE ACHEIVED
+            currentScore = 10;
+            if(currentScore > highScore){
+              stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);
+            }
             setState(() => gameInProgress = false);
           }
           obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
@@ -197,9 +207,16 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
 
   void loadImages() async{
-
+    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    
+    setState(() {
+      stage = objectsLoader.getStage(stageId);
+    });
+    
+    highScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
     int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
+
 
     char = objectsLoader.getChar(charId);
     enemy = objectsLoader.getEnemy(enemyId);
@@ -239,6 +256,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void dispose() {
     machineAnimationController.dispose();
     obstacleAnimationController.dispose();
+    obstacleDeathAnimationController.dispose();
     inputAnimationController.dispose();
     super.dispose();
   }
@@ -292,13 +310,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-      decoration: BoxDecoration(
+      decoration: stage ==null ? null : BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/backgrounds/1.png", bundle: DefaultAssetBundle.of(context)),
+          image: new AssetImage(stage.src, bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
       ),
-      child: loading? Center(child: Text('Loading...')): Stack(
+      child: loading? Center(child: Text('Loading...')) : Stack(
         children: <Widget>[
           SizedBox.expand(
             child: 
