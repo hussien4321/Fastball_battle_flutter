@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../models/stage.dart';
+import '../../models/character.dart';
 
-class StageView extends StatelessWidget {
+class CharView extends StatelessWidget {
 
-  Stage stage;
+  Character char;
   bool selected;
   bool unlocked;
   VoidCallback onClick;
 
-  StageView({this.stage, this.selected, this.unlocked, this.onClick});
+  CharView({this.char, this.selected, this.unlocked, this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class StageView extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(10.0),
                 child: Image.asset(
-                  stage.src,
+                  char.idleAction.srcPrefix + ((char.idleAction.startIndex < 10) ? '0'+char.idleAction.startIndex.toString() : char.idleAction.startIndex.toString()) + '.png',
                 ),
               ),
             ),
@@ -30,7 +30,7 @@ class StageView extends StatelessWidget {
               flex: 2,
               child: Container(
                   padding: EdgeInsets.all(5.0),
-                  child: Text('Stage ${stage.id}:\n ${stage.name}', textAlign: TextAlign.center,),
+                  child: Text('Character ${char.id}:\n ${char.name}', textAlign: TextAlign.center,),
               ),
             ),
             Padding(padding: EdgeInsets.only(bottom: 5.0),),
@@ -54,7 +54,7 @@ class StageView extends StatelessWidget {
                 onPressed: selected ? null : onClick,
               ) : Container(
                   padding: EdgeInsets.all(5.0),
-                  child: Text('Get ${stage.unlockThreshold} points to unlock', textAlign: TextAlign.center, style: TextStyle( fontSize: 10.0),),
+                  child: Text('Get ${char.unlockThreshold} points to unlock', textAlign: TextAlign.center, style: TextStyle( fontSize: 10.0),),
               ),
             ),
             Padding(padding: EdgeInsets.only(bottom: 25.0),),

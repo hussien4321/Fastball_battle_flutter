@@ -4,6 +4,8 @@ import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import './game_page.dart';
 import './stage_select_page.dart';
+import './enemy_select_page.dart';
+import './char_select_page.dart';
 import '../helpers/views/custom_page_routes.dart';
 
 class MainPage extends StatefulWidget {
@@ -41,7 +43,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     objectsLoader = new ObjectsLoader(context);
 
     int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
-    stageSrc = objectsLoader.getStageImage(stageId, context);
+    stageSrc = await objectsLoader.getStageImage(stageId, context);
 
     setState(() {
       this.coins = coinValue;
@@ -127,7 +129,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                 padding: EdgeInsets.only(top: 30.0),
                 child: Row(
                   children: <Widget>[
-                    MenuButton('CHANGE CHARACTER', Icons.person, () => print('clicked')),
+                    MenuButton('CHANGE CHARACTER', Icons.person, () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(builder: (context) => CharSelectPage()),
+                      );
+                    }),
                     MenuButton('CHANGE STAGE', Icons.landscape, () {
                       Navigator.push(
                         context,
@@ -141,7 +148,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       );
                     }),
                     MenuButton('BUY BONUSES', Icons.attach_money, () => print('clicked')),
-                    MenuButton('CHANGE ENEMY', Icons.person_outline, () => print('clicked')),
+                    MenuButton('CHANGE ENEMY', Icons.person_outline, () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(builder: (context) => EnemySelectPage()),
+                      );
+                    }),
                   ],
                 ),
               ),

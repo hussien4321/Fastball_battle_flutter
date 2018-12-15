@@ -140,8 +140,10 @@ class ObjectsLoader {
     return imagesList;
   }
 
-  String getStageImage(int id, BuildContext context) {
-    
+  Future<String> getStageImage(int id, BuildContext context) async {
+    if(_stages == null ){
+      await reInitiliaze();
+    }
     Stage currStage = _stages.where((stage)=> stage.id==id).toList()[0]; 
   
     return currStage.src;

@@ -3,17 +3,17 @@ import '../helpers/views/menu_button.dart';
 import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import './game_page.dart';
-import '../helpers/views/stage_view.dart';
+import '../helpers/views/char_view.dart';
 import '../helpers/views/custom_page_routes.dart';
-import '../models/stage.dart';
+import '../models/character.dart';
 
-class StageSelectPage extends StatefulWidget {
+class CharSelectPage extends StatefulWidget {
 
   @override
-  _StageSelectPage createState() => _StageSelectPage();
+  _CharSelectPage createState() => _CharSelectPage();
 }
 
-class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMixin{
+class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixin{
 
   StatsLoader stats = new StatsLoader();
   ObjectsLoader objectsLoader;
@@ -22,7 +22,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   int selectedIndex;
   int currHighScore;
 
-  List<Stage> allStages = [];
+  List<Character> allCharacters = [];
 
   bool loading = true;
 
@@ -35,14 +35,14 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
 
     objectsLoader = new ObjectsLoader(context);
 
-    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     currHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
-    stats.updatePreference(StatsLoader.STAGE_PAGE_SCORE, currHighScore);
+    stats.updatePreference(StatsLoader.CHAR_PAGE_SCORE, currHighScore);
 
-    allStages = objectsLoader.stages;
+    allCharacters = objectsLoader.characters;
 
-    Stage currentStage = allStages.where((stage) => stage.id == stageId).toList()[0];
-    currIndex = allStages.indexOf(currentStage);
+    Character currentChar = allCharacters.where((char) => char.id == charId).toList()[0];
+    currIndex = allCharacters.indexOf(currentChar);
     selectedIndex = currIndex;
 
     setState(() {
@@ -66,7 +66,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   }
   void nextItem() {
     int newIndex = currIndex + 1;
-    if(newIndex < allStages.length){
+    if(newIndex < allCharacters.length){
       setState(() {
         currIndex = newIndex;
       });
@@ -74,7 +74,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   }
 
   void updateToIndex(newIndex) {
-    stats.updatePreference(StatsLoader.CURRENT_STAGE, allStages[newIndex].id);
+    stats.updatePreference(StatsLoader.CURRENT_CHARACTER, allCharacters[newIndex].id);
 
     setState(() {
       selectedIndex = newIndex;
@@ -84,7 +84,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( body: loading ? Center(child: Text('LOADING...')):  Container(
+    return Scaffold( body: loading ? Center(child: Text('Loading...')):  Container(
       color: Colors.orangeAccent,
       padding: EdgeInsets.only(top: 30.0, bottom: 10.0, right: 5.0, left: 5.0),
       child: Column(
@@ -94,7 +94,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
                   children: <Widget>[
                     Center(
                       child: Text(
-                        'Select Stage',
+                        'Select Character',
                         style: TextStyle(fontSize: 30.0),
                       ),
                     ),
@@ -120,30 +120,30 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
                       Padding(padding: EdgeInsets.only(right: 5.0),),
                       Expanded(
                         flex: 3,
-                        child: (currIndex-1 < 0) ? Container() : StageView(
-                          stage: allStages[currIndex-1], 
+                        child: (currIndex-1 < 0) ? Container() : CharView(
+                          char: allCharacters[currIndex-1], 
                           selected: currIndex-1 == selectedIndex, 
-                          unlocked: allStages[currIndex-1].unlockThreshold <= currHighScore,
+                          unlocked: allCharacters[currIndex-1].unlockThreshold <= currHighScore,
                           onClick: () => updateToIndex(currIndex-1)
                         )
                       ),
                       Padding(padding: EdgeInsets.only(right: 5.0),),
                       Expanded(
                         flex: 5,
-                        child: StageView(
-                          stage: allStages[currIndex], 
+                        child: CharView(
+                          char: allCharacters[currIndex], 
                           selected: currIndex == selectedIndex, 
-                          unlocked: allStages[currIndex].unlockThreshold <= currHighScore,
+                          unlocked: allCharacters[currIndex].unlockThreshold <= currHighScore,
                           onClick: () => updateToIndex(currIndex)
                         )
                       ),
                       Padding(padding: EdgeInsets.only(right: 5.0),),
                       Expanded(
                         flex: 3,
-                        child: (currIndex+1 >= allStages.length) ? Container() : StageView(
-                          stage: allStages[currIndex+1], 
+                        child: (currIndex+1 >= allCharacters.length) ? Container() : CharView(
+                          char: allCharacters[currIndex+1], 
                           selected: currIndex+1 == selectedIndex, 
-                          unlocked: allStages[currIndex+1].unlockThreshold <= currHighScore,
+                          unlocked: allCharacters[currIndex+1].unlockThreshold <= currHighScore,
                           onClick: () => updateToIndex(currIndex+1)
                         )
                       ),
@@ -154,7 +154,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
                           child: GestureDetector(
                             onTap: () => nextItem(),
                             child: Image.asset(
-                              (currIndex+1 >= allStages.length) ? 'assets/other/right_gray.png' : 'assets/other/right_button.png'
+                              (currIndex+1 >= allCharacters.length) ? 'assets/other/right_gray.png' : 'assets/other/right_button.png'
                             ),
                           ) 
                         ),

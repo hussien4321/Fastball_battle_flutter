@@ -293,7 +293,7 @@
             "hurt_action": {
                 "src_prefix": "assets/enemy_animations/enemy_07/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
             }
-        },
+        }
     ],
     "stages" : [
         {
@@ -357,5 +357,4 @@
             "unlock_threshold": 96
         }
     ]
-
 }

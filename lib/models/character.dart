@@ -22,7 +22,7 @@ class Character{
   Character.fromJson(Map<String, dynamic> json)
     : _id = json['id'],
       _name =json['name'],
-      _unlockThreshold = json['unlockThreshold'],
+      _unlockThreshold = json['unlock_threshold'],
       _idleAction = Action.fromJson(json['idle_action']),
       _swingAction = Action.fromJson(json['swing_action']),
       _hurtAction = Action.fromJson(json['hurt_action']),

@@ -22,7 +22,7 @@ class Enemy{
   Enemy.fromJson(Map<String, dynamic> json)
     : _id = json['id'],
       _name =json['name'],
-      _unlockThreshold = json['unlockThreshold'],
+      _unlockThreshold = json['unlock_threshold'],
       _weaponSrc = json['weapon_src'],
       _idleAction = Action.fromJson(json['idle_action']),
       _throwAction = Action.fromJson(json['throw_action']),

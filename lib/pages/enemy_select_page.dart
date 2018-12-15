@@ -3,17 +3,17 @@ import '../helpers/views/menu_button.dart';
 import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import './game_page.dart';
-import '../helpers/views/stage_view.dart';
+import '../helpers/views/enemy_view.dart';
 import '../helpers/views/custom_page_routes.dart';
-import '../models/stage.dart';
+import '../models/enemy.dart';
 
-class StageSelectPage extends StatefulWidget {
+class EnemySelectPage extends StatefulWidget {
 
   @override
-  _StageSelectPage createState() => _StageSelectPage();
+  _EnemySelectPage createState() => _EnemySelectPage();
 }
 
-class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMixin{
+class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMixin{
 
   StatsLoader stats = new StatsLoader();
   ObjectsLoader objectsLoader;
@@ -22,7 +22,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   int selectedIndex;
   int currHighScore;
 
-  List<Stage> allStages = [];
+  List<Enemy> allEnemies = [];
 
   bool loading = true;
 
@@ -35,14 +35,14 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
 
     objectsLoader = new ObjectsLoader(context);
 
-    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
     currHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
-    stats.updatePreference(StatsLoader.STAGE_PAGE_SCORE, currHighScore);
+    stats.updatePreference(StatsLoader.ENEMY_PAGE_SCORE, currHighScore);
 
-    allStages = objectsLoader.stages;
+    allEnemies = objectsLoader.enemies;
 
-    Stage currentStage = allStages.where((stage) => stage.id == stageId).toList()[0];
-    currIndex = allStages.indexOf(currentStage);
+    Enemy currentEnemy = allEnemies.where((enemy) => enemy.id == enemyId).toList()[0];
+    currIndex = allEnemies.indexOf(currentEnemy);
     selectedIndex = currIndex;
 
     setState(() {
@@ -66,7 +66,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   }
   void nextItem() {
     int newIndex = currIndex + 1;
-    if(newIndex < allStages.length){
+    if(newIndex < allEnemies.length){
       setState(() {
         currIndex = newIndex;
       });
@@ -74,7 +74,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   }
 
   void updateToIndex(newIndex) {
-    stats.updatePreference(StatsLoader.CURRENT_STAGE, allStages[newIndex].id);
+    stats.updatePreference(StatsLoader.CURRENT_CHARACTER, allEnemies[newIndex].id);
 
     setState(() {
       selectedIndex = newIndex;
@@ -94,7 +94,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
                   children: <Widget>[
                     Center(
                       child: Text(
-                        'Select Stage',
+                        'Select Enemy',
                         style: TextStyle(fontSize: 30.0),
                       ),
                     ),
@@ -120,30 +120,30 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
                       Padding(padding: EdgeInsets.only(right: 5.0),),
                       Expanded(
                         flex: 3,
-                        child: (currIndex-1 < 0) ? Container() : StageView(
-                          stage: allStages[currIndex-1], 
+                        child: (currIndex-1 < 0) ? Container() : EnemyView(
+                          enemy: allEnemies[currIndex-1], 
                           selected: currIndex-1 == selectedIndex, 
-                          unlocked: allStages[currIndex-1].unlockThreshold <= currHighScore,
+                          unlocked: allEnemies[currIndex-1].unlockThreshold <= currHighScore,
                           onClick: () => updateToIndex(currIndex-1)
                         )
                       ),
                       Padding(padding: EdgeInsets.only(right: 5.0),),
                       Expanded(
                         flex: 5,
-                        child: StageView(
-                          stage: allStages[currIndex], 
+                        child: EnemyView(
+                          enemy: allEnemies[currIndex], 
                           selected: currIndex == selectedIndex, 
-                          unlocked: allStages[currIndex].unlockThreshold <= currHighScore,
+                          unlocked: allEnemies[currIndex].unlockThreshold <= currHighScore,
                           onClick: () => updateToIndex(currIndex)
                         )
                       ),
                       Padding(padding: EdgeInsets.only(right: 5.0),),
                       Expanded(
                         flex: 3,
-                        child: (currIndex+1 >= allStages.length) ? Container() : StageView(
-                          stage: allStages[currIndex+1], 
+                        child: (currIndex+1 >= allEnemies.length) ? Container() : EnemyView(
+                          enemy: allEnemies[currIndex+1], 
                           selected: currIndex+1 == selectedIndex, 
-                          unlocked: allStages[currIndex+1].unlockThreshold <= currHighScore,
+                          unlocked: allEnemies[currIndex+1].unlockThreshold <= currHighScore,
                           onClick: () => updateToIndex(currIndex+1)
                         )
                       ),
@@ -154,7 +154,7 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
                           child: GestureDetector(
                             onTap: () => nextItem(),
                             child: Image.asset(
-                              (currIndex+1 >= allStages.length) ? 'assets/other/right_gray.png' : 'assets/other/right_button.png'
+                              (currIndex+1 >= allEnemies.length) ? 'assets/other/right_gray.png' : 'assets/other/right_button.png'
                             ),
                           ) 
                         ),
