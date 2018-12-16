@@ -192,6 +192,7 @@
         {
             "id" : 1,
             "name": "Grodd",
+            "shoots_bullets": false,
             "unlock_threshold": 0,
             "weapon_src": "assets/balls/rock1.png",
             "idle_action": {
@@ -206,6 +207,7 @@
         },
         {
             "id" : 2,
+            "shoots_bullets": false,
             "name": "Zombie",
             "unlock_threshold": 12,
             "weapon_src": "assets/balls/rock2.png",
@@ -222,6 +224,7 @@
         {
             "id" : 3,
             "name": "Yeti",
+            "shoots_bullets": false,
             "unlock_threshold": 24,
             "weapon_src": "assets/balls/snowball.png",
             "idle_action": {
@@ -237,6 +240,7 @@
         {
             "id" : 4,
             "name": "Soldier",
+            "shoots_bullets": true,
             "unlock_threshold": 32,
             "weapon_src": "assets/balls/purple_bullet.png",
             "idle_action": {
@@ -252,6 +256,7 @@
         {
             "id" : 5,
             "name": "Hedgehog",
+            "shoots_bullets": true,
             "unlock_threshold": 64,
             "weapon_src": "assets/balls/orange_bullet.png",
             "idle_action": {
@@ -267,6 +272,7 @@
         {
             "id" : 6,
             "name": "Rebel",
+            "shoots_bullets": true,
             "unlock_threshold": 72,
             "weapon_src": "assets/balls/red_bullet.png",
             "idle_action": {
@@ -282,6 +288,7 @@
         {
             "id" : 7,
             "name": "Ninja Master",
+            "shoots_bullets": false,
             "unlock_threshold": 92,
             "weapon_src": "assets/balls/shuriken.png",
             "idle_action": {

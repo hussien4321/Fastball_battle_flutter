@@ -10,6 +10,8 @@ class GamePainter extends CustomPainter {
   Paint _paint2;
   Paint _paint3;
   UI.Image ballImage;
+  UI.Image ballRevImage;
+  bool shootsBullets;
   int strikes;
   int enemyIndex;
   List<UI.Image> enemyIdleImages;
@@ -36,7 +38,7 @@ class GamePainter extends CustomPainter {
   UI.Image enemyImage;
   double obstacleSize = 20.0;
   
-  GamePainter(BuildContext context, int newStrikes, double newMachinePos, double newObstaclePos, double newObstacleDeathPos,double newInputPos, bool newCanInput, bool newObstacleIsHit, OBSTACLE_STATUS newObstacleStatus, UI.Image newBallImage, List<UI.Image> newEnemyIdleImages, List<UI.Image> newEnemyInputImages, List<UI.Image> newEnemyHurtImages, List<UI.Image> newCharIdleImages, List<UI.Image> newCharInputImages, List<UI.Image> newCharHurtImages, List<UI.Image> newCharDeathImages){
+  GamePainter(BuildContext context, int newStrikes, double newMachinePos, double newObstaclePos, double newObstacleDeathPos,double newInputPos, bool newCanInput, bool newObstacleIsHit, OBSTACLE_STATUS newObstacleStatus, UI.Image newBallImage, UI.Image newBallRevImage, bool newShootsBullets, List<UI.Image> newEnemyIdleImages, List<UI.Image> newEnemyInputImages, List<UI.Image> newEnemyHurtImages, List<UI.Image> newCharIdleImages, List<UI.Image> newCharInputImages, List<UI.Image> newCharHurtImages, List<UI.Image> newCharDeathImages){
     obstacleStatus = newObstacleStatus;
     machinePos = newMachinePos;
     obstaclePos = newObstaclePos;
@@ -51,6 +53,8 @@ class GamePainter extends CustomPainter {
     _paint3 = Paint()
       ..color = Colors.green;
     ballImage = newBallImage;
+    ballRevImage = newBallRevImage;
+    shootsBullets = newShootsBullets;
 
     strikes = newStrikes;
     enemyIndex = 0;
@@ -103,26 +107,27 @@ class GamePainter extends CustomPainter {
 
     canvas.drawImageRect(currentImage, Rect.fromLTRB(0.0,0.0,currentImage.width.toDouble() , currentImage.height.toDouble()), Rect.fromLTRB(size.width*0.2-charWidth, size.height-charHeight+10,size.width*0.2, size.height+10), _paint2);
 
+    double ballY = size.height-(charHeight*2/3);
+    if(shootsBullets){
+      ballY = size.height-(charHeight*4/10);
+    }
+
 
     if(obstacleStatus == OBSTACLE_STATUS.ALIVE){
       double currentPos = ((size.width*0.75) * obstaclePos ) + size.width*0.15;
-      canvas.drawImageRect(ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(currentPos, size.height-(charHeight*2/3),   obstacleSize, obstacleSize), _paint2);
+      canvas.drawImageRect(ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(currentPos, ballY, obstacleSize, obstacleSize), _paint2);
 
     }
     if(obstacleStatus == OBSTACLE_STATUS.DEATH){
       if(obstacleIsHit && obstacleDeathPos > 0.5){
 
         double startX = size.width*0.15;
-        double startY = size.height-(charHeight*2/3);
 
         double displacementX = size.width*0.75;
         double powerX = (1-obstacleDeathPos) * 2;
         
         double newX = startX + displacementX * powerX;
-        double newY = startY;
-
-        canvas.drawImageRect(ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(newX, newY, obstacleSize, obstacleSize), _paint2);
-
+        canvas.drawImageRect(shootsBullets ? ballRevImage : ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(newX, ballY, obstacleSize, obstacleSize), _paint2);
       }
     }
   }

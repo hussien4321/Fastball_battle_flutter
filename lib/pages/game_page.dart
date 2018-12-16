@@ -82,6 +82,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Enemy enemy;
 
   UI.Image ballImage;
+  UI.Image ballRevImage;
   
   List<UI.Image> enemyIdleImages;
   List<UI.Image> enemyInputImages;
@@ -243,6 +244,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
     ballImage =  await objectsLoader.loadImage(enemy.weaponSrc, context);
 
+    if(enemy.shootsBullets){
+      String revSrc = enemy.weaponSrc.substring(0, enemy.weaponSrc.length-4)+'_rev.png';
+      ballRevImage = await objectsLoader.loadImage(revSrc, context); 
+    }
+
     enemyIdleImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.IDLE, context);
     enemyInputImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.THROW, context);
     enemyHurtImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.HURT, context);
@@ -330,9 +336,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   }
 
   canShowFlashingText() {
-    bool flashOn = flashingTextAnimationController.value < 0.5;
-
-    return flashOn && newHighScore;
+    return flashingTextAnimationController.value < 0.5;
   }
 
 
@@ -364,6 +368,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                       obstacleIsHit, 
                       obstacle_status, 
                       ballImage, 
+                      ballRevImage,
+                      enemy.shootsBullets,
                       enemyIdleImages, 
                       enemyInputImages, 
                       enemyHurtImages, 
@@ -392,8 +398,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
               ),
               Padding( padding: EdgeInsets.only(top: 20.0)),
               Text(
-                canShowFlashingText() ? 'NEW HIGH SCORE!' : '',
-                style: TextStyle(fontSize: 30.0),
+                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : 'Next unlockable at 15 points',
+                style: TextStyle(fontSize: 20.0),
               ),
               
               // Text(

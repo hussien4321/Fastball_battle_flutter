@@ -4,6 +4,7 @@ class Enemy{
 
   int _id;
   String _name;
+  bool _shootsBullets;
   int _unlockThreshold;
   String _weaponSrc;
   Action _idleAction;
@@ -13,6 +14,7 @@ class Enemy{
 
   int get id => _id;
   String get name => _name;
+  bool get shootsBullets => _shootsBullets;
   int get unlockThreshold => _unlockThreshold;
   String get weaponSrc => _weaponSrc;
   Action get idleAction => _idleAction;
@@ -22,6 +24,7 @@ class Enemy{
   Enemy.fromJson(Map<String, dynamic> json)
     : _id = json['id'],
       _name =json['name'],
+      _shootsBullets =json['shoots_bullets'],
       _unlockThreshold = json['unlock_threshold'],
       _weaponSrc = json['weapon_src'],
       _idleAction = Action.fromJson(json['idle_action']),
