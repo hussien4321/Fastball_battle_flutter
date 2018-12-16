@@ -47,7 +47,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   Animation<int> obstacleDeathAnimation;
   AnimationController  obstacleDeathAnimationController;
 
-  static final int OBSTACLE_DEATH_DURATION = 600; //ms time for obstacle to be first to passing by user 
+  static final int OBSTACLE_DEATH_DURATION = 1000; //ms time for obstacle to be first to passing by user 
   
   OBSTACLE_STATUS obstacle_status;
   
@@ -71,6 +71,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   int highScore;
   int currentScore;
   int strikes;
+  int nextUnlockable;
 
   bool gameInProgress;
 
@@ -158,6 +159,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           if(obstacleIsHit){
             int newScore = currentScore + 1;
             if(newScore > highScore){
+              nextUnlockable = objectsLoader.calculateNextUnlockable(highScore);
               newHighScore = true;
             }
             setState(() {
@@ -192,7 +194,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             startMachine();
           } else{
             if(currentScore > highScore){
-              stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);
+              stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);            
             }
             setState(() => gameInProgress = false);
           }
@@ -238,6 +240,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
 
+    nextUnlockable = objectsLoader.calculateNextUnlockable(highScore);
 
     char = objectsLoader.getChar(charId);
     enemy = objectsLoader.getEnemy(enemyId);
@@ -351,7 +354,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           fit: BoxFit.fill,
         ),
       ),
-      child: loading? Center(child: Text('Loading...')) : Stack(
+      child: loading? Center(child: Text('Tap screen to attack!')) : Stack(
         children: <Widget>[
           SizedBox.expand(
             child: 
@@ -398,7 +401,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
               ),
               Padding( padding: EdgeInsets.only(top: 20.0)),
               Text(
-                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : 'Next unlockable at 15 points',
+                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : 'Next unlockable at $nextUnlockable points',
                 style: TextStyle(fontSize: 20.0),
               ),
               
@@ -448,7 +451,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
               ],
             )
           ),
-          Container(
+          gameInProgress ? Container(
             padding: EdgeInsets.only(top: 25.0, right: 10.0),
             child: Align(
                 alignment: Alignment.topRight,
@@ -460,7 +463,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                     iconSize: 32.0,
                   ),
                 ),
-          ),
+          ) : Container(),
         ],
       ),
       ),

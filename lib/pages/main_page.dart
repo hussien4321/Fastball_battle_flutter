@@ -26,17 +26,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
   StatsLoader stats;
   ObjectsLoader objectsLoader;
 
-
   Character char;
   Enemy enemy;
   Stage stage;
 
-  int coins;
   int highScore;
 
-  int lastScoreStage;
-  int lastScoreEnemy;
-  int lastScoreChar;
+  int lastScoreStage, lastScoreEnemy, lastScoreChar;
+  bool newChars, newEnemies, newStages;
 
   bool loading = true;
 
@@ -75,16 +72,24 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     loadChar();
     loadEnemy();
     loadStage();
-    int coinValue = await stats.getPreference(StatsLoader.COINS);
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
+
+    newChars = false;
+    newEnemies = false;
+    newStages = false;
     
+        
     lastScoreStage = await stats.getPreference(StatsLoader.STAGE_PAGE_SCORE);
     lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
     lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
 
+    newChars = objectsLoader.checkNewChars(highScoreValue, lastScoreChar);
+    newEnemies = objectsLoader.checkNewEnemies(highScoreValue, lastScoreEnemy);
+    newStages = objectsLoader.checkNewStages(highScoreValue, lastScoreStage);
+
+
 
     setState(() {
-      this.coins = coinValue;
       this.highScore = highScoreValue;
       loading = false; 
     });
@@ -94,24 +99,30 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     setState(() {
       loading = true;
     });
+
+
+    //updates the chars/enemies/stages if they have been changed recently
+
+    int newCharId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
+    if(newCharId != char.id){
+      setState(() {
+        char = objectsLoader.getChar(newCharId);
+      });
+    }
+    int newEnemyId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    if(newEnemyId != enemy.id){
+      setState(() {
+        enemy = objectsLoader.getEnemy(newEnemyId);
+      });
+    }
     int newStageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
     if(newStageId != stage.id){
       setState(() {
         stage = objectsLoader.getStage(newStageId);
       });
     }
-    // if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
-    //   loadChar();
-    // }
-    // if(objectsLoader.checkNewEnemies(newHighScore, lastScoreStage)){
-    //   loadEnemy();
-    // }
-    // if(objectsLoader.checkNewStages(newHighScore, lastScoreStage)){
-    //   loadStage();
-    // }
-    //get latest stage/char/enemy
-    //if new stage then current
-      //update page with new image
+    
+    //updates the high score if a game was just finished
     int newHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
     if(newHighScore > highScore){
       setState(() {
@@ -119,24 +130,19 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       });
     }
 
-    
-    if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
-      print('NEW CHARS');
-    }
-    if(objectsLoader.checkNewEnemies(newHighScore, lastScoreEnemy)){
-      print('NEW ENEMIES');
-    }
-    if(objectsLoader.checkNewStages(newHighScore, lastScoreStage)){
-      print('NEW STAGES');
-    }
+    //checking if new chars/enemies/stages have been unlocked and updates that info on the page button
+    lastScoreStage = await stats.getPreference(StatsLoader.STAGE_PAGE_SCORE);
+    lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
+    lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
+
+    newChars = objectsLoader.checkNewChars(newHighScore, lastScoreChar);
+    newEnemies = objectsLoader.checkNewEnemies(newHighScore, lastScoreEnemy);
+    newStages = objectsLoader.checkNewStages(newHighScore, lastScoreStage);
+
     setState(() {
       loading = false;
     });
-    //get latest highscore 
-    //if new highscore
-      //update bottom of the page
-      //check if any of the pages have new unlockables
-      //enable a label to those pages
+
   }
 
   @override
@@ -179,14 +185,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                         CustomPageRoute(builder: (context) => CharSelectPage()),
                       );
                       updatePage();
-                    }),
+                    }, newChars),
                     MenuButton('CHANGE STAGE', Icons.landscape, () async {
                       await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => StageSelectPage()),
                       );
                       updatePage();
-                    }),
+                    }, newStages),
                     MenuButton('PLAY GAME', Icons.gamepad, () async {
                       await Navigator.push(
                         context,
@@ -200,7 +206,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                         context,
                         CustomPageRoute(builder: (context) => EnemySelectPage()),
                       );
-                    }),
+                    }, newEnemies),
                   ],
                 ),
               ),

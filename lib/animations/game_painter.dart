@@ -69,8 +69,9 @@ class GamePainter extends CustomPainter {
   }
 
   UI.Image getCharImage(){
-    if(obstacleStatus == OBSTACLE_STATUS.DEATH && !obstacleIsHit && strikes < 3){
-      int hurtIndex = (obstacleDeathPos*charHurtImages.length*0.99).floor();
+    if(obstacleStatus == OBSTACLE_STATUS.DEATH && !obstacleIsHit && strikes < 3 && obstacleDeathPos >= 0.3){
+      int hurtIndex = ((obstacleDeathPos-0.3)*10/7*charHurtImages.length*0.99).floor();
+
       return charHurtImages[hurtIndex];
     }else if(strikes >= 3){
       int deathIndex = (obstacleDeathPos*charDeathImages.length*0.99).floor();
@@ -85,8 +86,8 @@ class GamePainter extends CustomPainter {
   }
 
   UI.Image getEnemyImage(){
-    if(obstacleStatus == OBSTACLE_STATUS.DEATH && obstacleIsHit && obstacleDeathPos <= 0.5){
-      int hurtIndex = (obstacleDeathPos*2*enemyHurtImages.length*0.99).floor();
+    if(obstacleStatus == OBSTACLE_STATUS.DEATH && obstacleIsHit && obstacleDeathPos <= 0.7){
+      int hurtIndex = (obstacleDeathPos*(10/7)*enemyHurtImages.length*0.99).floor();
       return enemyHurtImages[hurtIndex];
     }else if(obstacleStatus==OBSTACLE_STATUS.ALIVE){
       int throwIndex = (obstaclePos* enemyInputImages.length*0.99).floor();
@@ -119,12 +120,12 @@ class GamePainter extends CustomPainter {
 
     }
     if(obstacleStatus == OBSTACLE_STATUS.DEATH){
-      if(obstacleIsHit && obstacleDeathPos > 0.5){
+      if(obstacleIsHit && obstacleDeathPos > 0.7){
 
         double startX = size.width*0.15;
 
         double displacementX = size.width*0.75;
-        double powerX = (1-obstacleDeathPos) * 2;
+        double powerX = (1-obstacleDeathPos) * (10/3);
         
         double newX = startX + displacementX * powerX;
         canvas.drawImageRect(shootsBullets ? ballRevImage : ballImage, Rect.fromLTRB(0.0, 0.0, ballImage.width.toDouble(), ballImage.height.toDouble()), Rect.fromLTWH(newX, ballY, obstacleSize, obstacleSize), _paint2);

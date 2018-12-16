@@ -109,6 +109,29 @@ class ObjectsLoader {
     });
   }
 
+  int calculateNextUnlockable(int newHighScore){
+    int nextUnlockable = 10000000;
+
+
+    _characters.forEach((char) {
+      if(char.unlockThreshold > newHighScore && char.unlockThreshold < nextUnlockable){
+        nextUnlockable = char.unlockThreshold;
+      }
+    });
+    _enemies.forEach((enemy) {
+      if(enemy.unlockThreshold > newHighScore && enemy.unlockThreshold < nextUnlockable){
+        nextUnlockable = enemy.unlockThreshold;
+      }
+    });
+    _stages.forEach((stage) {
+      if(stage.unlockThreshold > newHighScore && stage.unlockThreshold < nextUnlockable){
+        nextUnlockable = stage.unlockThreshold;
+      }
+    });
+
+    return nextUnlockable;
+  }
+
 
   Future<List<UI.Image>> loadCharImages(int id, CHAR_ACTION_TYPE actionType, BuildContext context) async {
     List<UI.Image> imagesList = [];

@@ -14,7 +14,6 @@ class StatsLoader {
   static final String CHAR_PAGE_SCORE = 'charPageScore';
   static final String ENEMY_PAGE_SCORE = 'enemyPageScore';
   static final String STAGE_PAGE_SCORE = 'stagePageScore';
-  static final String COINS = 'coins';
   static final String HIGH_SCORE = 'highScore';
   static final String ADS_PAID_STATUS = 'adsPaidStatus';
 
@@ -25,7 +24,6 @@ class StatsLoader {
     'stagePageScore' : 0,
     'enemyPageScore' : 0,
     'charPageScore' : 0,
-    'coins' : 0,
     'highScore' : 0,
     'adsPaidStatus' : false,
   };

@@ -5,8 +5,9 @@ class MenuButton extends StatelessWidget {
   String text;
   IconData icon;
   VoidCallback onClick;
+  bool newItem;
 
-  MenuButton(this.text, this.icon, this.onClick);
+  MenuButton(this.text, this.icon, this.onClick, [this.newItem = false]);
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +42,14 @@ class MenuButton extends StatelessWidget {
                     textAlign: TextAlign.center,
                   )
                 ),
+                newItem ? Align(
+                  alignment: Alignment.topRight,
+                      child: Text(
+                      'new',
+                      style: TextStyle(fontSize: 10.0, color: Colors.red, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    )
+                ) : Container(),
             ],
           )
           )
