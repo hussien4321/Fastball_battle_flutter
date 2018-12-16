@@ -87,8 +87,7 @@ class StatsLoader {
   Future<dynamic> getPreference(String key) async {
     var preferences = await currentPreferences;
 
-    print(preferences);
     return preferences[key];
   }
   
-}
+} 

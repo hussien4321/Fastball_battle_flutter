@@ -93,13 +93,13 @@
                 "src_prefix": "assets/player_animations/player_06/player_idle/Idle_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_06/player_swing/Slashing_0", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_06/player_swing/Attacking_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_06/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
             },
             "death_action": {
-                "src_prefix": "assets/player_animations/player_05/player_death/Dying_0", "start_index": 0, "image_count": 15
+                "src_prefix": "assets/player_animations/player_06/player_death/Dying_0", "start_index": 0, "image_count": 15
             }
         },
         {

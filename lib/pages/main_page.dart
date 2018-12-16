@@ -82,8 +82,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
     lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
 
-    print('lastScoreChar:$lastScoreChar, lastScoreEnemy:$lastScoreEnemy, lastScoreStage:$lastScoreStage');
-
 
     setState(() {
       this.coins = coinValue;
@@ -121,7 +119,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       });
     }
 
-
+    
     if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
       print('NEW CHARS');
     }

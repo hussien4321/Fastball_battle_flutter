@@ -57,7 +57,16 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   AnimationController  inputAnimationController;
 
   static final int TIME_INVALID_AFTER_HIT = 500; //ms time disabled after clicking hit
+
+  
+  AnimationController  flashingTextAnimationController;
+
+  static final int FLASHING_TEXT_DURATION = 2000; //the time for one appear and disappear of text 
+
   bool canInput;
+
+
+  bool newHighScore;
 
   int highScore;
   int currentScore;
@@ -86,7 +95,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void initState() {
 
     loading = true;
-    
+
     objectsLoader = new ObjectsLoader(context);
     stats = StatsLoader();
 
@@ -112,6 +121,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DURATION), vsync: this);
       obstacleDeathAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DEATH_DURATION), vsync: this);
       inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
+      flashingTextAnimationController = new AnimationController(duration: new Duration(milliseconds: FLASHING_TEXT_DURATION), vsync: this);
 
       machineAnimation = IntTween(
         begin: 0,
@@ -146,6 +156,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
         if(status == AnimationStatus.completed){
           if(obstacleIsHit){
             int newScore = currentScore + 1;
+            if(newScore > highScore){
+              newHighScore = true;
+            }
             setState(() {
               currentScore = newScore;
             });
@@ -177,8 +190,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           if(!isGameOver()){
             startMachine();
           } else{
-            //TODO: ADD 'NEW HIGH SCORE' MESSAGE TO POST GAME SCREEN WHEN NEW HIGH SCORE ACHEIVED
-            currentScore = 100;
             if(currentScore > highScore){
               stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);
             }
@@ -203,6 +214,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
         setState(() {
         });
       });
+
+      flashingTextAnimationController.addListener(() {
+        setState(() {
+        });
+      });
+  
+      flashingTextAnimationController.repeat();
+
+
   }
 
 
@@ -241,10 +261,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   Future<UI.Image> loadImage(String link) async {
 
-    ByteData bd = await DefaultAssetBundle.of(widget.parentContext).load(link);//.then( (bd) {
+    ByteData bd = await DefaultAssetBundle.of(widget.parentContext).load(link);
     Uint8List lst = new Uint8List.view(bd.buffer);
-    UI.Codec codec = await UI.instantiateImageCodec(lst);//.then( (codec) {
-    UI.FrameInfo frameInfo = await codec.getNextFrame();//.then(
+    UI.Codec codec = await UI.instantiateImageCodec(lst);
+    UI.FrameInfo frameInfo = await codec.getNextFrame();
     return frameInfo.image;
   }
 
@@ -258,11 +278,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     obstacleAnimationController.dispose();
     obstacleDeathAnimationController.dispose();
     inputAnimationController.dispose();
+    flashingTextAnimationController.dispose();
     super.dispose();
   }
 
   newGameState(){
     setState(() {      
+      newHighScore = false;
       currentScore = 0;
       strikes = 0;
       canInput = true;
@@ -290,6 +312,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     machineAnimationController.forward();
   }
 
+  void backToMenu(){
+    Navigator.of(context).pop();
+  }
 
   void triggerInput() {
     
@@ -302,6 +327,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       inputAnimationController.forward();
     }
 
+  }
+
+  canShowFlashingText() {
+    bool flashOn = flashingTextAnimationController.value < 0.5;
+
+    return flashOn && newHighScore;
   }
 
 
@@ -359,24 +390,30 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                 currentScore.toString(),
                 style: TextStyle(fontSize: 30.0),
               ),
+              Padding( padding: EdgeInsets.only(top: 20.0)),
+              Text(
+                canShowFlashingText() ? 'NEW HIGH SCORE!' : '',
+                style: TextStyle(fontSize: 30.0),
+              ),
+              
               // Text(
               //   'Strikes: '+strikes.toString(),
               //   style: TextStyle(fontSize: 30.0),
               // ),
-              Container(
-                padding: EdgeInsets.only(top: 30.0),
+              gameInProgress ? Container() : Container(
+                padding: EdgeInsets.all(30.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        width: 100.0,
-                        padding: EdgeInsets.all(10.0),
-                        child: gameInProgress ? Container() : RaisedButton(
-                          onPressed: (()=> startMachine()),
-                          child: Text('Play again'),
-                          color: Colors.orange[300],
-                        ),
-                      ),
+                    RaisedButton(
+                      onPressed: (()=> backToMenu()),
+                      child: Text('Back to menu'),
+                      color: Colors.orange[300],
+                    ),
+                    RaisedButton(
+                      onPressed: (()=> startMachine()),
+                      child: Text('Play again'),
+                      color: Colors.orange[300],
                     ),
                   ],
                 ),
@@ -404,6 +441,19 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                 ),
               ],
             )
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 25.0, right: 10.0),
+            child: Align(
+                alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.pause_circle_outline,
+                      color: Colors.black,
+                    ),
+                    iconSize: 32.0,
+                  ),
+                ),
           ),
         ],
       ),
