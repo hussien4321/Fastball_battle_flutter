@@ -25,7 +25,7 @@
                 "src_prefix": "assets/player_animations/player_02/player_idle/Idle_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_02/player_swing/Slashing_", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_02/player_swing/Slashing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_02/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
@@ -42,7 +42,7 @@
                 "src_prefix": "assets/player_animations/player_03/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_03/player_swing/Slashing_", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_03/player_swing/Slashing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_03/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
@@ -56,10 +56,10 @@
             "name": "Ali Yan",
             "unlock_threshold": 28,
             "idle_action": {
-                "src_prefix": "assets/player_animations/player_04/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+                "src_prefix": "assets/player_animations/player_04/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 12
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_04/player_swing/Slashing_", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_04/player_swing/Slashing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_04/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
@@ -76,7 +76,7 @@
                 "src_prefix": "assets/player_animations/player_05/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_05/player_swing/Slashing_", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_05/player_swing/Slashing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_05/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
@@ -93,7 +93,7 @@
                 "src_prefix": "assets/player_animations/player_06/player_idle/Idle_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_06/player_swing/Slashing_", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_06/player_swing/Slashing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_06/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
@@ -110,7 +110,7 @@
                 "src_prefix": "assets/player_animations/player_07/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
-                "src_prefix": "assets/player_animations/player_07/player_swing/Slashing_", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_07/player_swing/Slashing_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/player_animations/player_07/player_hurt/Hurt_0", "start_index": 0, "image_count": 12
@@ -124,7 +124,7 @@
             "name": "Rob Liam",
             "unlock_threshold": 60,
             "idle_action": {
-                "src_prefix": "assets/player_animations/player_08/player_idle/Idle_0", "start_index": 0, "image_count": 18
+                "src_prefix": "assets/player_animations/player_08/player_idle/Idle_0", "start_index": 0, "image_count": 12
             },
             "swing_action": {
                 "src_prefix": "assets/player_animations/player_08/player_swing/Kicking_0", "start_index": 0, "image_count": 12
@@ -285,7 +285,7 @@
             "unlock_threshold": 92,
             "weapon_src": "assets/balls/shuriken.png",
             "idle_action": {
-                "src_prefix": "assets/enemy_animations/enemy_07/enemy_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
+                "src_prefix": "assets/enemy_animations/enemy_07/enemy_idle/Idle Blinking_0", "start_index": 0, "image_count": 12
             },
             "throw_action": {
                 "src_prefix": "assets/enemy_animations/enemy_07/enemy_throw/Throwing_0", "start_index": 0, "image_count": 12

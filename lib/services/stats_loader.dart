@@ -75,7 +75,6 @@ class StatsLoader {
 
   void updatePreference(String key, dynamic value) {
 
-    print('Saving $key with val $value');
     Map<String, dynamic> content = {key: value};
     Map<String, dynamic> jsonFileContent = json.decode(_jsonFile.readAsStringSync());
     jsonFileContent.addAll(content);
@@ -88,6 +87,7 @@ class StatsLoader {
   Future<dynamic> getPreference(String key) async {
     var preferences = await currentPreferences;
 
+    print(preferences);
     return preferences[key];
   }
   

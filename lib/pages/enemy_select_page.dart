@@ -74,7 +74,7 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
   }
 
   void updateToIndex(newIndex) {
-    stats.updatePreference(StatsLoader.CURRENT_CHARACTER, allEnemies[newIndex].id);
+    stats.updatePreference(StatsLoader.CURRENT_ENEMY, allEnemies[newIndex].id);
 
     setState(() {
       selectedIndex = newIndex;

@@ -48,7 +48,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
   loadChar() async {
     int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     setState(() {
-      stage = objectsLoader.getStage(charId);;
+      char = objectsLoader.getChar(charId);
     });
   }
 
@@ -82,6 +82,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
     lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
 
+    print('lastScoreChar:$lastScoreChar, lastScoreEnemy:$lastScoreEnemy, lastScoreStage:$lastScoreStage');
 
 
     setState(() {
@@ -95,7 +96,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     setState(() {
       loading = true;
     });
-
+    int newStageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    if(newStageId != stage.id){
+      setState(() {
+        stage = objectsLoader.getStage(newStageId);
+      });
+    }
     // if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
     //   loadChar();
     // }
@@ -115,10 +121,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       });
     }
 
+
     if(objectsLoader.checkNewChars(newHighScore, lastScoreChar)){
       print('NEW CHARS');
     }
-    if(objectsLoader.checkNewEnemies(newHighScore, lastScoreStage)){
+    if(objectsLoader.checkNewEnemies(newHighScore, lastScoreEnemy)){
       print('NEW ENEMIES');
     }
     if(objectsLoader.checkNewStages(newHighScore, lastScoreStage)){
@@ -168,17 +175,19 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                 padding: EdgeInsets.only(top: 30.0),
                 child: Row(
                   children: <Widget>[
-                    MenuButton('CHANGE CHARACTER', Icons.person, () {
-                      Navigator.push(
+                    MenuButton('CHANGE CHARACTER', Icons.person, () async {
+                      await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => CharSelectPage()),
                       );
+                      updatePage();
                     }),
-                    MenuButton('CHANGE STAGE', Icons.landscape, () {
-                      Navigator.push(
+                    MenuButton('CHANGE STAGE', Icons.landscape, () async {
+                      await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => StageSelectPage()),
                       );
+                      updatePage();
                     }),
                     MenuButton('PLAY GAME', Icons.gamepad, () async {
                       await Navigator.push(
@@ -188,7 +197,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       updatePage();
                     }),
                     MenuButton('BUY BONUSES', Icons.attach_money, () => print('clicked')),
-                    MenuButton('CHANGE ENEMY', Icons.person_outline, () {
+                    MenuButton('CHANGE ENEMY', Icons.person_outline, () async {
                       Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => EnemySelectPage()),

@@ -178,7 +178,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
             startMachine();
           } else{
             //TODO: ADD 'NEW HIGH SCORE' MESSAGE TO POST GAME SCREEN WHEN NEW HIGH SCORE ACHEIVED
-            currentScore = 10;
+            currentScore = 100;
             if(currentScore > highScore){
               stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);
             }
