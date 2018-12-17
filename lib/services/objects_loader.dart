@@ -187,6 +187,17 @@ class ObjectsLoader {
     return imagesList;
   }
 
+  Future<List<UI.Image>> loadCollisionImages(BuildContext context) async {
+    List<UI.Image> imagesList = [];
+
+    for(int i=11 ; i >= 0; i--){
+      String num = i<10 ? '0$i':'$i';
+      UI.Image temp =  await loadImage("assets/other/collision/Smoke_0$num.png", context);
+      imagesList.add(temp);
+    }    
+    return imagesList;
+  }
+
   Future<UI.Image> loadImage(String link, BuildContext context) async {
 
     ByteData bd = await DefaultAssetBundle.of(context).load(link);//.then( (bd) {

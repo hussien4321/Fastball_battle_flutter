@@ -63,6 +63,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   static final int FLASHING_TEXT_DURATION = 2000; //the time for one appear and disappear of text 
 
+  AnimationController  gameStartAnimationController;
+
+  static final int GAME_START_TEXT_DURATION = 3000; //the minimum time the user should be shown the message on the load screen before game starts 
+
   bool canInput;
 
 
@@ -75,7 +79,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   bool gameInProgress;
 
-  bool loading;
+  bool loading, forcedLoading;
 
 
   Stage stage;
@@ -85,6 +89,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   UI.Image ballImage;
   UI.Image ballRevImage;
   
+  List<UI.Image> collisionImages;
+
   List<UI.Image> enemyIdleImages;
   List<UI.Image> enemyInputImages;
   List<UI.Image> enemyHurtImages;
@@ -97,10 +103,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void initState() {
 
     loading = true;
-
+    forcedLoading = true;
     objectsLoader = new ObjectsLoader(context);
     stats = StatsLoader();
 
+    collisionImages = [];
     enemyIdleImages = [];
     enemyInputImages = [];
     enemyHurtImages = [];
@@ -124,6 +131,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       obstacleDeathAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DEATH_DURATION), vsync: this);
       inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
       flashingTextAnimationController = new AnimationController(duration: new Duration(milliseconds: FLASHING_TEXT_DURATION), vsync: this);
+      gameStartAnimationController = new AnimationController(duration: new Duration(milliseconds: GAME_START_TEXT_DURATION), vsync: this);
 
       machineAnimation = IntTween(
         begin: 0,
@@ -226,6 +234,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       flashingTextAnimationController.repeat();
 
 
+      gameStartAnimationController.addStatusListener((status){
+        if(status == AnimationStatus.completed){
+          setState(() => forcedLoading = false);
+        }
+      });
+
+      gameStartAnimationController.forward();
   }
 
 
@@ -251,6 +266,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       String revSrc = enemy.weaponSrc.substring(0, enemy.weaponSrc.length-4)+'_rev.png';
       ballRevImage = await objectsLoader.loadImage(revSrc, context); 
     }
+
+    collisionImages = await objectsLoader.loadCollisionImages(context);
 
     enemyIdleImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.IDLE, context);
     enemyInputImages = await objectsLoader.loadEnemyImages(enemy.id, ENEMY_ACTION_TYPE.THROW, context);
@@ -288,6 +305,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     obstacleDeathAnimationController.dispose();
     inputAnimationController.dispose();
     flashingTextAnimationController.dispose();
+    gameStartAnimationController.dispose();
     super.dispose();
   }
 
@@ -354,7 +372,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           fit: BoxFit.fill,
         ),
       ),
-      child: loading? Center(child: Text('Tap screen to attack!')) : Stack(
+      child: (loading || forcedLoading) ? Center(child: Text('Tap screen to swing!')) : Stack(
         children: <Widget>[
           SizedBox.expand(
             child: 
@@ -373,6 +391,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
                       ballImage, 
                       ballRevImage,
                       enemy.shootsBullets,
+                      collisionImages,
                       enemyIdleImages, 
                       enemyInputImages, 
                       enemyHurtImages, 

@@ -101,6 +101,7 @@ flutter:
     - assets/player_animations/player_11/player_hurt/
     - assets/player_animations/player_11/player_death/
     - assets/other/
+    - assets/other/collision/
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
