@@ -9,6 +9,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   path_provider: 0.4.1
+  audioplayers: ^0.7.8
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,7 @@ flutter:
     - assets/enemy_animations/enemy_07/enemy_idle/
     - assets/enemy_animations/enemy_07/enemy_throw/
     - assets/enemy_animations/enemy_07/enemy_hurt/
+    - assets/music/
     - assets/player_animations/player_01/player_idle/
     - assets/player_animations/player_01/player_swing/
     - assets/player_animations/player_01/player_hurt/

@@ -17,7 +17,10 @@ class StatsLoader {
   static final String HIGH_SCORE = 'highScore';
   static final String ADS_PAID_STATUS = 'adsPaidStatus';
 
+
+  //REMEMBER: Any new attributes to this file means the version MUST be incremented!
   final Map<String, dynamic> _initialPreferences = {
+    'v': 1,
     'currentChar' : 1,
     'currentEnemy' : 1,
     'currentStage' : 1,
@@ -59,6 +62,14 @@ class StatsLoader {
     bool fileExists = _jsonFile.existsSync();
     if (fileExists){
       _currentPreferences = json.decode(_jsonFile.readAsStringSync());
+      if(_currentPreferences.containsKey('v') || _currentPreferences['v'] < _initialPreferences['v']){
+        for(String missingKey in _initialPreferences.keys){
+          if(!_currentPreferences.containsKey(missingKey)){
+            _currentPreferences[missingKey] = _initialPreferences[missingKey];
+            _jsonFile.writeAsStringSync(json.encode(_currentPreferences));
+          }
+        }
+      }
     } else {
       _currentPreferences = _initialPreferences;
       _createPreferencesFile(_currentPreferences);

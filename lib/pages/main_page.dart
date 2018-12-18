@@ -10,6 +10,8 @@ import '../helpers/views/custom_page_routes.dart';
 import '../models/stage.dart';
 import '../models/enemy.dart';
 import '../models/character.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -25,6 +27,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   StatsLoader stats;
   ObjectsLoader objectsLoader;
+  AudioCache bgmPlayer;
+  AudioPlayer bgmController;
 
   Character char;
   Enemy enemy;
@@ -42,26 +46,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     loadData();
   }
 
-  loadChar() async {
-    int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
-    setState(() {
-      char = objectsLoader.getChar(charId);
-    });
-  }
-
-  loadEnemy() async {
-    int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
-    setState(() {
-      enemy = objectsLoader.getEnemy(enemyId);;
-    });
-  }
-
-  loadStage() async {
-    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
-    setState(() {
-      stage = objectsLoader.getStage(stageId);;
-    });
-  }
 
   loadData() async {
     stats = new StatsLoader();
@@ -69,9 +53,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     objectsLoader = new ObjectsLoader(context);
     await objectsLoader.reInitiliaze();
 
-    loadChar();
-    loadEnemy();
-    loadStage();
+  
+
+    await loadChar();
+    await loadEnemy();
+    await loadStage();
+
+    bgmPlayer = new AudioCache();
+    // bgmController = await bgmPlayer.play(stage.bgm);
+
+    // TODO: Set up a notification for 1 day with something like, "Can't beat your score of 10, have you given up?" 
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
 
     newChars = false;
@@ -92,6 +83,27 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     setState(() {
       this.highScore = highScoreValue;
       loading = false; 
+    });
+  }
+
+  loadChar() async {
+    int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
+    setState(() {
+      char = objectsLoader.getChar(charId);
+    });
+  }
+
+  loadEnemy() async {
+    int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
+    setState(() {
+      enemy = objectsLoader.getEnemy(enemyId);
+    });
+  }
+
+  loadStage() async {
+    int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    setState(() {
+      stage = objectsLoader.getStage(stageId);
     });
   }
 
@@ -120,6 +132,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       setState(() {
         stage = objectsLoader.getStage(newStageId);
       });
+      //updating bgm for new stage
+      print(bgmController);
+      bgmController.release();
+      // bgmController = await bgmPlayer.loop(stage.bgm);
     }
     
     //updates the high score if a game was just finished
@@ -148,6 +164,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
   @override
   void dispose() {
     super.dispose();
+    bgmController.release();
+    bgmPlayer.clearCache();
+
   }
 
   @override
@@ -194,13 +213,17 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       updatePage();
                     }, newStages),
                     MenuButton('PLAY GAME', Icons.gamepad, () async {
+                      bgmController = await bgmPlayer.loop(stage.bgm);
                       await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => GamePage(context)),
                       );
+                      bgmController.release();
                       updatePage();
                     }),
-                    MenuButton('BUY BONUSES', Icons.attach_money, () => print('clicked')),
+                    MenuButton('BUY BONUSES', Icons.attach_money, () async {
+                      print('clicked');
+                    } ),
                     MenuButton('CHANGE ENEMY', Icons.person_outline, () async {
                       Navigator.push(
                         context,
