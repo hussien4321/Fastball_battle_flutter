@@ -4,10 +4,12 @@ import '../models/character.dart';
 import '../models/enemy.dart';
 import '../models/action.dart';
 import '../models/stage.dart';
+import '../models/bgm.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as UI;
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:math';
 
 
 enum AVATAR_TYPE {
@@ -27,15 +29,45 @@ class ObjectsLoader {
 
   static final String COIN_SRC = 'assets/other/coin.png';
 
+  final List<String> _throwSounds = [
+    "music/thow_sound_effect_01.wav",
+    "music/thow_sound_effect_02.wav",
+    "music/thow_sound_effect_03.wav",
+  ];
+  final List<String> _shootSounds = [
+    "music/shoot_sound_effect_01.wav",
+    "music/shoot_sound_effect_02.wav",
+    "music/shoot_sound_effect_03.wav",
+    "music/shoot_sound_effect_04.wav",
+    "music/shoot_sound_effect_05.wav",
+    "music/shoot_sound_effect_06.wav",
+  ];
+  final List<String> _hitbackSounds = [
+    "music/hitback_01_effect.wav",
+    "music/hitback_02_effect.wav",
+    "music/hitback_03_effect.wav",
+    "music/hitback_04_effect.wav",
+    "music/hitback_05_effect.wav",
+    "music/hitback_06_effect.wav",
+    "music/hitback_07_effect.wav",
+  ];
+
+  static final String CLICK_TONE = "music/click_tone.wav";
+  static final String PAGE_NAV_TONE = "music/page_navigation_effect.wav";
+  static final String NEW_HIGH_SCORE_TONE = "music/new_high_score_tone.wav";
+  static final String NEW_HIGH_SCORE_JINGLE = "music/new_high_score_post_game_jingle.wav";
+
   static BuildContext _context;
 
   List<Character> _characters; 
   List<Enemy> _enemies; 
   List<Stage> _stages;
+  List<BGM> _bgms;
   
   List<Character> get characters => _characters;
   List<Enemy> get enemies => _enemies;
   List<Stage> get stages => _stages; 
+  List<BGM> get bgms => _bgms; 
 
 
   static final ObjectsLoader _singleton  = new ObjectsLoader._internal();
@@ -57,10 +89,15 @@ class ObjectsLoader {
 
       List<dynamic> temp1 = jsonResult['characters'];
       _characters = temp1.map((result) => Character.fromJson(result)).toList();
+      
       List<dynamic> temp2 = jsonResult['enemies'];
       _enemies = temp2.map((result) => Enemy.fromJson(result)).toList();
-      List<dynamic> temp3 = jsonResult['stages'];
-      _stages = temp3.map((result) => Stage.fromJson(result)).toList();
+      
+      List<dynamic> temp3 = jsonResult['bgms'];
+      _bgms = temp3.map((result) => BGM.fromJson(result)).toList();
+      
+      List<dynamic> temp4 = jsonResult['stages'];
+      _stages = temp4.map((result) => Stage.fromJson(result)).toList();
     }
   }
 
@@ -89,6 +126,10 @@ class ObjectsLoader {
 
   Enemy getEnemy(int id) {
     return _enemies.where((enemy)=> enemy.id==id).toList()[0];
+  }
+  
+  BGM getBGM(int id) {
+    return _bgms.where((bgm)=> bgm.id==id).toList()[0];
   }
 
   bool checkNewChars(int newHighScore, int lastScore){
@@ -196,6 +237,26 @@ class ObjectsLoader {
       imagesList.add(temp);
     }    
     return imagesList;
+  }
+
+  String getThrowSound({bool shootBullets = false}){
+    
+    List<String> options = shootBullets ? _shootSounds : _throwSounds;
+
+    int randIndex = Random().nextInt(options.length);
+    
+    return options[randIndex];
+    
+  }
+
+  String getHitBackSound(){
+    
+    List<String> options = _hitbackSounds;
+
+    int randIndex = Random().nextInt(options.length);
+    
+    return options[randIndex];
+    
   }
 
   Future<UI.Image> loadImage(String link, BuildContext context) async {

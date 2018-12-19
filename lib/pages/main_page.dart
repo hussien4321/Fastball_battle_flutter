@@ -9,7 +9,9 @@ import './char_select_page.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/stage.dart';
 import '../models/enemy.dart';
+import '../models/bgm.dart';
 import '../models/character.dart';
+import '../helpers/views/sounds_dialogs.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audio_cache.dart';
 
@@ -27,12 +29,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   StatsLoader stats;
   ObjectsLoader objectsLoader;
-  AudioCache bgmPlayer;
+  AudioCache bgmPlayer, tonesPlayer;
   AudioPlayer bgmController;
 
   Character char;
   Enemy enemy;
   Stage stage;
+  BGM bgm;
+
+  bool isMusicOn, isTonesOn;
 
   int highScore;
 
@@ -58,9 +63,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     await loadChar();
     await loadEnemy();
     await loadStage();
+    await loadBGM();
 
+    isMusicOn = await stats.getPreference(StatsLoader.MUSIC_STATUS);
+    isTonesOn = await stats.getPreference(StatsLoader.TONES_STATUS);
+    
+    
     bgmPlayer = new AudioCache();
-    // bgmController = await bgmPlayer.play(stage.bgm);
+    tonesPlayer = new AudioCache();
 
     // TODO: Set up a notification for 1 day with something like, "Can't beat your score of 10, have you given up?" 
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
@@ -106,6 +116,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       stage = objectsLoader.getStage(stageId);
     });
   }
+  loadBGM() async {
+    int bgmId = await stats.getPreference(StatsLoader.CURRENT_BGM);
+    setState(() {
+      bgm = objectsLoader.getBGM(bgmId);
+    });
+  }
 
   updatePage() async {
     setState(() {
@@ -132,10 +148,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       setState(() {
         stage = objectsLoader.getStage(newStageId);
       });
-      //updating bgm for new stage
-      print(bgmController);
-      bgmController.release();
-      // bgmController = await bgmPlayer.loop(stage.bgm);
     }
     
     //updates the high score if a game was just finished
@@ -166,8 +178,47 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     super.dispose();
     bgmController.release();
     bgmPlayer.clearCache();
+    tonesPlayer.clearCache();
 
   }
+Future<Null>_showDialog() async {
+  return showDialog(
+    context: context,
+    builder: (newContext) {
+      return SoundsDialog(
+        isMusicOn: isMusicOn,
+        isTonesOn: isTonesOn,
+        currentBGM: bgm.id,
+        updateMusicSwitch: (onOff) {
+          stats.updatePreference(StatsLoader.MUSIC_STATUS, onOff);
+          setState(() {
+            isMusicOn = onOff;                                    
+          });
+          Navigator.of(context).pop();
+          _showDialog();
+        },
+        updateTonesSwitch: (onOff) {
+          stats.updatePreference(StatsLoader.TONES_STATUS, onOff);
+          setState(() {
+            isTonesOn = onOff;                                    
+          });
+          Navigator.of(context).pop();
+          _showDialog();
+        },
+        updateBGM: (newBGMId) {
+          stats.updatePreference(StatsLoader.CURRENT_BGM, newBGMId);
+          if(newBGMId != bgm.id){
+            setState(() {
+              bgm = objectsLoader.getBGM(newBGMId);
+            });
+          }
+          Navigator.of(context).pop();
+          _showDialog();
+        },
+      );
+    }
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +242,24 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                         style: TextStyle(fontSize: 30.0),
                       ),
                     ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Material(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        color: Colors.orange[100],
+                        child: IconButton(
+                          icon: Icon(Icons.music_note),
+                          onPressed: () {
+                            _showDialog();
+                          },
+                          iconSize: 30.0,
+                          color: Colors.black,
+                          padding: EdgeInsets.all(0.0),
+                        ),
+                      ),
+                    ),
                   ],
+
                 ),
               ),
               Container(
@@ -199,6 +267,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                 child: Row(
                   children: <Widget>[
                     MenuButton('CHANGE CHARACTER', Icons.person, () async {
+                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
                       await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => CharSelectPage()),
@@ -206,6 +275,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       updatePage();
                     }, newChars),
                     MenuButton('CHANGE STAGE', Icons.landscape, () async {
+                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
                       await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => StageSelectPage()),
@@ -213,7 +283,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       updatePage();
                     }, newStages),
                     MenuButton('PLAY GAME', Icons.gamepad, () async {
-                      bgmController = await bgmPlayer.loop(stage.bgm);
+                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      bgmController = await bgmPlayer.play(bgm.src);
                       await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => GamePage(context)),
@@ -222,9 +293,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                       updatePage();
                     }),
                     MenuButton('BUY BONUSES', Icons.attach_money, () async {
+                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
                       print('clicked');
                     } ),
                     MenuButton('CHANGE ENEMY', Icons.person_outline, () async {
+                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
                       Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => EnemySelectPage()),
@@ -264,7 +337,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
                   ),
                 ],
               )
-
             ],
           ),
     );

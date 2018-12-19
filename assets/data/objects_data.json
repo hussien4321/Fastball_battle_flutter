@@ -307,71 +307,81 @@
             "id" : 1,
             "name": "Friendly town",
             "src": "assets/backgrounds/stage_01.png",
-            "bgm": "music/stage_01_BGM.wav",
+            "bgm": "",
             "unlock_threshold": 0
         },
         {
             "id" : 2,
             "name": "Deadly arena",
             "src": "assets/backgrounds/stage_02.png",
-            "bgm": "music/stage_02_BGM.wav",
+            "bgm": "music/BGM_02_cinematic.wav",
             "unlock_threshold": 8
         },
         {
             "id" : 3,
             "name": "Peaceful beach",
             "src": "assets/backgrounds/stage_03.png",
-            "bgm": "music/stage_03_BGM.wav",
+            "bgm": "music/BGM_03_peaceful.wav",
             "unlock_threshold": 20
         },
         {
             "id" : 4,
             "name": "Cold winter",
             "src": "assets/backgrounds/stage_04.png",
-            "bgm": "music/stage_04_BGM.wav",
             "unlock_threshold": 36
         },
         {
             "id" : 5,
             "name": "Dangerous temple",
             "src": "assets/backgrounds/stage_05.png",
-            "bgm": "music/stage_05_BGM.wav",
             "unlock_threshold": 40
         },
         {
             "id" : 6,
             "name": "Future wasteland",
             "src": "assets/backgrounds/stage_06.png",
-            "bgm": "music/stage_06_BGM.wav",
             "unlock_threshold": 52
         },
         {
             "id" : 7,
             "name": "Bustling city",
             "src": "assets/backgrounds/stage_07.png",
-            "bgm": "music/stage_07_BGM.wav",
             "unlock_threshold": 68
         },
         {
             "id" : 8,
             "name": "Wild landscape",
             "src": "assets/backgrounds/stage_08.png",
-            "bgm": "music/stage_08_BGM.wav",
             "unlock_threshold": 80
         },
         {
             "id" : 9,
             "name": "Deep ocean",
             "src": "assets/backgrounds/stage_09.png",
-            "bgm": "music/stage_09_BGM.wav",
             "unlock_threshold": 84
         },
         {
             "id" : 10,
             "name": "Deserted desert",
             "src": "assets/backgrounds/stage_10.png",
-            "bgm": "Rmusic/stage_10_BGM.wav",
             "unlock_threshold": 96
+        }
+    ],
+    "bgms" : [
+        {
+            "id" : 1,
+            "name" : "Fun",
+            "src" : "music/BGM_01_fun.wav"
+        },
+        {
+            "id" : 2,
+            "name" : "Epic",
+            "src" : "music/BGM_02_epic.wav"
+        },
+        {
+            "id" : 3,
+            "name" : "Peaceful",
+            "src" : "music/BGM_03_peaceful.wav"
         }
     ]
 }

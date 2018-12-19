@@ -16,11 +16,17 @@ class StatsLoader {
   static final String STAGE_PAGE_SCORE = 'stagePageScore';
   static final String HIGH_SCORE = 'highScore';
   static final String ADS_PAID_STATUS = 'adsPaidStatus';
+  static final String VOLUME = 'volume';
+  static final String MUSIC_STATUS = 'musicStatus';
+  static final String TONES_STATUS = 'tonesStatus';
+  static final String CURRENT_BGM = 'currentBGM';
+  static final String VERSION = 'v';
+  
 
 
   //REMEMBER: Any new attributes to this file means the version MUST be incremented!
   final Map<String, dynamic> _initialPreferences = {
-    'v': 1,
+    'v': 3,
     'currentChar' : 1,
     'currentEnemy' : 1,
     'currentStage' : 1,
@@ -29,6 +35,10 @@ class StatsLoader {
     'charPageScore' : 0,
     'highScore' : 0,
     'adsPaidStatus' : false,
+    'musicStatus' : true,
+    'tonesStatus' : true,
+    'volume' : 0.5,
+    'currentBGM' : 1
   };
 
   Map<String, dynamic> _currentPreferences = {};
@@ -62,13 +72,18 @@ class StatsLoader {
     bool fileExists = _jsonFile.existsSync();
     if (fileExists){
       _currentPreferences = json.decode(_jsonFile.readAsStringSync());
-      if(_currentPreferences.containsKey('v') || _currentPreferences['v'] < _initialPreferences['v']){
+      if(!_currentPreferences.containsKey(VERSION) || _currentPreferences[VERSION] < _initialPreferences[VERSION]){
+        print('detected missing config! ${!_currentPreferences.containsKey('v')} OR ${_currentPreferences['v'] < _initialPreferences['v']} ${_currentPreferences['v']} < ${_initialPreferences['v']}');
+        _currentPreferences[VERSION] = _initialPreferences[VERSION];
+        print('updated: ${_currentPreferences['v']} = ${_initialPreferences['v']}');
         for(String missingKey in _initialPreferences.keys){
           if(!_currentPreferences.containsKey(missingKey)){
+            print('adding $missingKey to _currentPreferences');
             _currentPreferences[missingKey] = _initialPreferences[missingKey];
-            _jsonFile.writeAsStringSync(json.encode(_currentPreferences));
           }
         }
+        //TODO: Remove any deleted attributes
+        _jsonFile.writeAsStringSync(json.encode(_currentPreferences));
       }
     } else {
       _currentPreferences = _initialPreferences;
