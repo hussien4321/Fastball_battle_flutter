@@ -4,6 +4,8 @@
             "id" : 1,
             "name": "Sally",
             "unlock_threshold": 0,
+            "hurt_src" : "music/player_01_hurt.wav",
+            "death_src" : "music/player_01_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_01/player_idle/Idle_0", "start_index": 0, "image_count": 24
             },
@@ -21,6 +23,8 @@
             "id" : 2,
             "name": "Damon",
             "unlock_threshold": 4,
+            "hurt_src" : "music/player_02_hurt.wav",
+            "death_src" : "music/player_02_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_02/player_idle/Idle_0", "start_index": 0, "image_count": 18
             },
@@ -38,6 +42,8 @@
             "id" : 3,
             "name": "Wang Fung",
             "unlock_threshold": 16,
+            "hurt_src" : "music/player_03_hurt.wav",
+            "death_src" : "music/player_03_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_03/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
             },
@@ -55,6 +61,8 @@
             "id" : 4,
             "name": "Ali Yan",
             "unlock_threshold": 28,
+            "hurt_src" : "music/player_04_hurt.wav",
+            "death_src" : "music/player_04_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_04/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 12
             },
@@ -72,6 +80,8 @@
             "id" : 5,
             "name": "Roman",
             "unlock_threshold": 44,
+            "hurt_src" : "music/player_05_hurt.wav",
+            "death_src" : "music/player_05_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_05/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
             },
@@ -89,6 +99,8 @@
             "id" : 6,
             "name": "Chi Eve",
             "unlock_threshold": 48,
+            "hurt_src" : "music/player_06_hurt.wav",
+            "death_src" : "music/player_06_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_06/player_idle/Idle_0", "start_index": 0, "image_count": 18
             },
@@ -106,6 +118,8 @@
             "id" : 7,
             "name": "Robin",
             "unlock_threshold": 56,
+            "hurt_src" : "music/player_07_hurt.wav",
+            "death_src" : "music/player_07_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_07/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
             },
@@ -123,6 +137,8 @@
             "id" : 8,
             "name": "Rob Liam",
             "unlock_threshold": 60,
+            "hurt_src" : "music/player_08_hurt.wav",
+            "death_src" : "music/player_08_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_08/player_idle/Idle_0", "start_index": 0, "image_count": 12
             },
@@ -140,6 +156,8 @@
             "id" : 9,
             "name": "Miss death",
             "unlock_threshold": 76,
+            "hurt_src" : "music/player_09_hurt.wav",
+            "death_src" : "music/player_09_death.wav",
             "idle_action": {
                 "src_prefix": "assets/player_animations/player_09/player_idle/Idle_0", "start_index": 0, "image_count": 24
             },
@@ -155,10 +173,12 @@
         },
         {
             "id" : 10,
-            "name": "Nate Ron",
+            "name": "The Monk",
             "unlock_threshold": 88,
+            "hurt_src" : "music/player_10_hurt.wav",
+            "death_src" : "music/player_10_death.wav",
             "idle_action": {
-                "src_prefix": "assets/player_animations/player_10/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/player_animations/player_10/player_idle/Idle_0", "start_index": 0, "image_count": 18
             },
             "swing_action": {
                 "src_prefix": "assets/player_animations/player_10/player_swing/Attacking_0", "start_index": 0, "image_count": 12
@@ -172,10 +192,12 @@
         },
         {
             "id" : 11,
-            "name": "The Monk",
+            "name": "Nate Ron",
             "unlock_threshold": 100,
+            "hurt_src" : "music/player_11_hurt.wav",
+            "death_src" : "music/player_11_death.wav",
             "idle_action": {
-                "src_prefix": "assets/player_animations/player_11/player_idle/Idle_0", "start_index": 0, "image_count": 18
+                "src_prefix": "assets/player_animations/player_11/player_idle/Idle Blinking_0", "start_index": 0, "image_count": 12
             },
             "swing_action": {
                 "src_prefix": "assets/player_animations/player_11/player_swing/Attacking_0", "start_index": 0, "image_count": 12
@@ -194,6 +216,7 @@
             "name": "Grodd",
             "shoots_bullets": false,
             "unlock_threshold": 0,
+            "hurt_src" : "music/enemy_01_hurt.wav",
             "weapon_src": "assets/balls/rock1.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_01/enemy_idle/idle_", "start_index": 1, "image_count": 18
@@ -210,6 +233,7 @@
             "shoots_bullets": false,
             "name": "Zombie",
             "unlock_threshold": 12,
+            "hurt_src" : "music/enemy_02_hurt.wav",
             "weapon_src": "assets/balls/rock2.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_02/enemy_idle/Idle_0", "start_index": 0, "image_count": 12
@@ -226,6 +250,7 @@
             "name": "Yeti",
             "shoots_bullets": false,
             "unlock_threshold": 24,
+            "hurt_src" : "music/enemy_03_hurt.wav",
             "weapon_src": "assets/balls/snowball.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_03/enemy_idle/Idle Blinking_0", "start_index": 0, "image_count": 18
@@ -242,6 +267,7 @@
             "name": "Soldier",
             "shoots_bullets": true,
             "unlock_threshold": 32,
+            "hurt_src" : "music/enemy_04_hurt.wav",
             "weapon_src": "assets/balls/purple_bullet.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_04/enemy_idle/Idle Blinking - Handgun_0", "start_index": 0, "image_count": 18
@@ -258,6 +284,7 @@
             "name": "Hedgehog",
             "shoots_bullets": true,
             "unlock_threshold": 64,
+            "hurt_src" : "music/enemy_05_hurt.wav",
             "weapon_src": "assets/balls/orange_bullet.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_05/enemy_idle/Idle_0", "start_index": 0, "image_count": 18
@@ -274,6 +301,7 @@
             "name": "Rebel",
             "shoots_bullets": true,
             "unlock_threshold": 72,
+            "hurt_src" : "music/enemy_06_hurt.wav",
             "weapon_src": "assets/balls/red_bullet.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_06/enemy_idle/Idle - Rifle_0", "start_index": 0, "image_count": 18
@@ -290,6 +318,7 @@
             "name": "Ninja Master",
             "shoots_bullets": false,
             "unlock_threshold": 92,
+            "hurt_src" : "music/enemy_07_hurt.wav",
             "weapon_src": "assets/balls/shuriken.png",
             "idle_action": {
                 "src_prefix": "assets/enemy_animations/enemy_07/enemy_idle/Idle Blinking_0", "start_index": 0, "image_count": 12

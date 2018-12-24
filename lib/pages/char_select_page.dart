@@ -6,8 +6,14 @@ import './game_page.dart';
 import '../helpers/views/char_view.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/character.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 class CharSelectPage extends StatefulWidget {
+
+  AudioCache tonesPlayer;
+  bool isTonesOn;
+
+  CharSelectPage(this.tonesPlayer, this.isTonesOn);
 
   @override
   _CharSelectPage createState() => _CharSelectPage();
@@ -59,6 +65,9 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
   void prevItem() {
     int newIndex = currIndex - 1;
     if(newIndex >= 0){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.CLICK_TONE);
+      }
       setState(() {
         currIndex = newIndex;
       });
@@ -67,6 +76,9 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
   void nextItem() {
     int newIndex = currIndex + 1;
     if(newIndex < allCharacters.length){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.CLICK_TONE);
+      }
       setState(() {
         currIndex = newIndex;
       });
@@ -75,7 +87,9 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
 
   void updateToIndex(newIndex) {
     stats.updatePreference(StatsLoader.CURRENT_CHARACTER, allCharacters[newIndex].id);
-
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.SELECT_TONE);
+      }
     setState(() {
       selectedIndex = newIndex;
     });

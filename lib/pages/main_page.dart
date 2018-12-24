@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
   StatsLoader stats;
   ObjectsLoader objectsLoader;
   AudioCache bgmPlayer, tonesPlayer;
-  AudioPlayer bgmController;
+  AudioPlayer bgmController = new AudioPlayer();
 
   Character char;
   Enemy enemy;
@@ -215,6 +215,12 @@ Future<Null>_showDialog() async {
           Navigator.of(context).pop();
           _showDialog();
         },
+        onSave: () {
+          if(isTonesOn){
+            tonesPlayer.play(ObjectsLoader.SELECT_TONE);
+          }
+          Navigator.of(context).pop();
+        }
       );
     }
   );
@@ -267,40 +273,54 @@ Future<Null>_showDialog() async {
                 child: Row(
                   children: <Widget>[
                     MenuButton('CHANGE CHARACTER', Icons.person, () async {
-                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      if(isTonesOn){
+                        tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      }
                       await Navigator.push(
                         context,
-                        CustomPageRoute(builder: (context) => CharSelectPage()),
+                        CustomPageRoute(builder: (context) => CharSelectPage(tonesPlayer, isTonesOn)),
                       );
                       updatePage();
                     }, newChars),
                     MenuButton('CHANGE STAGE', Icons.landscape, () async {
-                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      if(isTonesOn){
+                        tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      }
                       await Navigator.push(
                         context,
-                        CustomPageRoute(builder: (context) => StageSelectPage()),
+                        CustomPageRoute(builder: (context) => StageSelectPage(tonesPlayer, isTonesOn)),
                       );
                       updatePage();
                     }, newStages),
                     MenuButton('PLAY GAME', Icons.gamepad, () async {
-                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
-                      bgmController = await bgmPlayer.play(bgm.src);
+                      if(isTonesOn){
+                        tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      }
+                      if(isMusicOn){
+                        bgmController = await bgmPlayer.loop(bgm.src, volume: 0.5);
+                      }
                       await Navigator.push(
                         context,
-                        CustomPageRoute(builder: (context) => GamePage(context)),
+                        CustomPageRoute(builder: (context) => GamePage(context, bgmController, isMusicOn, tonesPlayer, isTonesOn)),
                       );
-                      bgmController.release();
+                      if(isMusicOn){
+                        bgmController.release();
+                      }
                       updatePage();
                     }),
                     MenuButton('BUY BONUSES', Icons.attach_money, () async {
-                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      if(isTonesOn){
+                        tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      }
                       print('clicked');
                     } ),
                     MenuButton('CHANGE ENEMY', Icons.person_outline, () async {
-                      tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      if(isTonesOn){
+                        tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+                      }
                       Navigator.push(
                         context,
-                        CustomPageRoute(builder: (context) => EnemySelectPage()),
+                        CustomPageRoute(builder: (context) => EnemySelectPage(tonesPlayer, isTonesOn)),
                       );
                     }, newEnemies),
                   ],

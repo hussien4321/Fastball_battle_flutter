@@ -30,9 +30,9 @@ class ObjectsLoader {
   static final String COIN_SRC = 'assets/other/coin.png';
 
   final List<String> _throwSounds = [
-    "music/thow_sound_effect_01.wav",
-    "music/thow_sound_effect_02.wav",
-    "music/thow_sound_effect_03.wav",
+    "music/throw_sound_effect_01.wav",
+    "music/throw_sound_effect_02.wav",
+    "music/throw_sound_effect_03.wav",
   ];
   final List<String> _shootSounds = [
     "music/shoot_sound_effect_01.wav",
@@ -51,11 +51,19 @@ class ObjectsLoader {
     "music/hitback_06_effect.wav",
     "music/hitback_07_effect.wav",
   ];
+  final List<String> _swingSounds = [
+    "music/swing_sound_effect_01.wav",
+    "music/swing_sound_effect_02.wav",
+    "music/swing_sound_effect_03.wav",
+    "music/swing_sound_effect_04.wav",
+  ];
 
   static final String CLICK_TONE = "music/click_tone.wav";
+  static final String SELECT_TONE = "music/select_tone.wav";
   static final String PAGE_NAV_TONE = "music/page_navigation_effect.wav";
   static final String NEW_HIGH_SCORE_TONE = "music/new_high_score_tone.wav";
   static final String NEW_HIGH_SCORE_JINGLE = "music/new_high_score_post_game_jingle.wav";
+  static final String LOSE_GAME_JINGLE = "music/lose_game_jingle.wav";
 
   static BuildContext _context;
 
@@ -252,6 +260,15 @@ class ObjectsLoader {
   String getHitBackSound(){
     
     List<String> options = _hitbackSounds;
+
+    int randIndex = Random().nextInt(options.length);
+    
+    return options[randIndex];
+    
+  }
+  String getSwingSound(){
+    
+    List<String> options = _swingSounds;
 
     int randIndex = Random().nextInt(options.length);
     

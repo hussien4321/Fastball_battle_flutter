@@ -7,8 +7,9 @@ class SoundsDialog extends StatelessWidget {
   int currentBGM;
   ValueChanged<bool> updateMusicSwitch, updateTonesSwitch;
   ValueChanged<int> updateBGM;
+  VoidCallback onSave;
 
-  SoundsDialog({this.isMusicOn, this.isTonesOn, this.currentBGM, this.updateMusicSwitch, this.updateTonesSwitch, this.updateBGM});
+  SoundsDialog({this.isMusicOn, this.isTonesOn, this.currentBGM, this.updateMusicSwitch, this.updateTonesSwitch, this.updateBGM, this.onSave});
 
 
   @override
@@ -61,6 +62,7 @@ class SoundsDialog extends StatelessWidget {
           Expanded(
             child: Row(
               children: <Widget>[
+                //TODO: Change this list to be based on the entire list of _bgm from objects loader 
                 RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -122,9 +124,7 @@ class SoundsDialog extends StatelessWidget {
           child: Text('Close', 
             style: Theme.of(context).textTheme.body1,
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: onSave,
           color: Colors.orange,
         ),
       ],

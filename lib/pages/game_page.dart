@@ -10,13 +10,19 @@ import '../models/character.dart';
 import '../models/stage.dart';
 import '../models/enemy.dart';
 import '../helpers/views/menu_button.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 
 class GamePage extends StatefulWidget {
 
   BuildContext parentContext;
+  AudioPlayer bgmController;
+  bool isMusicOn;
+  AudioCache tonesPlayer;
+  bool isTonesOn;
 
-  GamePage(this.parentContext);
+  GamePage(this.parentContext, this.bgmController, this.isMusicOn, this.tonesPlayer, this.isTonesOn);
 
   @override
   _GamePageState createState() => _GamePageState();
@@ -27,7 +33,7 @@ enum OBSTACLE_STATUS{
   ALIVE,
   DEATH,
 }
-class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
+class _GamePageState extends State<GamePage> with TickerProviderStateMixin, WidgetsBindingObserver {
 
   StatsLoader stats;
   ObjectsLoader objectsLoader;
@@ -100,6 +106,26 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   List<UI.Image> charHurtImages;
   List<UI.Image> charDeathImages;
 
+  AudioPlayer swingController = new AudioPlayer();
+
+
+  bool playedEnemyHurtSound = false;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state changed to ${state.index}');
+    if(state.index == 0 ){
+      if(widget.isMusicOn){
+        widget.bgmController.resume();
+      }
+    } else {
+      if(widget.isMusicOn){
+        widget.bgmController.pause();
+      }
+    }
+  }
+
+
   void initState() {
 
     loading = true;
@@ -121,6 +147,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     initControllers();
     
     loadImages();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -153,6 +180,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       machineAnimationController.addStatusListener((status){
         if(status == AnimationStatus.completed){
           obstacle_status = OBSTACLE_STATUS.ALIVE;
+          if(widget.isTonesOn){
+            widget.tonesPlayer.play(objectsLoader.getThrowSound(shootBullets: enemy.shootsBullets));
+          }
           obstacleAnimationController.reset();
           obstacleAnimationController.forward();
         }
@@ -165,8 +195,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       obstacleAnimationController.addStatusListener((status){
         if(status == AnimationStatus.completed){
           if(obstacleIsHit){
+            if(widget.isTonesOn){
+              widget.tonesPlayer.play(objectsLoader.getHitBackSound());
+            }
             int newScore = currentScore + 1;
             if(newScore > highScore){
+              print('high score tone!');
+              if(widget.isTonesOn){
+                widget.tonesPlayer.play(ObjectsLoader.NEW_HIGH_SCORE_TONE);
+              }
               nextUnlockable = objectsLoader.calculateNextUnlockable(highScore);
               newHighScore = true;
             }
@@ -174,8 +211,19 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
               currentScore = newScore;
             });
           }
-          else{  
+          else{
+            swingController.stop();
             int newStrikes = strikes + 1;
+            if(newStrikes == 3){
+              if(widget.isTonesOn){
+                widget.tonesPlayer.play(char.deathSrc);
+              }
+            }
+            else{ 
+              if(widget.isTonesOn){
+                widget.tonesPlayer.play(char.hurtSrc);
+              }
+            }
             setState(() {
               strikes = newStrikes;
             });
@@ -196,13 +244,25 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
           if(obstacleIsHit){
             setState(() {
               obstacleIsHit = false;
+              playedEnemyHurtSound = false;
             });          
           }
           if(!isGameOver()){
             startMachine();
           } else{
+            if(widget.isMusicOn){
+              widget.bgmController.pause();
+            }
             if(currentScore > highScore){
-              stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);            
+              if(widget.isMusicOn){
+                widget.tonesPlayer.play(ObjectsLoader.NEW_HIGH_SCORE_JINGLE);
+              }
+              stats.updatePreference(StatsLoader.HIGH_SCORE, currentScore);           
+              highScore = currentScore; 
+            }else{
+              if(widget.isMusicOn){
+                widget.tonesPlayer.play(ObjectsLoader.LOSE_GAME_JINGLE);
+              }
             }
             setState(() => gameInProgress = false);
           }
@@ -211,6 +271,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
       });
 
       obstacleDeathAnimationController.addListener(() {
+        if(obstacleDeathAnimation.value/OBSTACLE_DEATH_DURATION < 0.7 && !playedEnemyHurtSound && obstacleIsHit){
+          if(widget.isTonesOn){
+            widget.tonesPlayer.play(enemy.hurtSrc);
+          }
+          playedEnemyHurtSound = true;
+        }
         setState(() {
         });
       });
@@ -306,6 +372,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
     inputAnimationController.dispose();
     flashingTextAnimationController.dispose();
     gameStartAnimationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -323,6 +390,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
 
   void startMachine(){
     if(isGameOver()){
+      if(widget.isMusicOn){
+        widget.bgmController.resume();
+      }
       newGameState();
     }
     setState(() => gameInProgress = true);
@@ -346,6 +416,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin{
   void triggerInput() {
     
     if(canInput && gameInProgress){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(objectsLoader.getSwingSound(), volume: 0.5).then((controller) {
+          swingController = controller;
+        });
+      }
       if(obstacleAnimation.value != 0 && obstacleAnimation.value <= CAN_HIT_OBSTACLE){
         obstacleIsHit = true;
       }

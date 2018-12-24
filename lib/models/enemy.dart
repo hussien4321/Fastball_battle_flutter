@@ -6,6 +6,8 @@ class Enemy{
   String _name;
   bool _shootsBullets;
   int _unlockThreshold;
+  String _hurtSrc;
+  String _deathSrc;
   String _weaponSrc;
   Action _idleAction;
   Action _throwAction;
@@ -16,6 +18,8 @@ class Enemy{
   String get name => _name;
   bool get shootsBullets => _shootsBullets;
   int get unlockThreshold => _unlockThreshold;
+  String get hurtSrc => _hurtSrc;
+  String get deathSrc => _deathSrc;
   String get weaponSrc => _weaponSrc;
   Action get idleAction => _idleAction;
   Action get throwAction => _throwAction;
@@ -26,6 +30,8 @@ class Enemy{
       _name =json['name'],
       _shootsBullets =json['shoots_bullets'],
       _unlockThreshold = json['unlock_threshold'],
+      _hurtSrc = json['hurt_src'],
+      _deathSrc = json['death_src'],
       _weaponSrc = json['weapon_src'],
       _idleAction = Action.fromJson(json['idle_action']),
       _throwAction = Action.fromJson(json['throw_action']),

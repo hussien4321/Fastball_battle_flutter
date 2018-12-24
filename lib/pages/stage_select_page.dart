@@ -6,8 +6,14 @@ import './game_page.dart';
 import '../helpers/views/stage_view.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/stage.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 class StageSelectPage extends StatefulWidget {
+
+  AudioCache tonesPlayer;
+  bool isTonesOn;
+
+  StageSelectPage(this.tonesPlayer, this.isTonesOn);
 
   @override
   _StageSelectPage createState() => _StageSelectPage();
@@ -59,6 +65,9 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   void prevItem() {
     int newIndex = currIndex - 1;
     if(newIndex >= 0){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.CLICK_TONE);
+      }
       setState(() {
         currIndex = newIndex;
       });
@@ -67,6 +76,9 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
   void nextItem() {
     int newIndex = currIndex + 1;
     if(newIndex < allStages.length){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.CLICK_TONE);
+      }
       setState(() {
         currIndex = newIndex;
       });
@@ -75,7 +87,9 @@ class _StageSelectPage extends State<StageSelectPage> with TickerProviderStateMi
 
   void updateToIndex(newIndex) {
     stats.updatePreference(StatsLoader.CURRENT_STAGE, allStages[newIndex].id);
-
+    if(widget.isTonesOn){
+      widget.tonesPlayer.play(ObjectsLoader.SELECT_TONE);
+    }
     setState(() {
       selectedIndex = newIndex;
     });

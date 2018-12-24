@@ -6,8 +6,14 @@ import './game_page.dart';
 import '../helpers/views/enemy_view.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/enemy.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 class EnemySelectPage extends StatefulWidget {
+
+  AudioCache tonesPlayer;
+  bool isTonesOn;
+
+  EnemySelectPage(this.tonesPlayer, this.isTonesOn);
 
   @override
   _EnemySelectPage createState() => _EnemySelectPage();
@@ -59,6 +65,9 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
   void prevItem() {
     int newIndex = currIndex - 1;
     if(newIndex >= 0){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.CLICK_TONE);
+      }
       setState(() {
         currIndex = newIndex;
       });
@@ -67,6 +76,9 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
   void nextItem() {
     int newIndex = currIndex + 1;
     if(newIndex < allEnemies.length){
+      if(widget.isTonesOn){
+        widget.tonesPlayer.play(ObjectsLoader.CLICK_TONE);
+      }
       setState(() {
         currIndex = newIndex;
       });
@@ -75,7 +87,9 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
 
   void updateToIndex(newIndex) {
     stats.updatePreference(StatsLoader.CURRENT_ENEMY, allEnemies[newIndex].id);
-
+    if(widget.isTonesOn){
+      widget.tonesPlayer.play(ObjectsLoader.SELECT_TONE);
+    }
     setState(() {
       selectedIndex = newIndex;
     });
