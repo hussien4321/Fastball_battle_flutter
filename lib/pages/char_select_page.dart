@@ -31,6 +31,7 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
   List<Character> allCharacters = [];
 
   bool loading = true;
+  bool allCharsUnlocked = false;
 
   void initState() {
     super.initState();
@@ -40,6 +41,8 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
   loadData() async {
 
     objectsLoader = new ObjectsLoader(context);
+
+    allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
 
     int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     currHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
@@ -59,6 +62,9 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
 
   @override
   void dispose() {
+    if(widget.isTonesOn){
+      widget.tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+    }
     super.dispose();
   }
 
@@ -96,22 +102,53 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
 
   }
 
+  void _goBack() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold( body: loading ? Center(child: Text('Loading...')):  Container(
       color: Colors.orangeAccent,
       padding: EdgeInsets.only(top: 30.0, bottom: 10.0, right: 5.0, left: 5.0),
       child: Column(
-            children: <Widget>[               
+            children: <Widget>[
               Container(
-                child: Stack(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: Row(
                   children: <Widget>[
-                    Center(
-                      child: Text(
-                        'Select Character',
-                        style: TextStyle(fontSize: 30.0),
+                    Container( 
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.orange[100]
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: _goBack,
+                        iconSize: 30.0,
                       ),
                     ),
+                    Expanded(
+                      child: Container(
+                        child: Stack(
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                'Select Character',
+                                style: TextStyle(fontSize: 30.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Opacity(
+                      opacity: 0.0,
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        iconSize: 30.0,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -137,7 +174,7 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
                         child: (currIndex-1 < 0) ? Container() : CharView(
                           char: allCharacters[currIndex-1], 
                           selected: currIndex-1 == selectedIndex, 
-                          unlocked: allCharacters[currIndex-1].unlockThreshold <= currHighScore,
+                          unlocked: allCharacters[currIndex-1].unlockThreshold <= currHighScore || allCharsUnlocked,
                           onClick: () => updateToIndex(currIndex-1)
                         )
                       ),
@@ -147,7 +184,7 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
                         child: CharView(
                           char: allCharacters[currIndex], 
                           selected: currIndex == selectedIndex, 
-                          unlocked: allCharacters[currIndex].unlockThreshold <= currHighScore,
+                          unlocked: allCharacters[currIndex].unlockThreshold <= currHighScore || allCharsUnlocked,
                           onClick: () => updateToIndex(currIndex)
                         )
                       ),
@@ -157,7 +194,7 @@ class _CharSelectPage extends State<CharSelectPage> with TickerProviderStateMixi
                         child: (currIndex+1 >= allCharacters.length) ? Container() : CharView(
                           char: allCharacters[currIndex+1], 
                           selected: currIndex+1 == selectedIndex, 
-                          unlocked: allCharacters[currIndex+1].unlockThreshold <= currHighScore,
+                          unlocked: allCharacters[currIndex+1].unlockThreshold <= currHighScore || allCharsUnlocked,
                           onClick: () => updateToIndex(currIndex+1)
                         )
                       ),

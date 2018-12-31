@@ -16,6 +16,7 @@ class StatsLoader {
   static final String STAGE_PAGE_SCORE = 'stagePageScore';
   static final String HIGH_SCORE = 'highScore';
   static final String ADS_PAID_STATUS = 'adsPaidStatus';
+  static final String ALL_ITEMS_UNLOCKED_STATUS = 'allItemsUnlockedStatus';
   static final String VOLUME = 'volume';
   static final String MUSIC_STATUS = 'musicStatus';
   static final String TONES_STATUS = 'tonesStatus';
@@ -26,7 +27,7 @@ class StatsLoader {
 
   //REMEMBER: Any new attributes to this file means the version MUST be incremented!
   final Map<String, dynamic> _initialPreferences = {
-    'v': 3,
+    'v': 4,
     'currentChar' : 1,
     'currentEnemy' : 1,
     'currentStage' : 1,
@@ -35,6 +36,7 @@ class StatsLoader {
     'charPageScore' : 0,
     'highScore' : 0,
     'adsPaidStatus' : false,
+    'allItemsUnlockedStatus' : false,
     'musicStatus' : true,
     'tonesStatus' : true,
     'volume' : 0.5,

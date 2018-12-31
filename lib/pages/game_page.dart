@@ -78,6 +78,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
   bool newHighScore;
 
+  bool allCharsUnlocked = false;
+  bool adsPaidStatus = false;
+
   int highScore;
   int currentScore;
   int strikes;
@@ -265,6 +268,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               }
             }
             setState(() => gameInProgress = false);
+            if(!adsPaidStatus){
+              //TODO: ADD ADS HERE
+              print('SHOW ADS HERE!');
+            }
           }
           obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
         }
@@ -303,6 +310,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
       gameStartAnimationController.addStatusListener((status){
         if(status == AnimationStatus.completed){
           setState(() => forcedLoading = false);
+          startMachine();
         }
       });
 
@@ -311,6 +319,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
 
   void loadImages() async{
+
+    allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
+    adsPaidStatus = await stats.getPreference(StatsLoader.ADS_PAID_STATUS);
+
     int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
     
     setState(() {
@@ -344,7 +356,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
     charHurtImages = await objectsLoader.loadCharImages(char.id, CHAR_ACTION_TYPE.HURT, context);
     charDeathImages = await objectsLoader.loadCharImages(char.id, CHAR_ACTION_TYPE.DEATH, context);
     
-    startMachine();
     setState(() {
       loading = false;
     });
@@ -366,6 +377,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
   @override
   void dispose() {
+    if(widget.isTonesOn){
+      widget.tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+    }
     machineAnimationController.dispose();
     obstacleAnimationController.dispose();
     obstacleDeathAnimationController.dispose();
@@ -416,7 +430,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
   void triggerInput() {
     
     if(canInput && gameInProgress){
-      if(widget.isTonesOn){
+      if(widget.isTonesOn && obstacle_status != OBSTACLE_STATUS.DEATH){
         widget.tonesPlayer.play(objectsLoader.getSwingSound(), volume: 0.5).then((controller) {
           swingController = controller;
         });
@@ -495,14 +509,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               ),
               Padding( padding: EdgeInsets.only(top: 20.0)),
               Text(
-                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : 'Next unlockable at $nextUnlockable points',
+                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : (nextUnlockable == 10000000 || allCharsUnlocked ? 'Good game!' : 'Next unlockable at $nextUnlockable points'),
                 style: TextStyle(fontSize: 20.0),
               ),
-              
-              // Text(
-              //   'Strikes: '+strikes.toString(),
-              //   style: TextStyle(fontSize: 30.0),
-              // ),
               gameInProgress ? Container() : Container(
                 padding: EdgeInsets.all(30.0),
                 child: Row(
@@ -510,12 +519,18 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
                   children: <Widget>[
                     RaisedButton(
                       onPressed: (()=> backToMenu()),
-                      child: Text('Back to menu'),
+                      child: Text(
+                        'Back to menu',
+                        style: Theme.of(context).textTheme.body1,
+                      ),
                       color: Colors.orange[300],
                     ),
                     RaisedButton(
                       onPressed: (()=> startMachine()),
-                      child: Text('Play again'),
+                      child: Text(
+                        'Play again',
+                        style: Theme.of(context).textTheme.body1,
+                      ),
                       color: Colors.orange[300],
                     ),
                   ],

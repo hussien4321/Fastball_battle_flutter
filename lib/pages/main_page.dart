@@ -6,6 +6,7 @@ import './game_page.dart';
 import './stage_select_page.dart';
 import './enemy_select_page.dart';
 import './char_select_page.dart';
+import './payments_page.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/stage.dart';
 import '../models/enemy.dart';
@@ -137,7 +138,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
         char = objectsLoader.getChar(newCharId);
       });
     }
-    int newEnemyId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
+    int newEnemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
     if(newEnemyId != enemy.id){
       setState(() {
         enemy = objectsLoader.getEnemy(newEnemyId);
@@ -312,7 +313,10 @@ Future<Null>_showDialog() async {
                       if(isTonesOn){
                         tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
                       }
-                      print('clicked');
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(builder: (context) => PaymentsPage(tonesPlayer, isTonesOn)),
+                      );
                     } ),
                     MenuButton('CHANGE ENEMY', Icons.person_outline, () async {
                       if(isTonesOn){

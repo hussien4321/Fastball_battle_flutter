@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
   }
 
   void _lockOrientation(){
+    SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,

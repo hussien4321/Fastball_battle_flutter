@@ -28,6 +28,8 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
   int selectedIndex;
   int currHighScore;
 
+  bool allCharsUnlocked = false;
+
   List<Enemy> allEnemies = [];
 
   bool loading = true;
@@ -40,6 +42,8 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
   loadData() async {
 
     objectsLoader = new ObjectsLoader(context);
+
+    allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
 
     int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
     currHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
@@ -59,6 +63,9 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
 
   @override
   void dispose() {
+    if(widget.isTonesOn){
+      widget.tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
+    }
     super.dispose();
   }
 
@@ -96,22 +103,53 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
 
   }
 
+  void _goBack() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold( body: loading ? Center(child: Text('LOADING...')):  Container(
       color: Colors.orangeAccent,
       padding: EdgeInsets.only(top: 30.0, bottom: 10.0, right: 5.0, left: 5.0),
       child: Column(
-            children: <Widget>[               
+            children: <Widget>[          
               Container(
-                child: Stack(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: Row(
                   children: <Widget>[
-                    Center(
-                      child: Text(
-                        'Select Enemy',
-                        style: TextStyle(fontSize: 30.0),
+                    Container( 
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.orange[100]
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: _goBack,
+                        iconSize: 30.0,
                       ),
                     ),
+                    Expanded(
+                      child: Container(
+                        child: Stack(
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                'Select Enemy',
+                                style: TextStyle(fontSize: 30.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Opacity(
+                      opacity: 0.0,
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        iconSize: 30.0,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -137,7 +175,7 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
                         child: (currIndex-1 < 0) ? Container() : EnemyView(
                           enemy: allEnemies[currIndex-1], 
                           selected: currIndex-1 == selectedIndex, 
-                          unlocked: allEnemies[currIndex-1].unlockThreshold <= currHighScore,
+                          unlocked: allEnemies[currIndex-1].unlockThreshold <= currHighScore || allCharsUnlocked,
                           onClick: () => updateToIndex(currIndex-1)
                         )
                       ),
@@ -147,7 +185,7 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
                         child: EnemyView(
                           enemy: allEnemies[currIndex], 
                           selected: currIndex == selectedIndex, 
-                          unlocked: allEnemies[currIndex].unlockThreshold <= currHighScore,
+                          unlocked: allEnemies[currIndex].unlockThreshold <= currHighScore || allCharsUnlocked,
                           onClick: () => updateToIndex(currIndex)
                         )
                       ),
@@ -157,7 +195,7 @@ class _EnemySelectPage extends State<EnemySelectPage> with TickerProviderStateMi
                         child: (currIndex+1 >= allEnemies.length) ? Container() : EnemyView(
                           enemy: allEnemies[currIndex+1], 
                           selected: currIndex+1 == selectedIndex, 
-                          unlocked: allEnemies[currIndex+1].unlockThreshold <= currHighScore,
+                          unlocked: allEnemies[currIndex+1].unlockThreshold <= currHighScore || allCharsUnlocked,
                           onClick: () => updateToIndex(currIndex+1)
                         )
                       ),
