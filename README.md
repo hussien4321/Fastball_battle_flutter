@@ -1,4 +1,4 @@
-# Ninja Baseball (undecided name)
+# Fastball Battle (previously known as 'ninja baseball')
 
 An endless-type mobile game using the Flutter project.
 

@@ -1,0 +1,85 @@
+Flutter crash report; please file at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter packages get
+
+## exception
+
+YamlException: Error on line 14, column 3: Duplicate mapping key.
+  flutter_local_notifications: ^0.4.2+1
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+```
+#0      Loader._loadMapping (package:yaml/src/loader.dart:167:9)
+#1      Loader._loadNode (package:yaml/src/loader.dart:86:16)
+#2      Loader._loadMapping (package:yaml/src/loader.dart:165:19)
+#3      Loader._loadNode (package:yaml/src/loader.dart:86:16)
+#4      Loader._loadDocument (package:yaml/src/loader.dart:62:20)
+#5      Loader.load (package:yaml/src/loader.dart:54:20)
+#6      loadYamlDocument (package:yaml/yaml.dart:51:25)
+#7      loadYamlNode (package:yaml/yaml.dart:42:5)
+#8      loadYaml (package:yaml/yaml.dart:34:5)
+#9      FlutterManifest.createFromString (package:flutter_tools/src/flutter_manifest.dart:42:28)
+<asynchronous suspension>
+#10     FlutterManifest.createFromPath (package:flutter_tools/src/flutter_manifest.dart:36:12)
+<asynchronous suspension>
+#11     FlutterProject._readManifest (package:flutter_tools/src/project.dart:128:60)
+<asynchronous suspension>
+#12     FlutterProject.fromDirectory (package:flutter_tools/src/project.dart:42:44)
+<asynchronous suspension>
+#13     FlutterProject.fromPath (package:flutter_tools/src/project.dart:57:58)
+#14     PackagesGetCommand.runCommand (package:flutter_tools/src/commands/packages.dart:83:61)
+<asynchronous suspension>
+#15     FlutterCommand.verifyThenRunCommand (package:flutter_tools/src/runner/flutter_command.dart:372:18)
+#16     _asyncThenWrapperHelper.<anonymous closure> (dart:async/runtime/libasync_patch.dart:77:64)
+#17     _rootRunUnary (dart:async/zone.dart:1132:38)
+#18     _CustomZone.runUnary (dart:async/zone.dart:1029:19)
+#19     _FutureListener.handleValue (dart:async/future_impl.dart:129:18)
+#20     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:642:45)
+#21     Future._propagateToListeners (dart:async/future_impl.dart:671:32)
+#22     Future._complete (dart:async/future_impl.dart:476:7)
+#23     _SyncCompleter.complete (dart:async/future_impl.dart:51:12)
+#24     _AsyncAwaitCompleter.complete.<anonymous closure> (dart:async/runtime/libasync_patch.dart:33:20)
+#25     _rootRun (dart:async/zone.dart:1124:13)
+#26     _CustomZone.run (dart:async/zone.dart:1021:19)
+#27     _CustomZone.bindCallback.<anonymous closure> (dart:async/zone.dart:947:23)
+#28     _microtaskLoop (dart:async/schedule_microtask.dart:41:21)
+#29     _startMicrotaskLoop (dart:async/schedule_microtask.dart:50:5)
+#30     _Timer._runTimers (dart:isolate/runtime/libtimer_impl.dart:391:30)
+#31     _Timer._handleMessage (dart:isolate/runtime/libtimer_impl.dart:416:5)
+#32     _RawReceivePortImpl._handleMessage (dart:isolate/runtime/libisolate_patch.dart:171:12)
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel beta, v0.9.4, on Microsoft Windows [Version 10.0.16299.371], locale en-GB)
+    • Flutter version 0.9.4 at C:\Users\MSI\Documents\Projects\flutter
+    • Framework revision f37c235c32 (3 months ago), 2018-09-25 17:45:40 -0400
+    • Engine revision 74625aed32
+    • Dart version 2.1.0-dev.5.0.flutter-a2eb050044
+
+[✓] Android toolchain - develop for Android devices (Android SDK 28.0.2)
+    • Android SDK at C:\Users\MSI\AppData\Local\Android\sdk
+    • Android NDK location not configured (optional; useful for native profiling support)
+    • Platform android-28, build-tools 28.0.2
+    • Java binary at: D:\Hussien\Games\Android\Android Studio\jre\bin\java
+    • Java version OpenJDK Runtime Environment (build 1.8.0_152-release-1024-b02)
+    • All Android licenses accepted.
+
+[✓] Android Studio (version 3.1)
+    • Android Studio at D:\Hussien\Games\Android\Android Studio
+    • Flutter plugin version 24.2.1
+    • Dart plugin version 173.4700
+    • Java version OpenJDK Runtime Environment (build 1.8.0_152-release-1024-b02)
+
+[✓] VS Code, 64-bit edition (version 1.30.1)
+    • VS Code at C:\Program Files\Microsoft VS Code
+    • Flutter extension version 2.21.1
+
+[!] Connected devices
+    ! No devices available
+
+! Doctor found issues in 1 category.
+```

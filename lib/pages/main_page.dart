@@ -15,6 +15,7 @@ import '../models/character.dart';
 import '../helpers/views/sounds_dialogs.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audio_cache.dart';
+import '../services/notifications.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -27,6 +28,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
+  NotificationService notifications = new NotificationService();
 
   StatsLoader stats;
   ObjectsLoader objectsLoader;
@@ -59,7 +61,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     objectsLoader = new ObjectsLoader(context);
     await objectsLoader.reInitiliaze();
 
-  
+
 
     await loadChar();
     await loadEnemy();
@@ -75,6 +77,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
     // TODO: Set up a notification for 1 day with something like, "Can't beat your score of 10, have you given up?" 
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
+
+    notifications.createReminderNotification(highScoreValue, objectsLoader.calculateNextUnlockable(highScoreValue));
 
     newChars = false;
     newEnemies = false;
@@ -154,6 +158,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     //updates the high score if a game was just finished
     int newHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
     if(newHighScore > highScore){
+      
+      notifications.createReminderNotification(newHighScore, objectsLoader.calculateNextUnlockable(newHighScore));
+
       setState(() {
         highScore = newHighScore;
       });
@@ -245,7 +252,7 @@ Future<Null>_showDialog() async {
                   children: <Widget>[
                     Center(
                       child: Text(
-                        'Ninja baseball',
+                        'Fastball Battle',
                         style: TextStyle(fontSize: 30.0),
                       ),
                     ),

@@ -128,7 +128,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
     }
   }
 
-
   void initState() {
 
     loading = true;
@@ -560,19 +559,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               ],
             )
           ),
-          gameInProgress ? Container(
-            padding: EdgeInsets.only(top: 25.0, right: 10.0),
-            child: Align(
-                alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.pause_circle_outline,
-                      color: Colors.black,
-                    ),
-                    iconSize: 32.0,
-                  ),
-                ),
-          ) : Container(),
         ],
       ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import './pages/main_page.dart';
 import './services/objects_loader.dart';
 import './services/stats_loader.dart';
+import './services/notifications.dart';
 
 void main() => runApp(new MyApp());
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     _initializeServices(context);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Baseball game',
+      title: 'Fastball Battle',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
         textTheme: TextTheme(
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
   void _initializeServices(BuildContext context){
     new StatsLoader();
     new ObjectsLoader(context);
+    new NotificationService();
   }
 
 }
