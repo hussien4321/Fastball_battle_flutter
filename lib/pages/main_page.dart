@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
 
     setState(() {
-      this.highScore = highScoreValue;
+      highScore = highScoreValue;
       loading = false; 
     });
   }

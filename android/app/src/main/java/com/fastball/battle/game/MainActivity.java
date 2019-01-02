@@ -1,4 +1,4 @@
-package com.example.ninjabaseball;
+package com.fastball.battle.game;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

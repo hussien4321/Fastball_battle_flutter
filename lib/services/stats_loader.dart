@@ -67,7 +67,6 @@ class StatsLoader {
   }
 
   reInitiliaze() async {
-    print('Initializing Stats Loader...');
     Directory directory = await getApplicationDocumentsDirectory();
     Directory dir = directory;
     _jsonFile = new File(dir.path +  "/" + _fileName);
@@ -75,12 +74,9 @@ class StatsLoader {
     if (fileExists){
       _currentPreferences = json.decode(_jsonFile.readAsStringSync());
       if(!_currentPreferences.containsKey(VERSION) || _currentPreferences[VERSION] < _initialPreferences[VERSION]){
-        print('detected missing config! ${!_currentPreferences.containsKey('v')} OR ${_currentPreferences['v'] < _initialPreferences['v']} ${_currentPreferences['v']} < ${_initialPreferences['v']}');
         _currentPreferences[VERSION] = _initialPreferences[VERSION];
-        print('updated: ${_currentPreferences['v']} = ${_initialPreferences['v']}');
         for(String missingKey in _initialPreferences.keys){
           if(!_currentPreferences.containsKey(missingKey)){
-            print('adding $missingKey to _currentPreferences');
             _currentPreferences[missingKey] = _initialPreferences[missingKey];
           }
         }
@@ -101,7 +97,6 @@ class StatsLoader {
 
   void updatePreference(String key, dynamic value) {
 
-    print('Updating $key to $value');
     Map<String, dynamic> content = {key: value};
     Map<String, dynamic> jsonFileContent = json.decode(_jsonFile.readAsStringSync());
     jsonFileContent.addAll(content);

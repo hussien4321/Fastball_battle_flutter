@@ -91,7 +91,6 @@ class ObjectsLoader {
 
   reInitiliaze() async {
     if(_stages == null){
-      print('Initializing Objects Loader...');
       String data = await DefaultAssetBundle.of(_context).loadString(_filePath);
       final jsonResult = json.decode(data);
 

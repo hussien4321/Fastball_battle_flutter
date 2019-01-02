@@ -118,7 +118,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state changed to ${state.index}');
     if(state.index == 0 ){
       if(widget.isMusicOn){
         widget.bgmController.resume();
@@ -219,7 +218,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
             }
             int newScore = currentScore + 1;
             if(newScore > highScore){
-              print('high score tone!');
               if(widget.isTonesOn){
                 widget.tonesPlayer.play(ObjectsLoader.NEW_HIGH_SCORE_TONE);
               }
