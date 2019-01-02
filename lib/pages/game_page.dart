@@ -12,7 +12,8 @@ import '../models/enemy.dart';
 import '../helpers/views/menu_button.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audio_cache.dart';
-
+import 'package:firebase_admob/firebase_admob.dart';
+import '../services/admob_tools.dart';
 
 class GamePage extends StatefulWidget {
 
@@ -21,8 +22,9 @@ class GamePage extends StatefulWidget {
   bool isMusicOn;
   AudioCache tonesPlayer;
   bool isTonesOn;
+  bool allCharsUnlocked;
 
-  GamePage(this.parentContext, this.bgmController, this.isMusicOn, this.tonesPlayer, this.isTonesOn);
+  GamePage(this.parentContext, this.bgmController, this.isMusicOn, this.tonesPlayer, this.isTonesOn, this.allCharsUnlocked);
 
   @override
   _GamePageState createState() => _GamePageState();
@@ -35,6 +37,7 @@ enum OBSTACLE_STATUS{
 }
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin, WidgetsBindingObserver {
 
+  InterstitialAd myInterstitial;
   StatsLoader stats;
   ObjectsLoader objectsLoader;
 
@@ -78,7 +81,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
   bool newHighScore;
 
-  bool allCharsUnlocked = false;
   bool adsPaidStatus = false;
 
   int highScore;
@@ -135,6 +137,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
     objectsLoader = new ObjectsLoader(context);
     stats = StatsLoader();
 
+    myInterstitial = createInterstitialAd()..load();
+
     collisionImages = [];
     enemyIdleImages = [];
     enemyInputImages = [];
@@ -153,8 +157,21 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
     super.initState();
   }
 
+
+  InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+      adUnitId: AdmobTools.interstitialAdUnitId,
+      targetingInfo: AdmobTools.targetingInfo,
+      listener: (MobileAdEvent event) {
+        if(event == MobileAdEvent.closed){
+          myInterstitial = createInterstitialAd()..load();
+        }
+      },
+    );
+  }
+
   void initControllers(){
-    
+
       machineAnimationController = new AnimationController(duration: new Duration(), vsync: this);
       obstacleAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DURATION), vsync: this);
       obstacleDeathAnimationController = new AnimationController(duration: new Duration(milliseconds: OBSTACLE_DEATH_DURATION), vsync: this);
@@ -206,7 +223,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               if(widget.isTonesOn){
                 widget.tonesPlayer.play(ObjectsLoader.NEW_HIGH_SCORE_TONE);
               }
-              nextUnlockable = objectsLoader.calculateNextUnlockable(highScore);
+              nextUnlockable = objectsLoader.calculateNextUnlockable(highScore, widget.allCharsUnlocked);
               newHighScore = true;
             }
             setState(() {
@@ -268,8 +285,11 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
             }
             setState(() => gameInProgress = false);
             if(!adsPaidStatus){
-              //TODO: ADD ADS HERE
-              print('SHOW ADS HERE!');
+              myInterstitial..show(
+                anchorType: AnchorType.bottom,
+                anchorOffset: 0.0,
+              );
+              
             }
           }
           obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
@@ -319,7 +339,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
   void loadImages() async{
 
-    allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
     adsPaidStatus = await stats.getPreference(StatsLoader.ADS_PAID_STATUS);
 
     int stageId = await stats.getPreference(StatsLoader.CURRENT_STAGE);
@@ -332,7 +351,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
     int charId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     int enemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
 
-    nextUnlockable = objectsLoader.calculateNextUnlockable(highScore);
+    nextUnlockable = objectsLoader.calculateNextUnlockable(highScore, widget.allCharsUnlocked);
 
     char = objectsLoader.getChar(charId);
     enemy = objectsLoader.getEnemy(enemyId);
@@ -386,6 +405,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
     flashingTextAnimationController.dispose();
     gameStartAnimationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    myInterstitial?.dispose();
+    myInterstitial = null;
+
     super.dispose();
   }
 
@@ -508,7 +530,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               ),
               Padding( padding: EdgeInsets.only(top: 20.0)),
               Text(
-                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : (nextUnlockable == 10000000 || allCharsUnlocked ? 'Good game!' : 'Next unlockable at $nextUnlockable points'),
+                newHighScore ? canShowFlashingText() ? 'NEW HIGH SCORE!' : '' : gameInProgress ? '' : (nextUnlockable == 10000000 || widget.allCharsUnlocked ? 'Good game!' : 'Next unlockable at $nextUnlockable points'),
                 style: TextStyle(fontSize: 20.0),
               ),
               gameInProgress ? Container() : Container(

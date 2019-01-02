@@ -4,6 +4,8 @@ import './pages/main_page.dart';
 import './services/objects_loader.dart';
 import './services/stats_loader.dart';
 import './services/notifications.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import './services/admob_tools.dart';
 
 void main() => runApp(new MyApp());
 
@@ -36,10 +38,15 @@ class MyApp extends StatelessWidget {
     ]);
   }
 
-  void _initializeServices(BuildContext context){
+  void _initializeServices(BuildContext context) async {
     new StatsLoader();
     new ObjectsLoader(context);
     new NotificationService();
+
+    _initializeAds();
+  }
+  void _initializeAds() async {
+    await FirebaseAdMob.instance.initialize(appId: AdmobTools.appId);
   }
 
 }

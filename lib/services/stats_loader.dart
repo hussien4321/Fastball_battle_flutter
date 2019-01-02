@@ -101,6 +101,7 @@ class StatsLoader {
 
   void updatePreference(String key, dynamic value) {
 
+    print('Updating $key to $value');
     Map<String, dynamic> content = {key: value};
     Map<String, dynamic> jsonFileContent = json.decode(_jsonFile.readAsStringSync());
     jsonFileContent.addAll(content);

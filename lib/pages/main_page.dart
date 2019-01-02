@@ -40,7 +40,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
   Stage stage;
   BGM bgm;
 
-  bool isMusicOn, isTonesOn;
+  bool shareEnabled = false;
+
+  bool isMusicOn, isTonesOn, allCharsUnlocked;
 
   int highScore;
 
@@ -68,6 +70,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     await loadStage();
     await loadBGM();
 
+    allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
     isMusicOn = await stats.getPreference(StatsLoader.MUSIC_STATUS);
     isTonesOn = await stats.getPreference(StatsLoader.TONES_STATUS);
     
@@ -78,7 +81,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     // TODO: Set up a notification for 1 day with something like, "Can't beat your score of 10, have you given up?" 
     int highScoreValue = await stats.getPreference(StatsLoader.HIGH_SCORE);
 
-    notifications.createReminderNotification(highScoreValue, objectsLoader.calculateNextUnlockable(highScoreValue));
+    notifications.createReminderNotification(highScoreValue, objectsLoader.calculateNextUnlockable(highScoreValue, allCharsUnlocked));
 
     newChars = false;
     newEnemies = false;
@@ -135,6 +138,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
 
     //updates the chars/enemies/stages if they have been changed recently
+    allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
 
     int newCharId = await stats.getPreference(StatsLoader.CURRENT_CHARACTER);
     if(newCharId != char.id){
@@ -159,7 +163,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     int newHighScore = await stats.getPreference(StatsLoader.HIGH_SCORE);
     if(newHighScore > highScore){
       
-      notifications.createReminderNotification(newHighScore, objectsLoader.calculateNextUnlockable(newHighScore));
+      notifications.createReminderNotification(newHighScore, objectsLoader.calculateNextUnlockable(newHighScore, allCharsUnlocked));
 
       setState(() {
         highScore = newHighScore;
@@ -309,7 +313,7 @@ Future<Null>_showDialog() async {
                       }
                       await Navigator.push(
                         context,
-                        CustomPageRoute(builder: (context) => GamePage(context, bgmController, isMusicOn, tonesPlayer, isTonesOn)),
+                        CustomPageRoute(builder: (context) => GamePage(context, bgmController, isMusicOn, tonesPlayer, isTonesOn, allCharsUnlocked)),
                       );
                       if(isMusicOn){
                         bgmController.release();
@@ -350,15 +354,18 @@ Future<Null>_showDialog() async {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        'High Score: '+ (highScore < 0 ? '...' : highScore.toString()),
-                        style: TextStyle(fontSize: 20.0),
+                      Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          'High Score: '+ (highScore < 0 ? '...' : highScore.toString()),
+                          style: TextStyle(fontSize: 20.0),
+                        ),
                       ),
-                      IconButton(
+                      shareEnabled ? IconButton(
                         icon: Icon(Icons.share),
                         iconSize: 30.0,
                         onPressed: () => print('I got a high score of $highScore'),
-                      )
+                      ) : Container()
                     ],
                   ),
                 ),

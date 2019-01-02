@@ -158,9 +158,11 @@ class ObjectsLoader {
     });
   }
 
-  int calculateNextUnlockable(int newHighScore){
+  int calculateNextUnlockable(int newHighScore, bool allCharsUnlocked){
     int nextUnlockable = 10000000;
-
+    if(allCharsUnlocked){
+      return nextUnlockable;
+    }
 
     _characters.forEach((char) {
       if(char.unlockThreshold > newHighScore && char.unlockThreshold < nextUnlockable){
