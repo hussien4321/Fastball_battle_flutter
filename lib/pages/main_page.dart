@@ -12,7 +12,8 @@ import '../models/stage.dart';
 import '../models/enemy.dart';
 import '../models/bgm.dart';
 import '../models/character.dart';
-import '../helpers/views/sounds_dialogs.dart';
+import '../helpers/views/sounds_dialog.dart';
+import '../helpers/views/tutorial_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:audioplayers/audio_cache.dart';
 import '../services/notifications.dart';
@@ -147,6 +148,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       });
     }
     int newEnemyId = await stats.getPreference(StatsLoader.CURRENT_ENEMY);
+    print('newEnemyId:$newEnemyId, enemy.id:${enemy.id}');
     if(newEnemyId != enemy.id){
       setState(() {
         enemy = objectsLoader.getEnemy(newEnemyId);
@@ -170,14 +172,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       });
     }
 
-    //checking if new chars/enemies/stages have been unlocked and updates that info on the page button
-    lastScoreStage = await stats.getPreference(StatsLoader.STAGE_PAGE_SCORE);
-    lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
-    lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
+    if(!allCharsUnlocked){
+      //checking if new chars/enemies/stages have been unlocked and updates that info on the page button
+      lastScoreStage = await stats.getPreference(StatsLoader.STAGE_PAGE_SCORE);
+      lastScoreEnemy = await stats.getPreference(StatsLoader.ENEMY_PAGE_SCORE);
+      lastScoreChar = await stats.getPreference(StatsLoader.CHAR_PAGE_SCORE);
 
-    newChars = objectsLoader.checkNewChars(newHighScore, lastScoreChar);
-    newEnemies = objectsLoader.checkNewEnemies(newHighScore, lastScoreEnemy);
-    newStages = objectsLoader.checkNewStages(newHighScore, lastScoreStage);
+      newChars = objectsLoader.checkNewChars(newHighScore, lastScoreChar);
+      newEnemies = objectsLoader.checkNewEnemies(newHighScore, lastScoreEnemy);
+      newStages = objectsLoader.checkNewStages(newHighScore, lastScoreStage);
+    }
 
     setState(() {
       loading = false;
@@ -193,7 +197,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
     tonesPlayer.clearCache();
 
   }
-Future<Null>_showDialog() async {
+Future<Null>_showSoundsDialog() async {
   return showDialog(
     context: context,
     builder: (newContext) {
@@ -207,7 +211,7 @@ Future<Null>_showDialog() async {
             isMusicOn = onOff;                                    
           });
           Navigator.of(context).pop();
-          _showDialog();
+          _showSoundsDialog();
         },
         updateTonesSwitch: (onOff) {
           stats.updatePreference(StatsLoader.TONES_STATUS, onOff);
@@ -215,7 +219,7 @@ Future<Null>_showDialog() async {
             isTonesOn = onOff;                                    
           });
           Navigator.of(context).pop();
-          _showDialog();
+          _showSoundsDialog();
         },
         updateBGM: (newBGMId) {
           stats.updatePreference(StatsLoader.CURRENT_BGM, newBGMId);
@@ -225,7 +229,7 @@ Future<Null>_showDialog() async {
             });
           }
           Navigator.of(context).pop();
-          _showDialog();
+          _showSoundsDialog();
         },
         onSave: () {
           if(isTonesOn){
@@ -238,6 +242,14 @@ Future<Null>_showDialog() async {
   );
 }
 
+Future<Null>_showTutorialDialog() async {
+  return showDialog(
+    context: context,
+    builder: (newContext) {
+      return TutorialDialog();
+    }
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -252,14 +264,9 @@ Future<Null>_showDialog() async {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[               
               Container(
-                child: Stack(
+                child: Row(
                   children: <Widget>[
-                    Center(
-                      child: Text(
-                        'Fastball Battle',
-                        style: TextStyle(fontSize: 30.0),
-                      ),
-                    ),
+                    
                     Container(
                       padding: EdgeInsets.only(left: 10.0),
                       child: Material(
@@ -267,9 +274,29 @@ Future<Null>_showDialog() async {
                         color: Colors.orange[100],
                         child: IconButton(
                           icon: Icon(Icons.music_note),
-                          onPressed: () {
-                            _showDialog();
-                          },
+                          onPressed: _showSoundsDialog,
+                          iconSize: 30.0,
+                          color: Colors.black,
+                          padding: EdgeInsets.all(0.0),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'Fastball Battle',
+                          style: TextStyle(fontSize: 30.0),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(right: 10.0),
+                      child: Material(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        color: Colors.orange[100],
+                        child: IconButton(
+                          icon: Icon(Icons.help),
+                          onPressed: _showTutorialDialog,
                           iconSize: 30.0,
                           color: Colors.black,
                           padding: EdgeInsets.all(0.0),
@@ -333,46 +360,57 @@ Future<Null>_showDialog() async {
                       if(isTonesOn){
                         tonesPlayer.play(ObjectsLoader.PAGE_NAV_TONE);
                       }
-                      Navigator.push(
+                      await Navigator.push(
                         context,
                         CustomPageRoute(builder: (context) => EnemySelectPage(tonesPlayer, isTonesOn)),
                       );
+                      updatePage();
                     }, newEnemies),
                   ],
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  Expanded(
-                    child: Container()
+                  Container(
+                    child: Image.asset(
+                      '${char.idleAction.srcPrefix}0${char.idleAction.startIndex}.png',
+                      width: 100.0,
+                      height: 100.0,
+                    ),
                   ),
-              Material(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                color: Colors.orange[100],
-                child: Container(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          'High Score: '+ (highScore < 0 ? '...' : highScore.toString()),
-                          style: TextStyle(fontSize: 20.0),
-                        ),
+                  Material(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    color: Colors.orange[100],
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              'High Score: '+ (highScore < 0 ? '...' : highScore.toString()),
+                              style: TextStyle(fontSize: 20.0),
+                            ),                          
+                          ),  
+                          shareEnabled ? IconButton(
+                            icon: Icon(Icons.share),
+                            iconSize: 30.0,
+                            onPressed: () => print('I got a high score of $highScore'),
+                          ) : Container(),
+                        ],
                       ),
-                      shareEnabled ? IconButton(
-                        icon: Icon(Icons.share),
-                        iconSize: 30.0,
-                        onPressed: () => print('I got a high score of $highScore'),
-                      ) : Container()
-                    ],
+                    ),
                   ),
-                ),
-              ),
-                  Expanded(
-                    child: Container()
-                  ),
+                  Container(
+                    child: Image.asset(
+                      '${enemy.idleAction.srcPrefix}0${enemy.idleAction.startIndex}.png',
+                      width: 100.0,
+                      height: 100.0,
+                    ),
+                  ),                     
                 ],
               )
             ],

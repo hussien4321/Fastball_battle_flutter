@@ -38,6 +38,8 @@ enum OBSTACLE_STATUS{
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin, WidgetsBindingObserver {
 
   InterstitialAd myInterstitial;
+  bool waitingForAds = false;
+
   StatsLoader stats;
   ObjectsLoader objectsLoader;
 
@@ -75,6 +77,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
   AnimationController  gameStartAnimationController;
 
   static final int GAME_START_TEXT_DURATION = 3000; //the minimum time the user should be shown the message on the load screen before game starts 
+
+  AnimationController  waitForAdsController;
+
+  static final int WAIT_FOR_ADS_DURATION = 1500; //the minimum time the user should be prevented from starting a new game, so the ad can load appropriately 
 
   bool canInput;
 
@@ -177,6 +183,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
       inputAnimationController = new AnimationController(duration: new Duration(milliseconds: TIME_INVALID_AFTER_HIT), vsync: this);
       flashingTextAnimationController = new AnimationController(duration: new Duration(milliseconds: FLASHING_TEXT_DURATION), vsync: this);
       gameStartAnimationController = new AnimationController(duration: new Duration(milliseconds: GAME_START_TEXT_DURATION), vsync: this);
+      waitForAdsController = new AnimationController(duration: new Duration(milliseconds: WAIT_FOR_ADS_DURATION), vsync: this);
 
       machineAnimation = IntTween(
         begin: 0,
@@ -283,11 +290,14 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
             }
             setState(() => gameInProgress = false);
             if(!adsPaidStatus){
+              setState(() {
+                waitingForAds = true;
+              });
               myInterstitial..show(
                 anchorType: AnchorType.bottom,
                 anchorOffset: 0.0,
               );
-              
+              waitForAdsController.forward();
             }
           }
           obstacle_status = OBSTACLE_STATUS.OFFSCREEN;
@@ -332,6 +342,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
       });
 
       gameStartAnimationController.forward();
+      
+      waitForAdsController.addStatusListener((status){
+        if(status == AnimationStatus.completed){
+          setState(() => waitingForAds = false);
+          waitForAdsController.reset();
+        }
+      });
   }
 
 
@@ -545,7 +562,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
                       color: Colors.orange[300],
                     ),
                     RaisedButton(
-                      onPressed: (()=> startMachine()),
+                      onPressed: waitingForAds ? null : (()=> startMachine()),
                       child: Text(
                         'Play again',
                         style: Theme.of(context).textTheme.body1,
@@ -579,6 +596,23 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               ],
             )
           ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: EdgeInsets.only(top: 30.0, right: 10.0),
+              child: Material(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                color: Colors.orange[100],
+                child: IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                  iconSize: 30.0,
+                  color: Colors.black,
+                  padding: EdgeInsets.all(0.0),
+                ),
+              ),
+            ),
+          )
         ],
       ),
       ),

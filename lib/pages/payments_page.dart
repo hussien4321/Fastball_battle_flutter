@@ -7,6 +7,10 @@ import '../helpers/views/payment_view.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/enemy.dart';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
+
 
 class PaymentsPage extends StatefulWidget {
 
@@ -20,6 +24,20 @@ class PaymentsPage extends StatefulWidget {
 }
 
 class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMixin{
+  final List<String>_productLists = Platform.isAndroid
+      ? [
+    'android.test.purchased',
+    'point_1000',
+    '5000_point',
+    'android.test.canceled',
+  ]
+      : ['com.cooni.point1000','com.cooni.point5000'];
+
+  String _platformVersion = 'Unknown';
+  List<IAPItem> _items = [];
+
+  bool restoring = false;
+
 
   StatsLoader stats = new StatsLoader();
   ObjectsLoader objectsLoader;
@@ -32,6 +50,7 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
   void initState() {
     super.initState();
     loadData();
+    initPlatformState();
   }
 
   loadData() async {
@@ -43,6 +62,48 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
     setState(() {
       loading = false; 
       
+    });
+  }
+
+  
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await FlutterInappPurchase.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    // initConnection
+    var result = await FlutterInappPurchase.initConnection;
+    print ('result: $result');
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+
+    // refresh items for android
+    String msg = await FlutterInappPurchase.consumeAllItems;
+    print('consumeAllItems: $msg');
+  }
+
+
+  Future<Null> _getProducts() async {
+    List<IAPItem> items = await FlutterInappPurchase.getProducts(_productLists);
+    for (var item in items) {
+      print('${item.toString()}');
+      this._items.add(item);
+    }
+
+    setState(() {
+      this._items = items;
     });
   }
 
@@ -78,6 +139,23 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
     }
   }
 
+  void _restorePurchases() async {
+    setState(() {
+      restoring=true;
+    });
+    await _getProducts();
+
+    print('you have ${_items.length} items');
+
+    //restore the purchases
+    //update the states of ads and all items
+    //turn the restore button back on
+    
+    setState(() {
+      restoring=false;
+    });
+  }
+
   void _goBack() {
     Navigator.pop(context);
   }
@@ -91,8 +169,46 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
             children: <Widget>[          
               Container(
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: Row(
-                  children: <Widget>[
+                  child: Stack(
+                    children: <Widget> [
+                      Row(
+                       children: <Widget>[  
+                        Opacity(
+                          opacity: 0.0,
+                          child: RaisedButton(
+                            child: Text(
+                              !restoring ? 'Restore' : 'Restoring...',
+                              style: Theme.of(context).textTheme.body1,
+                            ),
+                            color: Colors.orange[100],
+                            onPressed: null,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.only(bottom: 15.0),
+                            child: Stack(
+                              children: <Widget>[
+                                Center(
+                                  child: Text(
+                                    'Buy bonuses',
+                                    style: TextStyle(fontSize: 30.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        RaisedButton(
+                          child: Text(
+                            !restoring ? 'Restore' : 'Restoring...',
+                            style: Theme.of(context).textTheme.body1,
+                          ),
+                          color: Colors.orange[100],
+                          onPressed: !restoring ? _restorePurchases : null,
+                        ),
+                      ],
+                    ),
                     Container( 
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
@@ -103,30 +219,6 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
                         onPressed: _goBack,
                         iconSize: 30.0,
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(bottom: 15.0),
-                        child: Stack(
-                          children: <Widget>[
-                            Center(
-                              child: Text(
-                                'Buy bonuses',
-                                style: TextStyle(fontSize: 30.0),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Opacity(
-                        opacity: 0.0,
-                        child: IconButton(
-                          icon: Icon(Icons.close),
-                          iconSize: 30.0,
-                        ),
-                      )
                     ),
                   ],
                 ),
@@ -178,7 +270,7 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
                             ),
                           ),
                           paymentName: 'Remove Ads',
-                          paymentDescription: "Enjoy the ninja baseball experience with no ads!",
+                          paymentDescription: "Enjoy the fastball battle experience with no ads!",
                           unlocked: adsPaidStatus,
                           onClick: _removeAds
                         )

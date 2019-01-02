@@ -12,6 +12,8 @@ dependencies:
   audioplayers: ^0.7.8
   flutter_local_notifications: ^0.4.2+1
   firebase_admob: ^0.7.0
+  flutter_inapp_purchase: ^0.8.7
+  page_view_indicator: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +40,9 @@ flutter:
     - assets/balls/
     - assets/data/
     - assets/fonts/
+    - assets/enemy_animations/enemy_00/enemy_idle/
+    - assets/enemy_animations/enemy_00/enemy_throw/
+    - assets/enemy_animations/enemy_00/enemy_hurt/
     - assets/enemy_animations/enemy_01/enemy_idle/
     - assets/enemy_animations/enemy_01/enemy_throw/
     - assets/enemy_animations/enemy_01/enemy_hurt/
@@ -56,9 +61,6 @@ flutter:
     - assets/enemy_animations/enemy_06/enemy_idle/
     - assets/enemy_animations/enemy_06/enemy_throw/
     - assets/enemy_animations/enemy_06/enemy_hurt/
-    - assets/enemy_animations/enemy_07/enemy_idle/
-    - assets/enemy_animations/enemy_07/enemy_throw/
-    - assets/enemy_animations/enemy_07/enemy_hurt/
     - assets/music/
     - assets/player_animations/player_01/player_idle/
     - assets/player_animations/player_01/player_swing/

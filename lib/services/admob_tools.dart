@@ -5,7 +5,7 @@ class AdmobTools {
   
   static final MobileAdTargetingInfo targetingInfo = new MobileAdTargetingInfo(
     testDevices: <String>['B2AA47A5B61A62208DFAF5C4CD83EB0A', 'a4d0c870e8ac15dc1b13d5be2d248dbb'],
-    keywords: <String>['game', 'fun', 'casual', 'arcade', 'endless game', 'baseball', 'battle'],
+    keywords: <String>['game', 'fun', 'casual game', 'arcade', 'endless game', 'baseball', 'battle'],
   );
 
   static final String testAppId = FirebaseAdMob.testAppId;
