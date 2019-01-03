@@ -213,16 +213,16 @@
     "enemies" : [
         {
             "id" : 1,
-            "name": "Timmy",
+            "name": "Robot",
             "shoots_bullets": false,
             "unlock_threshold": 0,
             "hurt_src" : "music/enemy_00_hurt.wav",
             "weapon_src": "assets/balls/baseball.png",
             "idle_action": {
-                "src_prefix": "assets/enemy_animations/enemy_00/enemy_idle/Idle Blink_0", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/enemy_animations/enemy_00/enemy_idle/Idle_0", "start_index": 0, "image_count": 12
             },
             "throw_action": {
-                "src_prefix": "assets/enemy_animations/enemy_00/enemy_throw/Throwing_0", "start_index": 0, "image_count": 12
+                "src_prefix": "assets/enemy_animations/enemy_00/enemy_throw/Attacking_0", "start_index": 0, "image_count": 12
             },
             "hurt_action": {
                 "src_prefix": "assets/enemy_animations/enemy_00/enemy_hurt/Hurt_0", "start_index": 0, "image_count": 12
