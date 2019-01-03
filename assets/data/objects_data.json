@@ -334,7 +334,7 @@
     "stages" : [
         {
             "id" : 1,
-            "name": "Friendly town",
+            "name": "Plain Plains",
             "src": "assets/backgrounds/stage_01.png",
             "bgm": "",
             "unlock_threshold": 0
