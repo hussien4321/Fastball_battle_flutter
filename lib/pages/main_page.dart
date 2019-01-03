@@ -253,11 +253,12 @@ Future<Null>_showTutorialDialog() async {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: stage == null ? null : BoxDecoration(
+      decoration: stage == null ? BoxDecoration(color: Colors.orangeAccent) : BoxDecoration(
         image: new DecorationImage(
           image: new AssetImage(stage.src, bundle: DefaultAssetBundle.of(context)),
           fit: BoxFit.fill,
         ),
+        color: Colors.orangeAccent
       ),
       padding: EdgeInsets.only(top: 30.0, bottom: 10.0, right: 5.0, left: 5.0),
       child: loading ? Center(child: Text('LOADING...')): Column(

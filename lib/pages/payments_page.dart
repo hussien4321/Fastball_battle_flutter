@@ -4,6 +4,8 @@ import '../services/stats_loader.dart';
 import '../services/objects_loader.dart';
 import './game_page.dart';
 import '../helpers/views/payment_view.dart';
+import '../services/admob_tools.dart';
+import '../services/check_connection.dart';
 import '../helpers/views/custom_page_routes.dart';
 import '../models/enemy.dart';
 import 'package:audioplayers/audio_cache.dart';
@@ -24,19 +26,16 @@ class PaymentsPage extends StatefulWidget {
 }
 
 class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMixin{
-  final List<String>_productLists = Platform.isAndroid
-      ? [
-    'android.test.purchased',
-    'point_1000',
-    '5000_point',
-    'android.test.canceled',
-  ]
-      : ['com.cooni.point1000','com.cooni.point5000'];
-
   String _platformVersion = 'Unknown';
+
+  List<String> _purchasedIds = [];
   List<IAPItem> _items = [];
 
+  bool hasConnection = true;
   bool restoring = false;
+  bool purchasing = false;
+
+
 
 
   StatsLoader stats = new StatsLoader();
@@ -58,54 +57,49 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
     objectsLoader = new ObjectsLoader(context);
     allCharsUnlocked = await stats.getPreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS);
     adsPaidStatus = await stats.getPreference(StatsLoader.ADS_PAID_STATUS);
-    
     setState(() {
-      loading = false; 
-      
+      loading = false;       
     });
   }
 
-  
-  // Platform messages are asynchronous, so we initialize in an async method.
+
   Future<void> initPlatformState() async {
     String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       platformVersion = await FlutterInappPurchase.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
 
-    // initConnection
-    var result = await FlutterInappPurchase.initConnection;
-    print ('result: $result');
+    await FlutterInappPurchase.initConnection;
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+    await initPurchases();
+
     if (!mounted) return;
 
     setState(() {
       _platformVersion = platformVersion;
     });
 
-    // refresh items for android
-    String msg = await FlutterInappPurchase.consumeAllItems;
-    print('consumeAllItems: $msg');
   }
 
 
-  Future<Null> _getProducts() async {
-    List<IAPItem> items = await FlutterInappPurchase.getProducts(_productLists);
-    for (var item in items) {
-      print('${item.toString()}');
-      this._items.add(item);
+  initPurchases() async {
+
+    List<PurchasedItem> purchasedItems = await FlutterInappPurchase.getAvailablePurchases();
+    List<String> purchasedIds = purchasedItems.map((purchased) => purchased.productId.toString()).toList();
+    
+    List<IAPItem> items = await FlutterInappPurchase.getProducts(AdmobTools.productsList);
+
+    if (mounted){
+      setState(() {
+        _purchasedIds = purchasedIds;
+        _items = items;
+      });
     }
-
-    setState(() {
-      this._items = items;
-    });
   }
+
+  
 
   @override
   void dispose() {
@@ -115,27 +109,23 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
     super.dispose();
   }
 
-  void _unlockEverything() {
-    print('unlocking it allllll');
+  void _buyProduct(String prodId) async {
 
-    stats.updatePreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS, true);
-    setState(() {
-      allCharsUnlocked = true;
-    });
-    if(widget.isTonesOn){
-      widget.tonesPlayer.play(ObjectsLoader.SELECT_TONE);
-    }
-  }
-
-  void _removeAds() {
-    print('remove ads');
-
-    stats.updatePreference(StatsLoader.ADS_PAID_STATUS, true);
-    setState(() {
-      adsPaidStatus = true;
-    });
-    if(widget.isTonesOn){
-      widget.tonesPlayer.play(ObjectsLoader.SELECT_TONE);
+    List<IAPItem> result = _items.where((item) => item.productId == prodId).toList();
+    print('buying item ${_items.length} -> ${result.length}');
+    if(result.length != 0){
+      PurchasedItem purchased = await FlutterInappPurchase.buyProduct(result[0].productId);
+      print('purcuased - ${purchased.toString()}');
+      if(purchased != null){
+        print('successfully finsihing!');
+        stats.updatePreference(StatsLoader.ADS_PAID_STATUS, true);
+        setState(() {
+          allCharsUnlocked = true;
+        });
+        if(widget.isTonesOn){
+          widget.tonesPlayer.play(ObjectsLoader.SELECT_TONE);
+        }
+      }
     }
   }
 
@@ -143,17 +133,37 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
     setState(() {
       restoring=true;
     });
-    await _getProducts();
+    await initPurchases();
 
-    print('you have ${_items.length} items');
-
-    //restore the purchases
-    //update the states of ads and all items
-    //turn the restore button back on
+    hasConnection = await CheckConnection.checkConnection();
     
-    setState(() {
-      restoring=false;
-    });
+    if(hasConnection){
+      for (var item in _items) {
+        bool isBought =  _purchasedIds.contains(item.productId);
+        
+        print('SETTING ${item.productId} to $isBought');
+        if(item.productId == AdmobTools.unlockAllItemsProduct){
+          stats.updatePreference(StatsLoader.ALL_ITEMS_UNLOCKED_STATUS, isBought);
+          setState(() {
+            allCharsUnlocked = isBought;
+          });
+        } 
+        else if(item.productId == AdmobTools.removeAdsProduct){
+          stats.updatePreference(StatsLoader.ADS_PAID_STATUS, isBought);
+          setState(() {
+            adsPaidStatus = isBought;
+          });
+        } 
+      }
+      setState(() {
+        restoring=false;
+      });
+    }
+    else{
+      setState(() {
+        hasConnection = false;
+      });
+    }
   }
 
   void _goBack() {
@@ -177,7 +187,7 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
                           opacity: 0.0,
                           child: RaisedButton(
                             child: Text(
-                              !restoring ? 'Restore' : 'Restoring...',
+                              !hasConnection ? 'No connection' : (!restoring ? 'Restore' : 'Restoring...'),
                               style: Theme.of(context).textTheme.body1,
                             ),
                             color: Colors.orange[100],
@@ -201,11 +211,11 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
                         ),
                         RaisedButton(
                           child: Text(
-                            !restoring ? 'Restore' : 'Restoring...',
+                            !hasConnection ? 'No connection' : (!restoring ? 'Restore' : 'Restoring...'),
                             style: Theme.of(context).textTheme.body1,
                           ),
                           color: Colors.orange[100],
-                          onPressed: !restoring ? _restorePurchases : null,
+                          onPressed: hasConnection && !restoring ? _restorePurchases : null,
                         ),
                       ],
                     ),
@@ -237,7 +247,7 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
                           paymentName: 'Unlock everything',
                           paymentDescription: "Get access to all characters, enemies and stages in the game!",
                           unlocked: allCharsUnlocked,
-                          onClick: _unlockEverything
+                          onClick: () => _buyProduct(AdmobTools.unlockAllItemsProduct)
                         )
                       ),
                       Padding(padding: EdgeInsets.only(right: 5.0),),
@@ -272,7 +282,7 @@ class _PaymentsPageState extends State<PaymentsPage> with TickerProviderStateMix
                           paymentName: 'Remove Ads',
                           paymentDescription: "Enjoy the fastball battle experience with no ads!",
                           unlocked: adsPaidStatus,
-                          onClick: _removeAds
+                          onClick: () => _buyProduct(AdmobTools.removeAdsProduct)
                         )
                       ),
                       Padding(padding: EdgeInsets.only(right: 5.0),),

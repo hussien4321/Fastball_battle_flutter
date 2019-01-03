@@ -39,6 +39,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
 
   InterstitialAd myInterstitial;
   bool waitingForAds = false;
+  int adsCounter = 1;
+  final int NUMBER_OF_ROUNDS_WITH_NO_ADS = 2;
 
   StatsLoader stats;
   ObjectsLoader objectsLoader;
@@ -289,7 +291,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
               }
             }
             setState(() => gameInProgress = false);
-            if(!adsPaidStatus){
+            adsCounter++;
+            if(adsPaidStatus && adsCounter == NUMBER_OF_ROUNDS_WITH_NO_ADS){
+              adsCounter = 0;
               setState(() {
                 waitingForAds = true;
               });

@@ -8,6 +8,26 @@ class AdmobTools {
     keywords: <String>['game', 'fun', 'casual game', 'arcade', 'endless game', 'baseball', 'battle'],
   );
 
+    final List<String> testProductsList = Platform.isAndroid
+      ? [
+    'android.test.purchased',
+    'point_1000',
+    '5000_point',
+    'android.test.canceled',
+  ]
+      : ['com.cooni.point1000','com.cooni.point5000'];
+
+
+  static final List<String> productsList = Platform.isAndroid
+    ? ['fastball_battle_remove_ads' , 'fastball_battle_unlock_all_items']
+    : ['fastball_battle_remove_ads' , 'fastball_battle_unlock_all_items'];
+
+  static final String removeAdsProduct = Platform.isAndroid
+    ? 'fastball_battle_remove_ads' : 'fastball_battle_remove_ads';
+
+  static final String unlockAllItemsProduct = Platform.isAndroid
+    ? 'fastball_battle_unlock_all_items' : 'fastball_battle_unlock_all_items';
+
   static final String testAppId = FirebaseAdMob.testAppId;
 
   static final String appId = Platform.isAndroid

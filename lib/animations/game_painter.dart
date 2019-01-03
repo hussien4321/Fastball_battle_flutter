@@ -127,13 +127,13 @@ class GamePainter extends CustomPainter {
     enemyImage = getEnemyImage();
     collisionImage = getCollisionImage();
 
-    canvas.drawImageRect(enemyImage, Rect.fromLTRB(0.0,0.0,enemyImage.width.toDouble(), enemyImage.height.toDouble()), Rect.fromLTRB(size.width*0.8, size.height-charHeight+10,size.width*0.8+charWidth, size.height+10), _paint2);
+    canvas.drawImageRect(enemyImage, Rect.fromLTRB(0.0,0.0,enemyImage.width.toDouble(), enemyImage.height.toDouble()), Rect.fromLTRB(size.width*0.8, size.height-charHeight,size.width*0.8+charWidth, size.height), _paint2);
 
-    canvas.drawImageRect(currentImage, Rect.fromLTRB(0.0,0.0,currentImage.width.toDouble() , currentImage.height.toDouble()), Rect.fromLTRB(size.width*0.2-charWidth, size.height-charHeight+10,size.width*0.2, size.height+10), _paint2);
+    canvas.drawImageRect(currentImage, Rect.fromLTRB(0.0,0.0,currentImage.width.toDouble() , currentImage.height.toDouble()), Rect.fromLTRB(size.width*0.2-charWidth, size.height-charHeight,size.width*0.2, size.height), _paint2);
 
     double ballY = size.height-(charHeight*2/3);
     if(shootsBullets){
-      ballY = size.height-(charHeight*4/10);
+      ballY = size.height-(charHeight*4/10)-10;
     }
 
 
