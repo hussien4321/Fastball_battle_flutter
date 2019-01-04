@@ -292,7 +292,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin, Widg
             }
             setState(() => gameInProgress = false);
             adsCounter++;
-            if(adsPaidStatus && adsCounter == NUMBER_OF_ROUNDS_WITH_NO_ADS){
+            if(!adsPaidStatus && adsCounter == NUMBER_OF_ROUNDS_WITH_NO_ADS){
               adsCounter = 0;
               setState(() {
                 waitingForAds = true;
