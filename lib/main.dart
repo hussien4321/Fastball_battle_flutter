@@ -20,9 +20,10 @@ class MyApp extends StatelessWidget {
       title: 'Fastball Battle',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
-        textTheme: TextTheme(
-          body1: TextStyle(fontFamily: 'Bungee'),
-        ),
+        fontFamily: 'Bungee',
+        // textTheme: TextTheme(
+        //   bodyText1: TextStyle(fontFamily: 'Bungee'),
+        // ),
       ),
       home: Scaffold(
         body: MainPage(context),
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  void _lockOrientation(){
+  void _lockOrientation() {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
@@ -45,8 +46,8 @@ class MyApp extends StatelessWidget {
 
     _initializeAds();
   }
+
   void _initializeAds() async {
     await FirebaseAdMob.instance.initialize(appId: AdmobTools.appId);
   }
-
 }

@@ -2,72 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class CustomPageRoute<T> extends MaterialPageRoute<T> {
-  CustomPageRoute({ WidgetBuilder builder, RouteSettings settings})
+  CustomPageRoute({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 300);
 
-
   //TODO: Fade to black for a second then switch no next page
   @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    if (settings.isInitialRoute)
-      return child;
-    
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    if (settings.isInitialRoute) return child;
+
     return FadeTransition(
-        opacity: new Tween<double>(
-          begin: 0.0,
-          end: 1.0
-        ).animate(animation),
-        child: child,
+      opacity: new Tween<double>(begin: 0.0, end: 1.0).animate(animation),
+      child: child,
     );
   }
 }
 
-
 class NoAnimationPageRoute<T> extends MaterialPageRoute<T> {
-  NoAnimationPageRoute({ WidgetBuilder builder, RouteSettings settings })
+  NoAnimationPageRoute({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 300);
 
-
   @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    if (settings.isInitialRoute)
-      return child;
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    if (settings.isInitialRoute) return child;
 
     return child;
-
   }
 }
 
-
 class CustomPageRouteIOS<T> extends CupertinoPageRoute<T> {
-  CustomPageRouteIOS({ WidgetBuilder builder, RouteSettings settings})
+  CustomPageRouteIOS({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 300);
 
-
   //TODO: Update to get desired transition circle expanding to show behind layer
   @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    if (settings.isInitialRoute)
-      return child;
-    
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    if (settings.isInitialRoute) return child;
+
     return Opacity(
       opacity: animation.value,
       child: SlideTransition(
@@ -80,32 +62,29 @@ class CustomPageRouteIOS<T> extends CupertinoPageRoute<T> {
             begin: Offset.zero,
             end: const Offset(0.0, 1.0),
           ).animate(secondaryAnimation),
-        child: child,
+          child: child,
         ),
       ),
     );
-
   }
 }
 
-
 class NoAnimationPageRouteIOS<T> extends CupertinoPageRoute<T> {
-  NoAnimationPageRouteIOS({ WidgetBuilder builder, RouteSettings settings })
+  NoAnimationPageRouteIOS({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 300);
 
-
   @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    if (settings.isInitialRoute)
-      return child;
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    if (settings.isInitialRoute) return child;
 
     return child;
-
   }
+}
+
+extension Routing on RouteSettings {
+  bool get isInitialRoute => name == '/';
 }
