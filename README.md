@@ -13,6 +13,16 @@ Built without a game engine or sprite library — rendering is hand-written over
 
 ---
 
+## Main features
+
+- **Timing-based batting mini-game** with escalating pitch speed and strike-out rules.
+- **Unlockable characters, enemies and stages**, gated on score thresholds.
+- **Layered sprite animation** composed from JSON-declared frame sequences.
+- **Music and sound effects**, with per-stage backing tracks.
+- **In-app purchases** alongside ad-supported free play.
+
+---
+
 ## Tech stack
 
 | Concern | Choice |
@@ -23,6 +33,17 @@ Built without a game engine or sprite library — rendering is hand-written over
 | Audio | `audioplayers` — music beds and effects |
 | Re-engagement | `flutter_local_notifications` |
 | Monetisation | `firebase_admob`, `flutter_inapp_purchase` |
+
+---
+
+## Getting started
+
+```bash
+flutter pub get
+flutter run
+```
+
+> **Note:** targets a pre-null-safety Dart SDK and pins `firebase_admob`, which has since been replaced by `google_mobile_ads`. It needs a dependency upgrade pass to build on current stable.
 
 ---
 
@@ -131,26 +152,3 @@ bool shouldRepaint(GamePainter old) =>
 ```
 
 Including the resolved images themselves (`currentImage`, `enemyImage`, `collisionImage`) covers the case where a position moved too little to matter but crossed a frame boundary — the thing a position-only comparison would miss.
-
----
-
-## Main features
-
-- **Timing-based batting mini-game** with escalating pitch speed and strike-out rules.
-- **Unlockable characters, enemies and stages**, gated on score thresholds.
-- **Layered sprite animation** composed from JSON-declared frame sequences.
-- **Music and sound effects**, with per-stage backing tracks.
-- **In-app purchases** alongside ad-supported free play.
-
----
-
-## Getting started
-
-```bash
-flutter pub get
-flutter run
-```
-
-> **Note:** targets a pre-null-safety Dart SDK and pins `firebase_admob`, which has since been replaced by `google_mobile_ads`. It needs a dependency upgrade pass to build on current stable.
-
----
